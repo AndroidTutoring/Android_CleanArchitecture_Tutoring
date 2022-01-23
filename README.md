@@ -3,7 +3,7 @@
 
 1차
 
-[이동훈](https://github.com/realizer12)
+[성함](git주소)
 - 후기
 
 [성함](git주소)
