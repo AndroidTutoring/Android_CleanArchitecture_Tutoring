@@ -12,7 +12,7 @@ open class BaseFragment<VB : ViewBinding>(
 ) : Fragment() {
 
     private var mBinding: VB? = null
-    val binding get() = mBinding
+    val binding get() = mBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,7 +20,7 @@ open class BaseFragment<VB : ViewBinding>(
         savedInstanceState: Bundle?
     ): View? {
         mBinding = inflate.invoke(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
 }

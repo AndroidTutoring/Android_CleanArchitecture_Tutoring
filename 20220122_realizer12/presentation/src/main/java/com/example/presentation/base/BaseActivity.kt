@@ -10,12 +10,12 @@ open class BaseActivity<VB : ViewBinding>(private val bindingFactory: (LayoutInf
     AppCompatActivity() {
 
     private var mBinding: VB? = null
-    val binding get() = mBinding
+    val binding get() = mBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = bindingFactory(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
     }
 
 }
