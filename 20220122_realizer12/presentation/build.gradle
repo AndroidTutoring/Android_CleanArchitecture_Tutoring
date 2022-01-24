@@ -29,6 +29,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
+    //뷰바인딩 적용
+    buildFeatures{
+        viewBinding true
+    }
+
     kotlinOptions {
         jvmTarget = '11'
     }
