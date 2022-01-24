@@ -6,5 +6,5 @@
 [이동훈](https://github.com/realizer12)
 - 후기
 
-[성함](git주소)
+[권혁준](https://github.com/DavidKwon7)
 - 후기
