@@ -36,7 +36,7 @@ class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
                 return oldItem == newItem
             }
             override fun areItemsTheSame(oldItem: SearchedUser, newItem: SearchedUser):Boolean{
-                return oldItem.hashCode() == newItem.hashCode()
+                return oldItem.id == newItem.id
             }
         }
     }
