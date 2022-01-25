@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CleanArchitectureTutoring">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.presentation.activity.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

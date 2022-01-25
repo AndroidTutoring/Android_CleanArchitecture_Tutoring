@@ -2,4 +2,6 @@
     <string name="app_name">presentation</string>
     <string name="nickname_title">아이디 : </string>
     <string name="github_url_title">github 주소 : </string>
+    <string name="hint_search_user">github 유저를 검색해주세요</string>
+    <string name="search">검색</string>
 </resources>

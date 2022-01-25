@@ -4,6 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:id="@+id/edit_search_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/hint_search_user"
+        android:inputType="textPersonName"
+        android:textStyle="bold"
+        android:imeOptions="actionSearch"
+        app:layout_constraintEnd_toStartOf="@+id/btn_search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="@string/search"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_search_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edit_search_user"
+        app:layout_constraintTop_toTopOf="@+id/edit_search_user" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcy_user_list"
         android:layout_width="0dp"
@@ -11,5 +34,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_search_user" />
 </androidx.constraintlayout.widget.ConstraintLayout>
