@@ -10,6 +10,8 @@ import com.example.presentation.model.SearchedUser
 import com.example.presentation.model.SearchedUsers
 import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.util.Util
+import com.example.presentation.util.Util.hideKeyboard
+import com.example.presentation.util.Util.search
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,8 +46,11 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         //유저 검색 클릭시
         binding.btnSearch.setOnClickListener {
             searchUsers()
+            hideKeyboard()//키보드 내림
         }
 
+        //imeoption action search 버튼 누르면,   유저 검색 버튼 눌리게함.
+        binding.editSearchUser.search(binding.btnSearch)
     }
 
 
