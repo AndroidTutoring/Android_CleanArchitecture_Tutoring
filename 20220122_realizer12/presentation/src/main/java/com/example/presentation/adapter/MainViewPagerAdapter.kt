@@ -15,5 +15,5 @@ class MainViewPagerAdapter(fragmentActivity: FragmentActivity):FragmentStateAdap
     }
 
     //유저, 즐겨찾기 두개니까  2로 고정 시킴.
-    override fun getItemCount(): Int  =2
+    override fun getItemCount(): Int = 2
 }
