@@ -54,6 +54,8 @@
         android:id="@+id/tv_user_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:textColorLink="#2196F3"
         app:layout_constraintBottom_toBottomOf="@+id/tv_user_url_title"
         app:layout_constraintStart_toEndOf="@+id/tv_user_url_title"
         app:layout_constraintTop_toBottomOf="@+id/tv_nickname"
