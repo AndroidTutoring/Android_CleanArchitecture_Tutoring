@@ -2,13 +2,10 @@ package com.example.presentation.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.activity.DetailActivity
-import com.example.presentation.activity.MainActivity
+import com.example.presentation.activity.SplashActivity
 import com.example.presentation.adapter.UserListRcyAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
@@ -44,8 +41,19 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
             adapter = userListRcyAdapter
         }
 
+        //splash 에서 받아온  유저 리스트 먼저 뿌려줌.
+        showSplashUserList()
     }
 
+    //splash 에서 받아온  유저 리스트
+    private fun showSplashUserList(){
+        searchedUsersList =
+            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO) as ArrayList<SearchedUser>
+        if(!searchedUsersList.isNullOrEmpty()){
+            userListRcyAdapter.submitList(searchedUsersList)
+            binding.editSearchUser.setText(searchedUsersList!![0].login.toString())
+        }
+    }
 
 
     //리스너 기능 모음.
@@ -87,10 +95,6 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         intent.putExtra(PARAM_USER_INFO,searchedUser)
         startActivity(intent)
     }
-
-
-
-
 
 
     //유저 검색

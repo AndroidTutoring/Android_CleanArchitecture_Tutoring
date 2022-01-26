@@ -2,6 +2,7 @@ package com.example.presentation.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 
@@ -16,6 +17,10 @@ open class BaseActivity<VB : ViewBinding>(private val bindingFactory: (LayoutInf
         super.onCreate(savedInstanceState)
         mBinding = bindingFactory(layoutInflater)
         setContentView(binding.root)
+    }
+
+    fun showToast(msg:String){
+        Toast.makeText(this,msg, Toast.LENGTH_SHORT).show();
     }
 
 }
