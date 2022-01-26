@@ -1,11 +1,14 @@
 package com.example.presentation.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.example.presentation.activity.DetailActivity
+import com.example.presentation.activity.MainActivity
 import com.example.presentation.adapter.UserListRcyAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
@@ -66,14 +69,24 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                     searchUsers()
                 }
             }
-
-
         })
 
+        //아이템 클릭시 처리
+        userListRcyAdapter.setItemClickListener(object :UserListRcyAdapter.ItemCliCkListener{
+            override fun onItemClickListener(searchedUser: SearchedUser) {
+                gotoDetailActivity(searchedUser)
+            }
+        })
 
     }
 
 
+    //상세화면으로 가기
+    private fun gotoDetailActivity(searchedUser: SearchedUser){
+        val intent = Intent(requireActivity(), DetailActivity::class.java)
+        intent.putExtra(PARAM_USER_INFO,searchedUser)
+        startActivity(intent)
+    }
 
 
 
@@ -114,6 +127,10 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         })
     }
 
+    companion object{
+      const val PARAM_USER_INFO = "param_user_info"
 
+
+    }
 
 }
