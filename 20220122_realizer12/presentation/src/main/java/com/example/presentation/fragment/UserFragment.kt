@@ -36,6 +36,9 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
 
     //초기세팅
     private fun initSet(){
+
+        binding.emptyView.visibility = View.VISIBLE
+
         userListRcyAdapter = UserListRcyAdapter()
         binding.rcyUserList.apply {
             adapter = userListRcyAdapter
@@ -52,6 +55,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         if(!searchedUsersList.isNullOrEmpty()){
             userListRcyAdapter.submitList(searchedUsersList)
             binding.editSearchUser.setText(searchedUsersList!![0].login.toString())
+            binding.emptyView.visibility = View.GONE
         }
     }
 
@@ -60,6 +64,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
     private fun listenerEvent(){
         //유저 검색 클릭시
         binding.btnSearch.setOnClickListener {
+            binding.emptyView.visibility = View.VISIBLE
             page = 1
             searchUsers()
             hideKeyboard()//키보드 내림
@@ -118,10 +123,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                         userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
                     }//검색한 데이터 모두 넣어줌.
 
-
-                }else{//응답 실패
-                    //통신 재시도
-                    //Util.retryCall(call = call,callback = this)
+                    binding.emptyView.visibility = View.GONE
                 }
             }
             override fun onFailure(call: Call<SearchedUsers>, t: Throwable) {

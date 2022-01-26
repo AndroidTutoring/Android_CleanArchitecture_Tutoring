@@ -7,4 +7,5 @@
     <string name="repository_url_title">레포지토리 주소 : </string>
     <string name="repo_name_title">레포지토리 이름 : </string>
     <string name="repo_star_count_title">레포 별점 수 : </string>
+    <string name="empty_view_string">데이터 가져오는 중..</string>
 </resources>

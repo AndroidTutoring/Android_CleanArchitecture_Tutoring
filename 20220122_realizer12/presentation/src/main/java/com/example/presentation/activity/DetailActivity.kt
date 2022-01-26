@@ -1,6 +1,7 @@
 package com.example.presentation.activity
 
 import android.os.Bundle
+import android.view.View
 import com.example.presentation.adapter.RepoListRcyAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityDetailBinding
@@ -48,6 +49,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
                     call: Call<ArrayList<UserRepo>>,
                     response: Response<ArrayList<UserRepo>>
                 ) {
+                    binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
                     userRepoList = response.body()
                     repoRcyAdapter.submitList(userRepoList)
                 }
