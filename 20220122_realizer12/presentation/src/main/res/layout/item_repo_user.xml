@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/black_background_border"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/img_user_profile"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_nickname_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/nickname_title"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_user_profile" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_nickname_title"
+        app:layout_constraintStart_toEndOf="@+id/tv_nickname_title"
+        app:layout_constraintTop_toBottomOf="@+id/img_user_profile"
+        app:layout_constraintVertical_bias="1"
+        tools:text="realzier12" />
+
+    <TextView
+        android:id="@+id/tv_user_url_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/github_url_title"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nickname_title" />
+
+    <TextView
+        android:id="@+id/tv_user_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:textColorLink="#2196F3"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_user_url_title"
+        app:layout_constraintStart_toEndOf="@+id/tv_user_url_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nickname"
+        app:layout_constraintVertical_bias="1"
+        tools:text="https://github.com/realizer12" />
+
+    <ImageView
+        android:id="@+id/img_btn_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_user_profile"
+        app:srcCompat="@android:drawable/btn_star_big_off" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
