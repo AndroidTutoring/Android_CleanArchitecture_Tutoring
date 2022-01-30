@@ -120,18 +120,19 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
             override fun onResponse(call: Call<SearchedUsers>, response: Response<SearchedUsers>) {
                 if(response.isSuccessful){//응답 성공
                     totalDataCount = response.body()?.total_count //전체 데이터 숫자 넣어줌.
-                    val items = response.body()?.items
 
                     if(page==1){//첫번째 페이지라면 리스트를 다시 clear 해준다.
                         searchedUsersList = ArrayList()
                     }
 
                     response.body()?.items?.let {
-                        searchedUsersList?.addAll(it)
-                        userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
+                       if(!it.isNullOrEmpty()){//검색한  결과가 있는 경우 
+                           searchedUsersList?.addAll(it)
+                           userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
+                           binding.emptyView.visibility = View.GONE
+                       }
                     }//검색한 데이터 모두 넣어줌.
 
-                    binding.emptyView.visibility = View.GONE
                 }
             }
             override fun onFailure(call: Call<SearchedUsers>, t: Throwable) {
