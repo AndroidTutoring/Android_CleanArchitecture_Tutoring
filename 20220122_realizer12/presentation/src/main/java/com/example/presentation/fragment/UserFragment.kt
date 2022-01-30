@@ -18,6 +18,7 @@ import com.example.presentation.util.Util.search
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 //유저 프래그먼트
 class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
@@ -94,7 +95,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         //즐겨 찾기 클릭시 처리
         userListRcyAdapter.setFavoriteMarkClickListener(object :UserListRcyAdapter.FavoriteClickListener{
             override fun onFavoriteMarkListener(searchedUser: SearchedUser) {
-                // TODO: 2022/01/30 북마크시 처리 들어가기  
+                Timber.v("즐겨 찾기  추가 됨")
             }
         })
 
