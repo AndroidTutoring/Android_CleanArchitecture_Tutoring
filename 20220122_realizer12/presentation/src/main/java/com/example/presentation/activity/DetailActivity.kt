@@ -18,8 +18,6 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
     //유저 정보
     private var userInfo: SearchedUser? = null
 
-    //유저의 레포지토리 리스트
-    private var userRepoList: ArrayList<UserRepo>? = ArrayList()
     private lateinit var repoRcyAdapter: RepoListRcyAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +47,12 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
                     call: Call<ArrayList<UserRepo>>,
                     response: Response<ArrayList<UserRepo>>
                 ) {
-                    binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
-                    userRepoList = response.body()
-                    repoRcyAdapter.submitList(userRepoList)
+                    response.body().apply {
+                        if(!this.isNullOrEmpty()){
+                           binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
+                           repoRcyAdapter.submitList(this)
+                        }
+                    }
                 }
 
                 override fun onFailure(call: Call<ArrayList<UserRepo>>, t: Throwable) {
