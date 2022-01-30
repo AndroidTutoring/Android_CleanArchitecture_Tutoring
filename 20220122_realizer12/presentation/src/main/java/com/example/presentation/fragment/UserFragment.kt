@@ -91,6 +91,13 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
             }
         })
 
+        //즐겨 찾기 클릭시 처리
+        userListRcyAdapter.setFavoriteMarkClickListener(object :UserListRcyAdapter.FavoriteClickListener{
+            override fun onFavoriteMarkListener(searchedUser: SearchedUser) {
+                // TODO: 2022/01/30 북마크시 처리 들어가기  
+            }
+        })
+
     }
 
 

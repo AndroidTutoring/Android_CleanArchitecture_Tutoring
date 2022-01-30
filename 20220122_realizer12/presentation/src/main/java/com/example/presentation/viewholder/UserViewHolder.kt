@@ -5,7 +5,7 @@ import com.bumptech.glide.Glide
 import com.example.presentation.databinding.ItemRepoUserBinding
 import com.example.presentation.model.SearchedUser
 
-class UserViewHolder(private val binding: ItemRepoUserBinding) :RecyclerView.ViewHolder(binding.root){
+class UserViewHolder(val binding: ItemRepoUserBinding) :RecyclerView.ViewHolder(binding.root){
     fun bind(searchedUser: SearchedUser){
 
         Glide.with(itemView.context).load(searchedUser.avatar_url).into(binding.imgUserProfile)//유저 프로필 추가

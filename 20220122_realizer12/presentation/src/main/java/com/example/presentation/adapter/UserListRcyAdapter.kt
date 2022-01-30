@@ -12,9 +12,16 @@ import com.example.presentation.viewholder.UserViewHolder
 class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
 
     private var onItemClickListener: ItemCliCkListener? = null
+    private var onFavoriteMarkClickListener: FavoriteClickListener? = null
 
+    //아이템 전체 클릭
     interface ItemCliCkListener{
         fun onItemClickListener(searchedUser: SearchedUser)//아이템 클릭시 -> 디테일 화면으로?
+    }
+
+    //즐겨찾기  클릭
+    interface FavoriteClickListener{
+        fun onFavoriteMarkListener(searchedUser: SearchedUser)
     }
 
 
@@ -23,8 +30,15 @@ class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
         return UserViewHolder(binding)
     }
 
+
+    //아이템 전체 클릭
     fun setItemClickListener(itemCliCkListener: ItemCliCkListener){
         this.onItemClickListener = itemCliCkListener
+    }
+
+    //즐겨찾기 버튼 클릭
+    fun setFavoriteMarkClickListener(favoriteClickListener: FavoriteClickListener){
+        this.onFavoriteMarkClickListener =  favoriteClickListener
     }
 
 
@@ -32,8 +46,13 @@ class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
        holder.apply {
            bind(currentList[position])
 
+           //즐겨찾기 버튼 클릭시
+           binding.imgBtnFavorite.setOnClickListener {
+               onFavoriteMarkClickListener?.onFavoriteMarkListener(currentList[position])
+           }
+
            //아이템 클릭시
-           itemView.setOnClickListener {
+           binding.root.setOnClickListener {
                onItemClickListener?.onItemClickListener(currentList[position])
            }
        }
