@@ -12,6 +12,8 @@ import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.model.SearchedUsers
 import com.example.presentation.retrofit.RetrofitHelper
+import com.example.presentation.room.FavoriteDao
+import com.example.presentation.room.FavoriteMarkDataBase
 import com.example.presentation.util.Util
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
@@ -28,6 +30,10 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
 
    private var searchedUsersList:ArrayList<SearchedUser>? = ArrayList()
    private lateinit var userListRcyAdapter: UserListRcyAdapter
+
+   private val favoriteMarkDataBase:FavoriteMarkDataBase? by lazy {
+       FavoriteMarkDataBase.getInstance(requireContext().applicationContext)
+   }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -95,7 +101,9 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         //즐겨 찾기 클릭시 처리
         userListRcyAdapter.setFavoriteMarkClickListener(object :UserListRcyAdapter.FavoriteClickListener{
             override fun onFavoriteMarkListener(searchedUser: SearchedUser) {
-                Timber.v("즐겨 찾기  추가 됨")
+                showToast("저장 ")
+                searchedUser.isMyFavorite = true
+                favoriteMarkDataBase?.getFavoriteMarkDao()?.setFavoriteMark(searchedUser)
             }
         })
 
@@ -126,7 +134,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                     }
 
                     response.body()?.items?.let {
-                       if(!it.isNullOrEmpty()){//검색한  결과가 있는 경우 
+                       if(!it.isNullOrEmpty()){//검색한  결과가 있는 경우
                            searchedUsersList?.addAll(it)
                            userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
                            binding.emptyView.visibility = View.GONE
