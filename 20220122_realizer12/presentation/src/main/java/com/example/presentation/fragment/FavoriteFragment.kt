@@ -6,7 +6,11 @@ import com.example.presentation.adapter.UserListRcyAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentFavoriteBinding
 import com.example.presentation.model.SearchedUser
+import com.example.presentation.repository.UserRepository
+import com.example.presentation.repository.UserRepositoryImpl
 import com.example.presentation.room.FavoriteMarkDataBase
+import com.example.presentation.source.local.UserLocalDataSourceImpl
+import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import timber.log.Timber
 
 //즐겨찾기 프래그먼트
@@ -14,8 +18,12 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
 
     private lateinit var favoriteMarkedRcyAdapter: UserListRcyAdapter
 
-    private val favoriteMarkDataBase: FavoriteMarkDataBase? by lazy {
-        FavoriteMarkDataBase.getInstance(requireContext().applicationContext)
+
+    private val userRepository: UserRepository by lazy {
+        val favoriteMarkDataBase = FavoriteMarkDataBase.getInstance(requireContext().applicationContext)
+        val remoteDataSource = UserRemoteDataSourceImpl()
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase?.getFavoriteMarkDao())
+        UserRepositoryImpl(localDataSource,remoteDataSource)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +42,7 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
         favoriteMarkedRcyAdapter.setFavoriteMarkClickListener(object:UserListRcyAdapter.FavoriteClickListener{
             override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
 
-                favoriteMarkDataBase?.getFavoriteMarkDao()?.deleteFavoriteUser(searchedUser.id)
+                userRepository.deleteFavoriteUser(searchedUser)
                 val newList= favoriteMarkedRcyAdapter.currentList.toMutableList()
                 newList.removeAll { it.id == searchedUser.id }
                 favoriteMarkedRcyAdapter.submitList(newList.toList())
@@ -55,6 +63,6 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
 
     //즐겨찾기한 유저들 가져옴.
     private fun getFavoriteGitUsers(){
-        favoriteMarkedRcyAdapter.submitList(favoriteMarkDataBase?.getFavoriteMarkDao()?.getFavoriteGitUsers(true))
+        favoriteMarkedRcyAdapter.submitList(userRepository.getFavoriteUsers())
     }
 }
