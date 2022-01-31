@@ -33,8 +33,8 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
         UserRepositoryImpl(localDataSource,remoteDataSource)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResume() {
+        super.onResume()
         searUserInfo()
     }
 
