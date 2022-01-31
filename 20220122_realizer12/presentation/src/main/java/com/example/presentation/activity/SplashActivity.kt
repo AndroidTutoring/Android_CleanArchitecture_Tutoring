@@ -5,19 +5,33 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.model.SearchedUsers
+import com.example.presentation.repository.UserRepository
+import com.example.presentation.repository.UserRepositoryImpl
 import com.example.presentation.retrofit.RetrofitHelper
+import com.example.presentation.room.FavoriteMarkDataBase
+import com.example.presentation.source.local.UserLocalDataSourceImpl
+import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding.inflate(it) }) {
 
     private var apiRetryCount = 0
+
+    private val userRepository: UserRepository by lazy {
+        val favoriteMarkDataBase = FavoriteMarkDataBase.getInstance(this.applicationContext)
+        val remoteDataSource = UserRemoteDataSourceImpl()
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase?.getFavoriteMarkDao())
+        UserRepositoryImpl(localDataSource,remoteDataSource)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,27 +41,16 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
 
     //유저 검색 -> 내 깃헙 아이디 검색
     private fun searUserInfo() {
-        RetrofitHelper.apiServices.searchUsers(
-            query = "realizer12",
-            page = 1,
-            perPage = 10
-        ).enqueue(object : Callback<SearchedUsers> {
-            override fun onResponse(call: Call<SearchedUsers>, response: Response<SearchedUsers>) {
-                if(response.isSuccessful){//응답 성공
-                    val items = response.body()?.items
+        userRepository.getSearchUsers(query = "realizer12", 1, 10, {
+            val items = it?.items
 
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        gotoMainActivity(items)
-                    },2000)//통신 성공하고  2초뒤에 메인으로
+            Handler(Looper.getMainLooper()).postDelayed({
+                gotoMainActivity(items)
+            },2000)//통신 성공하고  2초뒤에 메인으로
 
-                }else{//응답 실패
-                    retryApiCall(call = call,callback = this)
-                }
-            }
-            override fun onFailure(call: Call<SearchedUsers>, t: Throwable) {
-                //통신 재시도
-                retryApiCall(call = call,callback = this)
-            }
+        }, {call, callback,errorCode->
+            //errocode와 상관없이  통신 재시도
+            retryApiCall(call,callback)
         })
     }
 
