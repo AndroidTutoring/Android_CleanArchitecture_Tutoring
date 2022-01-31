@@ -11,8 +11,12 @@ import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.model.SearchedUsers
+import com.example.presentation.repository.UserRepository
+import com.example.presentation.repository.UserRepositoryImpl
 import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.room.FavoriteMarkDataBase
+import com.example.presentation.source.local.UserLocalDataSourceImpl
+import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
@@ -30,9 +34,13 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
    private var searchedUsersList:ArrayList<SearchedUser>? = ArrayList()
    private lateinit var userListRcyAdapter: UserListRcyAdapter
 
-   private val favoriteMarkDataBase:FavoriteMarkDataBase? by lazy {
-       FavoriteMarkDataBase.getInstance(requireContext().applicationContext)
-   }
+    private val userRepository: UserRepository by lazy {
+        val favoriteMarkDataBase = FavoriteMarkDataBase.getInstance(requireContext().applicationContext)
+        val remoteDataSource = UserRemoteDataSourceImpl()
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase?.getFavoriteMarkDao())
+        UserRepositoryImpl(localDataSource,remoteDataSource)
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,7 +75,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         userListRcyAdapter.notifyDataSetChanged()//전체 업데이트가 안되어서 이렇게 notify넣어줌.
     }
 
-    private fun getFavoriteUserList() = favoriteMarkDataBase?.getFavoriteMarkDao()?.getFavoriteGitUsers(true)
+    private fun getFavoriteUserList() = userRepository.getFavoriteUsers()
 
 
     //splash 에서 받아온  유저 리스트
@@ -127,11 +135,11 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                 if(searchedUser.isMyFavorite){
                     showToast("즐겨찾기 취소")
                     searchedUser.isMyFavorite = false
-                    favoriteMarkDataBase?.getFavoriteMarkDao()?.deleteFavoriteUser(searchedUser.id)
+                    userRepository.deleteFavoriteUser(searchedUser)
                 }else{
                     showToast("즐겨찾기 추가")
                     searchedUser.isMyFavorite = true
-                    favoriteMarkDataBase?.getFavoriteMarkDao()?.setFavoriteMark(searchedUser)
+                    userRepository.addFavoriteUser(searchedUser)
                 }
 
                 val newList = userListRcyAdapter.currentList.toMutableList()
