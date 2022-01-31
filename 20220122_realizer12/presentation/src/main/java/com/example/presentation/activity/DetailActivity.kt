@@ -8,7 +8,15 @@ import com.example.presentation.databinding.ActivityDetailBinding
 import com.example.presentation.fragment.UserFragment
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.model.UserRepo
+import com.example.presentation.repository.RepoRepository
+import com.example.presentation.repository.RepoRepositoryImpl
+import com.example.presentation.repository.UserRepository
+import com.example.presentation.repository.UserRepositoryImpl
 import com.example.presentation.retrofit.RetrofitHelper
+import com.example.presentation.room.FavoriteMarkDataBase
+import com.example.presentation.source.local.UserLocalDataSourceImpl
+import com.example.presentation.source.remote.RepoRemoteDataSourceImpl
+import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,6 +27,10 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
     private var userInfo: SearchedUser? = null
 
     private lateinit var repoRcyAdapter: RepoListRcyAdapter
+    private val repoRepository: RepoRepository by lazy {
+        val remoteDataSource = RepoRemoteDataSourceImpl()
+        RepoRepositoryImpl(remoteDataSource)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,25 +53,15 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
 
     //유저의  레포지토리 리스트를 받아온다.
     private fun getUserRepoList(userName: String) {
-        RetrofitHelper.apiServices.getUserRepoInfo(userName)
-            .enqueue(object : Callback<ArrayList<UserRepo>> {
-                override fun onResponse(
-                    call: Call<ArrayList<UserRepo>>,
-                    response: Response<ArrayList<UserRepo>>
-                ) {
-                    response.body().apply {
-                        if(!this.isNullOrEmpty()){
-                           binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
-                           repoRcyAdapter.submitList(this)
-                        }
-                    }
-                }
 
-                override fun onFailure(call: Call<ArrayList<UserRepo>>, t: Throwable) {
-                    showToast(t.message.toString())
-                }
-            })
+        repoRepository.getUserRepoList(userName = userName,{userRepoList->
+            if(!userRepoList.isNullOrEmpty()){
+                binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
+                repoRcyAdapter.submitList(userRepoList)
+            }
+        },{t->
+            showToast(t.message.toString())
+        })
     }
-
 
 }
