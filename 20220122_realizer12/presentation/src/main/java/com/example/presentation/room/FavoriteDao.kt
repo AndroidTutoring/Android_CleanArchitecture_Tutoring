@@ -1,10 +1,9 @@
 package com.example.presentation.room
 
-import androidx.room.Dao
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import androidx.room.Query
 import com.example.presentation.model.SearchedUser
+import retrofit2.http.DELETE
 
 //즐겨 찾기 관련  쿼리 모음
 @Dao
@@ -16,4 +15,6 @@ interface FavoriteDao {
     @Query("SELECT * FROM favoriteMarkTable WHERE isMyFavorite = :isMyFavorite")
     fun getFavoriteGitUsers(isMyFavorite:Boolean): List<SearchedUser>
 
+    @Query("DELETE FROM favoriteMarkTable WHERE userId = :userId")
+    fun deleteFavoriteUser(userId:Long?)
 }
