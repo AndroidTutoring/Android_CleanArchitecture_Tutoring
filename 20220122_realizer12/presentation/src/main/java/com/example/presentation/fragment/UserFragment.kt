@@ -12,7 +12,6 @@ import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.model.SearchedUsers
 import com.example.presentation.retrofit.RetrofitHelper
-import com.example.presentation.room.FavoriteDao
 import com.example.presentation.room.FavoriteMarkDataBase
 import com.example.presentation.util.Util
 import com.example.presentation.util.Util.hideKeyboard
@@ -55,12 +54,35 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         showSplashUserList()
     }
 
+    override fun onResume() {
+        super.onResume()
+        val newList = userListRcyAdapter.currentList.toMutableList()
+
+        newList.map { user->
+            if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == user.id} == false) {
+                user.isMyFavorite = false
+            }
+        }
+        userListRcyAdapter.submitList(newList.toMutableList())
+        userListRcyAdapter.notifyDataSetChanged()//전체 업데이트가 안되어서 이렇게 notify넣어줌.
+    }
+
+    private fun getFavoriteUserList() = favoriteMarkDataBase?.getFavoriteMarkDao()?.getFavoriteGitUsers(true)
+
+
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList(){
         searchedUsersList =
             requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO) as ArrayList<SearchedUser>
         if(!searchedUsersList.isNullOrEmpty()){
-            userListRcyAdapter.submitList(searchedUsersList)
+
+            searchedUsersList?.map {searchUser->
+                if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == searchUser.id } == true) {
+                    searchUser.isMyFavorite = true
+                }
+            }
+
+            userListRcyAdapter.submitList(searchedUsersList!!.toMutableList())
             binding.editSearchUser.setText(searchedUsersList!![0].login.toString())
             binding.emptyView.visibility = View.GONE
         }
@@ -99,11 +121,29 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         })
 
         //즐겨 찾기 클릭시 처리
-        userListRcyAdapter.setFavoriteMarkClickListener(object :UserListRcyAdapter.FavoriteClickListener{
-            override fun onFavoriteMarkListener(searchedUser: SearchedUser) {
-                showToast("저장 ")
-                searchedUser.isMyFavorite = true
-                favoriteMarkDataBase?.getFavoriteMarkDao()?.setFavoriteMark(searchedUser)
+            userListRcyAdapter.setFavoriteMarkClickListener(object :UserListRcyAdapter.FavoriteClickListener{
+                override fun onFavoriteMarkListener(searchedUser: SearchedUser,position:Int) {
+
+                if(searchedUser.isMyFavorite){
+                    showToast("즐겨찾기 취소")
+                    searchedUser.isMyFavorite = false
+                    favoriteMarkDataBase?.getFavoriteMarkDao()?.deleteFavoriteUser(searchedUser.id)
+                }else{
+                    showToast("즐겨찾기 추가")
+                    searchedUser.isMyFavorite = true
+                    favoriteMarkDataBase?.getFavoriteMarkDao()?.setFavoriteMark(searchedUser)
+                }
+
+                val newList = userListRcyAdapter.currentList.toMutableList()
+
+                newList.map { user->
+                    if(searchedUser.id == user.id){
+                        user.isMyFavorite = searchedUser.isMyFavorite
+                    }
+                }
+
+                userListRcyAdapter.submitList(newList.toMutableList())
+                userListRcyAdapter.notifyItemChanged(position)
             }
         })
 
@@ -131,11 +171,18 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
 
                     if(page==1){//첫번째 페이지라면 리스트를 다시 clear 해준다.
                         searchedUsersList = ArrayList()
+                        //userListRcyAdapter.submitList(null)//새로 그려주기 위해서 submitlist null보내서 초기화
                     }
-
                     response.body()?.items?.let {
                        if(!it.isNullOrEmpty()){//검색한  결과가 있는 경우
                            searchedUsersList?.addAll(it)
+
+                           searchedUsersList?.map {searchUser->
+                               if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == searchUser.id } == true) {
+                                   searchUser.isMyFavorite = true
+                               }
+                           }
+
                            userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
                            binding.emptyView.visibility = View.GONE
                        }

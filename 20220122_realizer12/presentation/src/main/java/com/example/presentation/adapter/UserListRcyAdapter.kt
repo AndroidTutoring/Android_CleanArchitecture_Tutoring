@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.databinding.ItemRepoUserBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.viewholder.UserViewHolder
+import timber.log.Timber
 
 class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
 
@@ -21,7 +22,7 @@ class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
 
     //즐겨찾기  클릭
     interface FavoriteClickListener{
-        fun onFavoriteMarkListener(searchedUser: SearchedUser)
+        fun onFavoriteMarkListener(searchedUser: SearchedUser,position: Int)
     }
 
 
@@ -44,16 +45,16 @@ class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
        holder.apply {
-           bind(currentList[position])
+           bind(currentList[adapterPosition])
 
            //즐겨찾기 버튼 클릭시
            binding.imgBtnFavorite.setOnClickListener {
-               onFavoriteMarkClickListener?.onFavoriteMarkListener(currentList[position])
+               onFavoriteMarkClickListener?.onFavoriteMarkListener(currentList[adapterPosition],adapterPosition)
            }
 
            //아이템 클릭시
            binding.root.setOnClickListener {
-               onItemClickListener?.onItemClickListener(currentList[position])
+               onItemClickListener?.onItemClickListener(currentList[adapterPosition])
            }
        }
     }

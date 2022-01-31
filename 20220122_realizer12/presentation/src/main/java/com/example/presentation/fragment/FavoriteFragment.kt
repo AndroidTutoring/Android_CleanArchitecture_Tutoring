@@ -5,6 +5,7 @@ import android.view.View
 import com.example.presentation.adapter.UserListRcyAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentFavoriteBinding
+import com.example.presentation.model.SearchedUser
 import com.example.presentation.room.FavoriteMarkDataBase
 import timber.log.Timber
 
@@ -20,11 +21,26 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSet()
+        listenerEvent()
     }
 
     override fun onResume() {
         super.onResume()
         getFavoriteGitUsers()
+    }
+
+    //리스너 기능 모음.
+    private fun listenerEvent(){
+        favoriteMarkedRcyAdapter.setFavoriteMarkClickListener(object:UserListRcyAdapter.FavoriteClickListener{
+            override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
+
+                favoriteMarkDataBase?.getFavoriteMarkDao()?.deleteFavoriteUser(searchedUser.id)
+                val newList= favoriteMarkedRcyAdapter.currentList.toMutableList()
+                newList.removeAll { it.id == searchedUser.id }
+                favoriteMarkedRcyAdapter.submitList(newList.toList())
+
+            }
+        })
     }
 
     //초기세팅
