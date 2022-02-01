@@ -9,11 +9,7 @@ class RepoRepositoryImpl(
 ):RepoRepository {
 
     override fun getUserRepoList(
-        userName: String,
-        onSuccess: (ArrayList<UserRepo>?) -> Unit,
-        onFailure: (t: Throwable) -> Unit
-    ) {
-        repoRemoteDataSource.getUserRepoList(userName, onSuccess, onFailure)
-    }
+        userName: String
+    ) = repoRemoteDataSource.getUserRepoList(userName)
 
 }
