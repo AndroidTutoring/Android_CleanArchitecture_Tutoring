@@ -17,6 +17,8 @@ import com.example.presentation.room.FavoriteMarkDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.RepoRemoteDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,14 +56,17 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
     //유저의  레포지토리 리스트를 받아온다.
     private fun getUserRepoList(userName: String) {
 
-        repoRepository.getUserRepoList(userName = userName,{userRepoList->
-            if(!userRepoList.isNullOrEmpty()){
-                binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
-                repoRcyAdapter.submitList(userRepoList)
-            }
-        },{t->
-            showToast(t.message.toString())
-        })
+        repoRepository.getUserRepoList(userName = userName)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({userRepoList->
+                if(!userRepoList.isNullOrEmpty()){
+                    binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
+                    repoRcyAdapter.submitList(userRepoList)
+                }
+            }, {t->
+                showToast(t.message.toString())
+            })
     }
 
 }
