@@ -5,7 +5,9 @@ import com.example.presentation.model.SearchedUsers
 import com.example.presentation.source.local.UserLocalDataSource
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSource
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -14,15 +16,15 @@ class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource
 ):UserRepository {
 
-    override fun deleteFavoriteUser(vararg favoriteUser: SearchedUser) {
-        userLocalDataSource.deleteFavoriteUser(*favoriteUser)
+    override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUser):Completable? {
+        return userLocalDataSource.deleteFavoriteUser(deletedFavoriteUser)
     }
 
-    override fun addFavoriteUser(vararg favoriteUser: SearchedUser) {
-        userLocalDataSource.addFavoriteUser(*favoriteUser)
+    override fun addFavoriteUser(vararg favoriteUser: SearchedUser):Completable? {
+       return userLocalDataSource.addFavoriteUser(*favoriteUser)
     }
 
-    override fun getFavoriteUsers(): List<SearchedUser>? = userLocalDataSource.getFavoriteUsers()
+    override fun getFavoriteUsers(): Single<List<SearchedUser>>? = userLocalDataSource.getFavoriteUsers()
     override fun getSearchUsers(
         query: String,
         page: Int,

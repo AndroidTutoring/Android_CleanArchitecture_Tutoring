@@ -11,6 +11,9 @@ import com.example.presentation.repository.UserRepositoryImpl
 import com.example.presentation.room.FavoriteMarkDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 
 //즐겨찾기 프래그먼트
@@ -43,10 +46,14 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
             override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
 
                 userRepository.deleteFavoriteUser(searchedUser)
-                val newList= favoriteMarkedRcyAdapter.currentList.toMutableList()
-                newList.removeAll { it.id == searchedUser.id }
-                favoriteMarkedRcyAdapter.submitList(newList.toList())
-
+                    ?.subscribeOn(Schedulers.io())
+                    ?.observeOn(AndroidSchedulers.mainThread())
+                    ?.doOnComplete {
+                        val newList= favoriteMarkedRcyAdapter.currentList.toMutableList()
+                        newList.removeAll { it.id == searchedUser.id }
+                        favoriteMarkedRcyAdapter.submitList(newList.toList())
+                     }
+                    ?.subscribe()?.addTo(compositeDisposable)
             }
         })
     }
@@ -63,6 +70,12 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
 
     //즐겨찾기한 유저들 가져옴.
     private fun getFavoriteGitUsers(){
-        favoriteMarkedRcyAdapter.submitList(userRepository.getFavoriteUsers())
+        userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ favoriteUsers ->
+                favoriteMarkedRcyAdapter.submitList(favoriteUsers)
+            }, {
+                showToast("로컬 디비 가져오는 중 문제가 생김")
+            })?.addTo(compositeDisposable)
+
     }
 }

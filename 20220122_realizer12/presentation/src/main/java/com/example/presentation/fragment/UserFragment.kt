@@ -18,7 +18,10 @@ import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
+import timber.log.Timber
 
 //유저 프래그먼트
 class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
@@ -62,15 +65,21 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         val newList = userListRcyAdapter.currentList.toMutableList()
 
         newList.map { user->
-            if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == user.id} == false) {
-                user.isMyFavorite = false
-            }
+            Timber.v("adasd ->"+user.login)
+            userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())?.subscribe({favoriteUser ->
+                    if(!favoriteUser.any { it.id  == user.id}){
+                        user.isMyFavorite = false
+                    }
+                    userListRcyAdapter.submitList(newList.toMutableList())
+                    userListRcyAdapter.notifyDataSetChanged()//전체 업데이트가 안되어서 이렇게 notify넣어줌.
+                }, {
+                    showToast("로컬 디비 가져오는 중 문제가 생김")
+                })?.addTo(compositeDisposable)
         }
-        userListRcyAdapter.submitList(newList.toMutableList())
-        userListRcyAdapter.notifyDataSetChanged()//전체 업데이트가 안되어서 이렇게 notify넣어줌.
     }
 
-    private fun getFavoriteUserList() = userRepository.getFavoriteUsers()
+
 
 
     //splash 에서 받아온  유저 리스트
@@ -80,14 +89,18 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         if(!searchedUsersList.isNullOrEmpty()){
 
             searchedUsersList?.map {searchUser->
-                if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == searchUser.id } == true) {
-                    searchUser.isMyFavorite = true
-                }
+                userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
+                    ?.observeOn(AndroidSchedulers.mainThread())?.subscribe({favoriteUser ->
+                        if(favoriteUser.any {eachUser-> eachUser.id  == searchUser.id}){
+                            searchUser.isMyFavorite = true
+                        }
+                        userListRcyAdapter.submitList(searchedUsersList!!.toMutableList())
+                        binding.editSearchUser.setText(searchedUsersList!![0].login.toString())
+                        binding.emptyView.visibility = View.GONE
+                    }, {
+                        showToast("로컬 디비 가져오는 중 문제가 생김")
+                    })?.addTo(compositeDisposable)
             }
-
-            userListRcyAdapter.submitList(searchedUsersList!!.toMutableList())
-            binding.editSearchUser.setText(searchedUsersList!![0].login.toString())
-            binding.emptyView.visibility = View.GONE
         }
     }
 
@@ -131,22 +144,42 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                     showToast("즐겨찾기 취소")
                     searchedUser.isMyFavorite = false
                     userRepository.deleteFavoriteUser(searchedUser)
+                        ?.subscribeOn(Schedulers.io())
+                        ?.observeOn(AndroidSchedulers.mainThread())
+                        ?.doOnComplete {
+
+                            val newList = userListRcyAdapter.currentList.toMutableList()
+
+                            newList.map { user->
+                                if(searchedUser.id == user.id){
+                                    user.isMyFavorite = searchedUser.isMyFavorite
+                                }
+                            }
+
+                            userListRcyAdapter.submitList(newList.toMutableList())
+                            userListRcyAdapter.notifyItemChanged(position)
+
+                        }?.subscribe()
                 }else{
                     showToast("즐겨찾기 추가")
                     searchedUser.isMyFavorite = true
-                    userRepository.addFavoriteUser(searchedUser)
+                    userRepository.addFavoriteUser(searchedUser)?.subscribeOn(Schedulers.io())
+                        ?.observeOn(AndroidSchedulers.mainThread())
+                        ?.doOnComplete {
+
+                            val newList = userListRcyAdapter.currentList.toMutableList()
+
+                            newList.map { user->
+                                if(searchedUser.id == user.id){
+                                    user.isMyFavorite = searchedUser.isMyFavorite
+                                }
+                            }
+
+                            userListRcyAdapter.submitList(newList.toMutableList())
+                            userListRcyAdapter.notifyItemChanged(position)
+
+                        }?.subscribe()
                 }
-
-                val newList = userListRcyAdapter.currentList.toMutableList()
-
-                newList.map { user->
-                    if(searchedUser.id == user.id){
-                        user.isMyFavorite = searchedUser.isMyFavorite
-                    }
-                }
-
-                userListRcyAdapter.submitList(newList.toMutableList())
-                userListRcyAdapter.notifyItemChanged(position)
             }
         })
 
@@ -163,33 +196,37 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
 
     //유저 검색
     private fun searchUsers() {
-        userRepository.getSearchUsers(binding.editSearchUser.text.toString(), page, perPage)
-         .subscribeOn(Schedulers.io())
-         .retry()
-         .observeOn(AndroidSchedulers.mainThread())
-         .subscribe({
-               totalDataCount = it.body()?.total_count
 
-               if(page ==1){
-                   searchedUsersList = ArrayList()
-               }
 
-              it.body()?.items.let { searUSerList ->
-                 if (!searUSerList.isNullOrEmpty()) {//검색한  결과가 있는 경우
-                     searchedUsersList?.addAll(searUSerList)
+        //local , remote  zip으로  동시에 다 처리되면  뿌려지게 수정
+        Single.zip(userRepository.getSearchUsers(binding.editSearchUser.text.toString(), page, perPage)
+            .subscribeOn(Schedulers.io())
+            .retry()
+            .observeOn(AndroidSchedulers.mainThread()),
+            userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread()),{
+                    remote,local->
+                totalDataCount = remote.body()?.total_count
 
-                     searchedUsersList?.map { searchUser ->
-                         if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == searchUser.id } == true) {
-                             searchUser.isMyFavorite = true
-                         }
-                     }
-                     userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
-                     binding.emptyView.visibility = View.GONE
-                 }
-             }
-         },{
+                if(page ==1){
+                    searchedUsersList = ArrayList()
+                }
 
-         })
+                remote.body()?.items.let { searUSerList->
+                    if (!searUSerList.isNullOrEmpty()) {
+                      searchedUsersList?.addAll(searUSerList)
+                    }
+                    searchedUsersList?.map { searchedUser ->
+                        if(local.any{it.id == searchedUser.id}){
+                            searchedUser.isMyFavorite = true
+                        }
+                    }
+                }
+                userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
+                binding.emptyView.visibility = View.GONE
+            }).onErrorReturn {
+                  showToast("유저 검색 중 문제가 생김")
+            }.subscribe()
     }
 
     companion object{
