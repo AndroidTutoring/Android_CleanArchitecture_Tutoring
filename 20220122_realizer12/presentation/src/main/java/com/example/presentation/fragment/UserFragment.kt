@@ -3,7 +3,6 @@ package com.example.presentation.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.activity.DetailActivity
 import com.example.presentation.activity.SplashActivity
@@ -11,20 +10,13 @@ import com.example.presentation.adapter.UserListRcyAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.SearchedUser
-import com.example.presentation.model.SearchedUsers
 import com.example.presentation.repository.UserRepository
 import com.example.presentation.repository.UserRepositoryImpl
-import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.room.FavoriteMarkDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
-import com.example.presentation.util.Const.REQUEST_RETRY_CALLBACK
-import com.example.presentation.util.Util
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 //유저 프래그먼트
 class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
@@ -169,32 +161,32 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
 
     //유저 검색
     private fun searchUsers() {
-        userRepository.getSearchUsers(binding.editSearchUser.text.toString(), page, perPage, {
-            totalDataCount = it?.total_count //전체 데이터 숫자 넣어줌.
-
-            if(page==1){//첫번째 페이지라면 리스트를 다시 clear 해준다.
-                searchedUsersList = ArrayList()
-                //userListRcyAdapter.submitList(null)//새로 그려주기 위해서 submitlist null보내서 초기화
-            }
-            it?.items?.let {searUSerList->
-                if(!searUSerList.isNullOrEmpty()){//검색한  결과가 있는 경우
-                    searchedUsersList?.addAll(searUSerList)
-
-                    searchedUsersList?.map {searchUser->
-                        if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == searchUser.id } == true) {
-                            searchUser.isMyFavorite = true
-                        }
-                    }
-
-                    userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
-                    binding.emptyView.visibility = View.GONE
-                }
-            }//검색한 데이터 모두 넣어줌.
-        }, {call, callback ,errorBody->
-            if(errorBody ==REQUEST_RETRY_CALLBACK){//에러코드가  콜백 요청일때만  callback retry
-              Util.retryCall(call,callback)
-            }
-        })
+//        userRepository.getSearchUsers(binding.editSearchUser.text.toString(), page, perPage, {
+//            totalDataCount = it?.total_count //전체 데이터 숫자 넣어줌.
+//
+//            if(page==1){//첫번째 페이지라면 리스트를 다시 clear 해준다.
+//                searchedUsersList = ArrayList()
+//                //userListRcyAdapter.submitList(null)//새로 그려주기 위해서 submitlist null보내서 초기화
+//            }
+//            it?.items?.let {searUSerList->
+//                if(!searUSerList.isNullOrEmpty()){//검색한  결과가 있는 경우
+//                    searchedUsersList?.addAll(searUSerList)
+//
+//                    searchedUsersList?.map {searchUser->
+//                        if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == searchUser.id } == true) {
+//                            searchUser.isMyFavorite = true
+//                        }
+//                    }
+//
+//                    userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
+//                    binding.emptyView.visibility = View.GONE
+//                }
+//            }//검색한 데이터 모두 넣어줌.
+//        }, {errorBody->
+//            if(errorBody ==REQUEST_RETRY_CALLBACK){//에러코드가  콜백 요청일때만  callback retry
+//
+//            }
+//        })
     }
 
     companion object{

@@ -5,6 +5,7 @@ import com.example.presentation.model.SearchedUsers
 import com.example.presentation.source.local.UserLocalDataSource
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSource
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -25,14 +26,11 @@ class UserRepositoryImpl(
     override fun getSearchUsers(
         query: String,
         page: Int,
-        perPage: Int,
-        onSuccess: (SearchedUsers?) -> Unit,
-        onFailure: (call: Call<SearchedUsers>, callback: Callback<SearchedUsers>,errorCode:Int?) -> Unit,
-    ) {
-        userRemoteDataSource.getSearchUsers(
-            query, page, perPage, onSuccess,onFailure
+        perPage: Int
+    ) = userRemoteDataSource.getSearchUsers(
+            query, page, perPage
         )
-    }
+
 
 
 }
