@@ -1,6 +1,7 @@
 package com.example.presentation.retrofit
 
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitHelper {
@@ -10,6 +11,7 @@ object RetrofitHelper {
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(ServerIp.BaseUrl)
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

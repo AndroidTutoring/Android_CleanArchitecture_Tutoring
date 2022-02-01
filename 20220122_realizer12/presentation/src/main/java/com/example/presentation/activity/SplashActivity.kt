@@ -1,30 +1,37 @@
 package com.example.presentation.activity
 
 import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import android.view.View
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.model.SearchedUsers
 import com.example.presentation.repository.UserRepository
 import com.example.presentation.repository.UserRepositoryImpl
-import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.room.FavoriteMarkDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.util.Const
 import com.example.presentation.util.Util
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.functions.BiFunction
+import io.reactivex.rxjava3.functions.Function
+import io.reactivex.rxjava3.functions.Function3
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding.inflate(it) }) {
 
-    private var apiRetryCount = 0
+    private lateinit var disposable:Disposable
 
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = FavoriteMarkDataBase.getInstance(this.applicationContext)
@@ -35,23 +42,34 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
 
     override fun onResume() {
         super.onResume()
-        searUserInfo()
+
+        disposable= Single.zip(
+            getGitHubUserInfo().subscribeOn(Schedulers.io()).map {
+            if(it.isSuccessful) {
+                it.body()
+            }else {
+                throw Throwable()
+            }
+        }.retryWhen {errorObservable ->
+            errorObservable.delay(3,TimeUnit.SECONDS).take(2)
+        }.observeOn(AndroidSchedulers.mainThread())
+            ,Single.timer(2,TimeUnit.SECONDS),
+            { searchedUsers,_->
+                gotoMainActivity(searchedUsers?.items)
+            }).onErrorReturn {
+               showToast("유저 정보를 가져올수가 없습니다.")
+        }.subscribe()
+
     }
 
+    //유저 정보 가져오기
+    private fun getGitHubUserInfo()=userRepository.getSearchUsers(query = "realizer12",1,10)
 
-    //유저 검색 -> 내 깃헙 아이디 검색
-    private fun searUserInfo() {
-        userRepository.getSearchUsers(query = "realizer12", 1, 10, {
-            val items = it?.items
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                gotoMainActivity(items)
-            },2000)//통신 성공하고  2초뒤에 메인으로
-
-        }, {call, callback,errorCode->
-            //errocode와 상관없이  통신 재시도
-            retryApiCall(call,callback)
-        })
+    override fun onStop() {
+        super.onStop()
+        if(!disposable.isDisposed){
+           disposable.dispose()
+        }
     }
 
     //메인 가기
@@ -60,20 +78,6 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
         intent.putExtra(PARAM_INIT_USER_INFO,searchUsers)
         startActivity(intent)
         finish()
-    }
-
-    //응답 실패시  3초 간격으로 api call 해줌.
-    private fun <T>retryApiCall(call: Call<T>,callback: Callback<T>) {
-        ++apiRetryCount
-        if (apiRetryCount < 3) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                //통신 재시도
-                Util.retryCall(call = call, callback = callback)
-            }, 3000)//3초 간격으로  api call
-        }else{
-            showToast("유저목록을 가져오는데 실패하였습니다. ")
-            apiRetryCount = 0
-        }
     }
 
     companion object{
