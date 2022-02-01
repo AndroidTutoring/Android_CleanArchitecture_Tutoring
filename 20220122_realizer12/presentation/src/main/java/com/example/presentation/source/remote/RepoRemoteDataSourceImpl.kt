@@ -18,17 +18,3 @@ class RepoRemoteDataSourceImpl:RepoRemoteDataSource {
     }
 
 }
-
-//.enqueue(object : Callback<ArrayList<UserRepo>> {
-//    override fun onResponse(
-//        call: Call<ArrayList<UserRepo>>,
-//        response: Response<ArrayList<UserRepo>>
-//    ) {
-//        if(response.isSuccessful){
-//            onSuccess(response.body())
-//        }
-//    }
-//    override fun onFailure(call: Call<ArrayList<UserRepo>>, t: Throwable) {
-//        onFailure(t)
-//    }
-//})
