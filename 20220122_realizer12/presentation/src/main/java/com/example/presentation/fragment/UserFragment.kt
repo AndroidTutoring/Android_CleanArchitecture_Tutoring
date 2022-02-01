@@ -17,6 +17,8 @@ import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 //유저 프래그먼트
 class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
@@ -161,32 +163,33 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
 
     //유저 검색
     private fun searchUsers() {
-//        userRepository.getSearchUsers(binding.editSearchUser.text.toString(), page, perPage, {
-//            totalDataCount = it?.total_count //전체 데이터 숫자 넣어줌.
-//
-//            if(page==1){//첫번째 페이지라면 리스트를 다시 clear 해준다.
-//                searchedUsersList = ArrayList()
-//                //userListRcyAdapter.submitList(null)//새로 그려주기 위해서 submitlist null보내서 초기화
-//            }
-//            it?.items?.let {searUSerList->
-//                if(!searUSerList.isNullOrEmpty()){//검색한  결과가 있는 경우
-//                    searchedUsersList?.addAll(searUSerList)
-//
-//                    searchedUsersList?.map {searchUser->
-//                        if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == searchUser.id } == true) {
-//                            searchUser.isMyFavorite = true
-//                        }
-//                    }
-//
-//                    userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
-//                    binding.emptyView.visibility = View.GONE
-//                }
-//            }//검색한 데이터 모두 넣어줌.
-//        }, {errorBody->
-//            if(errorBody ==REQUEST_RETRY_CALLBACK){//에러코드가  콜백 요청일때만  callback retry
-//
-//            }
-//        })
+        userRepository.getSearchUsers(binding.editSearchUser.text.toString(), page, perPage)
+         .subscribeOn(Schedulers.io())
+         .retry()
+         .observeOn(AndroidSchedulers.mainThread())
+         .subscribe({
+               totalDataCount = it.body()?.total_count
+
+               if(page ==1){
+                   searchedUsersList = ArrayList()
+               }
+
+              it.body()?.items.let { searUSerList ->
+                 if (!searUSerList.isNullOrEmpty()) {//검색한  결과가 있는 경우
+                     searchedUsersList?.addAll(searUSerList)
+
+                     searchedUsersList?.map { searchUser ->
+                         if (getFavoriteUserList()?.any { favoriteUser -> favoriteUser.id == searchUser.id } == true) {
+                             searchUser.isMyFavorite = true
+                         }
+                     }
+                     userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
+                     binding.emptyView.visibility = View.GONE
+                 }
+             }
+         },{
+
+         })
     }
 
     companion object{
