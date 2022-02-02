@@ -1,33 +1,18 @@
 package com.example.presentation.activity
 
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.SearchedUser
-import com.example.presentation.model.SearchedUsers
 import com.example.presentation.repository.UserRepository
 import com.example.presentation.repository.UserRepositoryImpl
 import com.example.presentation.room.FavoriteMarkDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
-import com.example.presentation.util.Const
-import com.example.presentation.util.Util
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.functions.BiFunction
-import io.reactivex.rxjava3.functions.Function
-import io.reactivex.rxjava3.functions.Function3
-import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding.inflate(it) }) {
