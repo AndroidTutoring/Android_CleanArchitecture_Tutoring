@@ -14,9 +14,9 @@ interface FavoriteDao {
     fun setFavoriteMark(vararg searchedUser: SearchedUser):Completable//즐겨 찾기 클릭시 local db에 추가
 
     //내가 즐겨찾기한  깃 유저들 모두 가져오기
-    @Query("SELECT * FROM favoriteMarkTable WHERE isMyFavorite = :isMyFavorite")
+    @Query("SELECT * FROM favoriteMarkTable WHERE is_my_favorite = :isMyFavorite")
     fun getFavoriteGitUsers(isMyFavorite:Boolean): Single<List<SearchedUser>>
 
-    @Query("DELETE FROM favoriteMarkTable WHERE userId = :userId")
+    @Query("DELETE FROM favoriteMarkTable WHERE user_id = :userId")
     fun deleteFavoriteUser(userId:Long?):Completable
 }

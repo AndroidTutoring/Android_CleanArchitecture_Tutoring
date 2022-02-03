@@ -8,7 +8,7 @@ import com.example.presentation.model.SearchedUser
 
 @Database(
     entities = [SearchedUser::class],
-    version = 1,
+    version = 2,
     exportSchema = false//schema 구조 export false처리
 )
 abstract class FavoriteMarkDataBase : RoomDatabase() {
