@@ -12,9 +12,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 open class BaseFragment<VB : ViewBinding>(
     private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB
 ) : Fragment() {
-    val compositeDisposable = CompositeDisposable()
+    protected val compositeDisposable = CompositeDisposable()
     private var mBinding: VB? = null
-    val binding get() = mBinding!!
+    protected val binding get() = mBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,

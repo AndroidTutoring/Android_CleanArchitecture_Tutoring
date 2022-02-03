@@ -10,9 +10,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 //베이스 엑티비티 뷰바인딩 적용
 open class BaseActivity<VB : ViewBinding>(private val bindingFactory: (LayoutInflater) -> VB) :
     AppCompatActivity() {
-    val compositeDisposable = CompositeDisposable()
+    protected val compositeDisposable = CompositeDisposable()
     private var mBinding: VB? = null
-    val binding get() = mBinding!!
+    protected val binding get() = mBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
