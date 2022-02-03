@@ -5,7 +5,7 @@ import com.example.presentation.util.TimberDebugTree
 import timber.log.Timber
 
 
-class GlobalApplication: Application() {
+class Application: Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(TimberDebugTree())
