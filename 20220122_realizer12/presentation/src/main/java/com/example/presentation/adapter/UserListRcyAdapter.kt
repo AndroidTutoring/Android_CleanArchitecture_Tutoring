@@ -10,11 +10,11 @@ import com.example.presentation.viewholder.UserViewHolder
 
 class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
 
-    private var onItemClickListener: ItemCliCkListener? = null
+    private var onItemClickListener: ItemClickListener? = null
     private var onFavoriteMarkClickListener: FavoriteClickListener? = null
 
     //아이템 전체 클릭
-    interface ItemCliCkListener{
+    interface ItemClickListener{
         fun onItemClickListener(searchedUser: SearchedUser)//아이템 클릭시 -> 디테일 화면으로?
     }
 
@@ -31,7 +31,7 @@ class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
 
 
     //아이템 전체 클릭
-    fun setItemClickListener(itemCliCkListener: ItemCliCkListener){
+    fun setItemClickListener(itemCliCkListener: ItemClickListener){
         this.onItemClickListener = itemCliCkListener
     }
 

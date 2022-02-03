@@ -130,7 +130,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         })
 
         //아이템 클릭시 처리
-        userListRcyAdapter.setItemClickListener(object :UserListRcyAdapter.ItemCliCkListener{
+        userListRcyAdapter.setItemClickListener(object :UserListRcyAdapter.ItemClickListener{
             override fun onItemClickListener(searchedUser: SearchedUser) {
                 gotoDetailActivity(searchedUser)
             }
