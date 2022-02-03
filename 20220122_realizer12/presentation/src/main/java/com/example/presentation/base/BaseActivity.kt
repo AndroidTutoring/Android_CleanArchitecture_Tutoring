@@ -28,7 +28,7 @@ open class BaseActivity<VB : ViewBinding>(private val bindingFactory: (LayoutInf
         super.onDestroy()
 
         //화면 destroy될때  disposable들 모두 clear -> 메모리 누수 방지
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }

@@ -32,7 +32,7 @@ open class BaseFragment<VB : ViewBinding>(
     override fun onDestroyView() {
         super.onDestroyView()
 
-        compositeDisposable.clear()
+        compositeDisposable.dispose()
     }
 
 }
