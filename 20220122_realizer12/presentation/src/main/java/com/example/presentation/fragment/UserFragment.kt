@@ -20,6 +20,7 @@ import com.example.presentation.util.Util.search
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.schedulers.Schedulers
 import timber.log.Timber
 
@@ -191,6 +192,9 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
     //유저 검색
     private fun searchUsers() {
 
+        RxJavaPlugins.setErrorHandler {
+            Timber.v("이거여 ->"+it.message)
+        }
 
         //local , remote  zip으로  동시에 다 처리되면  뿌려지게 수정
         Single.zip(
@@ -199,10 +203,8 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                 page,
                 perPage
             ).subscribeOn(Schedulers.io())
-            .retry(2)
-            .observeOn(AndroidSchedulers.mainThread()),
-            userRepository.getFavoriteUsers()!!.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread()),{
+            .retry(2),
+            userRepository.getFavoriteUsers(),{
                     remote,local->
                 totalDataCount = remote.body()?.total_count
 
@@ -220,11 +222,15 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                         }
                     }
                 }
+                searchedUsersList
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({searchedUsersList->
                 userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
                 binding.emptyView.visibility = View.GONE
-            }).onErrorReturn {
-                  showToast("유저 검색 중 문제가 생김")
-            }.subscribe()
+            },{
+              showToast("유저 정보를 가져오는데 문제가 생겼습니다.. ")
+            })
     }
 
     companion object{
