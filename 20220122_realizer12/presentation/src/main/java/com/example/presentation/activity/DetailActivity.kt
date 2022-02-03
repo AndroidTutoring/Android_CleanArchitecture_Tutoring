@@ -2,7 +2,7 @@ package com.example.presentation.activity
 
 import android.os.Bundle
 import android.view.View
-import com.example.presentation.adapter.RepoListRcyAdapter
+import com.example.presentation.adapter.RepoListRvAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityDetailBinding
 import com.example.presentation.fragment.UserFragment
@@ -18,7 +18,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
     //유저 정보
     private var userInfo: SearchedUser? = null
 
-    private lateinit var repoRcyAdapter: RepoListRcyAdapter
+    private lateinit var repoRvAdapter: RepoListRvAdapter
     private val repoRepository: RepoRepository by lazy {
         val remoteDataSource = RepoRemoteDataSourceImpl()
         RepoRepositoryImpl(remoteDataSource)
@@ -36,9 +36,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
         userInfo = intent.getParcelableExtra(UserFragment.PARAM_USER_INFO)
 
         //리시이클러뷰 세팅
-        repoRcyAdapter = RepoListRcyAdapter()
+        repoRvAdapter = RepoListRvAdapter()
         binding.rcyUserRepoList.apply {
-            adapter = repoRcyAdapter
+            adapter = repoRvAdapter
         }
     }
 
@@ -52,7 +52,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({userRepoList->
                 binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
-                repoRcyAdapter.submitList(userRepoList)
+                repoRvAdapter.submitList(userRepoList)
             }, {t->
                 showToast(t.message.toString())
             })
