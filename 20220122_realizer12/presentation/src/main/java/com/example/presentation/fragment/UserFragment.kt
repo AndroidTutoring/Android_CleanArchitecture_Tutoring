@@ -163,7 +163,9 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                 }else{
                     showToast("즐겨찾기 추가")
                     searchedUser.isMyFavorite = true
-                    userRepository.addFavoriteUser(searchedUser)?.subscribeOn(Schedulers.io())
+                    userRepository
+                        .addFavoriteUser(searchedUser)
+                        ?.subscribeOn(Schedulers.io())
                         ?.observeOn(AndroidSchedulers.mainThread())
                         ?.doOnComplete {
 
