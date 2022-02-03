@@ -66,8 +66,10 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
 
         newList.map { user->
             Timber.v("adasd ->"+user.login)
-            userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())?.subscribe({favoriteUser ->
+            userRepository.getFavoriteUsers()
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe({favoriteUser ->
                     if(!favoriteUser.any { it.id  == user.id}){
                         user.isMyFavorite = false
                     }
@@ -89,8 +91,10 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         if(!searchedUsersList.isNullOrEmpty()){
 
             searchedUsersList?.map {searchUser->
-                userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())?.subscribe({favoriteUser ->
+                userRepository.getFavoriteUsers()
+                    ?.subscribeOn(Schedulers.io())
+                    ?.observeOn(AndroidSchedulers.mainThread())
+                    ?.subscribe({favoriteUser ->
                         if(favoriteUser.any {eachUser-> eachUser.id  == searchUser.id}){
                             searchUser.isMyFavorite = true
                         }
@@ -159,7 +163,11 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                             userListRcyAdapter.submitList(newList.toMutableList())
                             userListRcyAdapter.notifyItemChanged(position)
 
-                        }?.subscribe()
+                        }
+                        ?.onErrorReturn{
+                            showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
+                        }
+                        ?.subscribe()
                 }else{
                     showToast("즐겨찾기 추가")
                     searchedUser.isMyFavorite = true
@@ -180,7 +188,11 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                             userListRcyAdapter.submitList(newList.toMutableList())
                             userListRcyAdapter.notifyItemChanged(position)
 
-                        }?.subscribe()
+                        }
+                        ?.onErrorReturn{
+                            showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
+                        }
+                        ?.subscribe()
                 }
             }
         })
