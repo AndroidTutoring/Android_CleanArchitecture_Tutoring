@@ -48,12 +48,11 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
 
         repoRepository.getUserRepoList(userName = userName)
             .subscribeOn(Schedulers.io())
+            .filter { !it.isNullOrEmpty() }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({userRepoList->
-                if(!userRepoList.isNullOrEmpty()){
-                    binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
-                    repoRcyAdapter.submitList(userRepoList)
-                }
+                binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
+                repoRcyAdapter.submitList(userRepoList)
             }, {t->
                 showToast(t.message.toString())
             })
