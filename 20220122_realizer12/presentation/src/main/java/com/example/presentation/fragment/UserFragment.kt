@@ -210,9 +210,9 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                     searchedUsersList = ArrayList()
                 }
 
-                remote.body()?.items.let { searUSerList->
-                    if (!searUSerList.isNullOrEmpty()) {
-                      searchedUsersList?.addAll(searUSerList)
+                remote.body()?.items.let { searUserList->
+                    if (!searUserList.isNullOrEmpty()) {
+                      searchedUsersList?.addAll(searUserList)
                     }
                     searchedUsersList?.map { searchedUser ->
                         if(local.any{it.id == searchedUser.id}){
