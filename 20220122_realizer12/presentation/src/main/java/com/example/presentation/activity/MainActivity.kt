@@ -27,8 +27,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inf
     private fun backPressCheck(){
         //항상 누른거 이전걸로 체크해야되니까 buffer count 2 주고 skip 1로줌.
         behaviorSubject.buffer(2,1)
-            .observeOn(AndroidSchedulers.mainThread())
             .map { it[0] to it[1] }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 if (it.second - it.first < 2000L) {//첫번째 누른것과 두번째 누른 값의 차가 2초이내이면 뒤로가기 처리
                     super.onBackPressed()
