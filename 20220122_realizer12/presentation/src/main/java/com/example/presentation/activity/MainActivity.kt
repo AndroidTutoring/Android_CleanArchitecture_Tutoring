@@ -15,7 +15,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inf
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSet()
-        backPressProcess()
+        backPressCheck()
     }
 
     override fun onBackPressed() {
@@ -23,8 +23,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inf
         behaviorSubject.onNext(System.currentTimeMillis())
     }
 
-    //뒤로가기 프로세스 처리
-    private fun backPressProcess(){
+    //뒤로가기 프로세스 체크처리
+    private fun backPressCheck(){
         //항상 누른거 이전걸로 체크해야되니까 buffer count 2 주고 skip 1로줌.
         behaviorSubject.buffer(2,1)
             .observeOn(AndroidSchedulers.mainThread())
@@ -39,7 +39,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inf
     }
 
     //초기 뷰 세팅
-    fun initSet(){
+    private fun initSet(){
 
        //메인 뷰페이져  FragmentStateAdapter 연결
        binding.vpMain.apply {
