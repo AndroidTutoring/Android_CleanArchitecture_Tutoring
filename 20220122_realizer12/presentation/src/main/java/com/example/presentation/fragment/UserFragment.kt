@@ -164,7 +164,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                     searchedUser.isMyFavorite = true
                     userRepository
                         .addFavoriteUser(searchedUser)
-                        ?.subscribeOn(Schedulers.io())
+                        .subscribeOn(Schedulers.io())
                         ?.observeOn(AndroidSchedulers.mainThread())
                         ?.doOnComplete {
                             userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())

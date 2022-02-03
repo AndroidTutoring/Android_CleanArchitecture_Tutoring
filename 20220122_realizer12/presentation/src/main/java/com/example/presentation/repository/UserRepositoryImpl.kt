@@ -20,8 +20,8 @@ class UserRepositoryImpl(
         return userLocalDataSource.deleteFavoriteUser(deletedFavoriteUser)
     }
 
-    override fun addFavoriteUser(vararg favoriteUser: SearchedUser):Completable {
-       return userLocalDataSource.addFavoriteUser(*favoriteUser)
+    override fun addFavoriteUser(favoriteUser: SearchedUser):Completable {
+       return userLocalDataSource.addFavoriteUser(favoriteUser)
     }
 
     override fun getFavoriteUsers(): Single<List<SearchedUser>> = userLocalDataSource.getFavoriteUsers()

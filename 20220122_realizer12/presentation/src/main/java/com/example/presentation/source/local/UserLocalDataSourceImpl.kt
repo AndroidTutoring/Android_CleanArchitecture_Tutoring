@@ -7,8 +7,8 @@ import io.reactivex.rxjava3.core.Single
 
 class UserLocalDataSourceImpl(private val favoriteDao: FavoriteDao):UserLocalDataSource {
 
-    override fun addFavoriteUser(vararg favoriteUser: SearchedUser): Completable {
-       return favoriteDao.setFavoriteMark(*favoriteUser)
+    override fun addFavoriteUser(favoriteUser: SearchedUser): Completable {
+       return favoriteDao.setFavoriteMark(favoriteUser)
     }
 
     override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUser):Completable {
