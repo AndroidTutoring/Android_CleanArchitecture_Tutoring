@@ -36,7 +36,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = FavoriteMarkDataBase.getInstance(requireContext().applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl()
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase?.getFavoriteMarkDao())
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
         UserRepositoryImpl(localDataSource,remoteDataSource)
     }
 

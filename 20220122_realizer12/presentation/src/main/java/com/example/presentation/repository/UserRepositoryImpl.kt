@@ -16,15 +16,15 @@ class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource
 ):UserRepository {
 
-    override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUser):Completable? {
+    override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUser):Completable {
         return userLocalDataSource.deleteFavoriteUser(deletedFavoriteUser)
     }
 
-    override fun addFavoriteUser(vararg favoriteUser: SearchedUser):Completable? {
+    override fun addFavoriteUser(vararg favoriteUser: SearchedUser):Completable {
        return userLocalDataSource.addFavoriteUser(*favoriteUser)
     }
 
-    override fun getFavoriteUsers(): Single<List<SearchedUser>>? = userLocalDataSource.getFavoriteUsers()
+    override fun getFavoriteUsers(): Single<List<SearchedUser>> = userLocalDataSource.getFavoriteUsers()
     override fun getSearchUsers(
         query: String,
         page: Int,

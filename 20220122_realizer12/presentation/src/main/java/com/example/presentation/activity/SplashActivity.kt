@@ -22,7 +22,7 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = FavoriteMarkDataBase.getInstance(this.applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl()
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase?.getFavoriteMarkDao())
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
         UserRepositoryImpl(localDataSource,remoteDataSource)
     }
 
