@@ -8,6 +8,6 @@ import retrofit2.Callback
 
 interface RepoRemoteDataSource {
     fun getUserRepoList(
-        userName:String = ""
+        userName:String
     ): Single<ArrayList<UserRepo>>
 }

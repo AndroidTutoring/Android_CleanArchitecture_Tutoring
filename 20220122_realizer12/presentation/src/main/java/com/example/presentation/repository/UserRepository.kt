@@ -14,7 +14,7 @@ interface UserRepository {
     fun addFavoriteUser(vararg favoriteUser: SearchedUser):Completable?//유저 즐겨찾기에 추가
     fun getFavoriteUsers():Single<List<SearchedUser>>?//즐겨 찾기 유저 다 가져오기
     fun getSearchUsers(
-        query:String = "",
+        query:String,
         page:Int,
         perPage:Int
     ): Single<Response<SearchedUsers>>
