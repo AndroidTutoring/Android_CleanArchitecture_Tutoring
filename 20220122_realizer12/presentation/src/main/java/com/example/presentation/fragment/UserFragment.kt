@@ -197,7 +197,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
             .subscribeOn(Schedulers.io())
             .retry()
             .observeOn(AndroidSchedulers.mainThread()),
-            userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
+            userRepository.getFavoriteUsers()!!.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread()),{
                     remote,local->
                 totalDataCount = remote.body()?.total_count
