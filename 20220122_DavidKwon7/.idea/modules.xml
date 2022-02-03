@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidTutoring_HJ.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidTutoring_HJ.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AndroidTutoring_HJ.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AndroidTutoring_HJ.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/presentation/AndroidTutoring_HJ.presentation.iml" filepath="$PROJECT_DIR$/.idea/modules/presentation/AndroidTutoring_HJ.presentation.iml" />
+    </modules>
+  </component>
+</project>
