@@ -151,18 +151,8 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                         ?.subscribeOn(Schedulers.io())
                         ?.observeOn(AndroidSchedulers.mainThread())
                         ?.doOnComplete {
-
-                            val newList = userListRcyAdapter.currentList.toMutableList()
-
-                            newList.map { user->
-                                if(searchedUser.id == user.id){
-                                    user.isMyFavorite = searchedUser.isMyFavorite
-                                }
-                            }
-
-                            userListRcyAdapter.submitList(newList.toMutableList())
+                            userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
                             userListRcyAdapter.notifyItemChanged(position)
-
                         }
                         ?.onErrorReturn{
                             showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
@@ -176,18 +166,8 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                         ?.subscribeOn(Schedulers.io())
                         ?.observeOn(AndroidSchedulers.mainThread())
                         ?.doOnComplete {
-
-                            val newList = userListRcyAdapter.currentList.toMutableList()
-
-                            newList.map { user->
-                                if(searchedUser.id == user.id){
-                                    user.isMyFavorite = searchedUser.isMyFavorite
-                                }
-                            }
-
-                            userListRcyAdapter.submitList(newList.toMutableList())
+                            userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
                             userListRcyAdapter.notifyItemChanged(position)
-
                         }
                         ?.onErrorReturn{
                             showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
