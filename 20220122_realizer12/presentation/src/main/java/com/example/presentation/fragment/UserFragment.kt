@@ -195,7 +195,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         //local , remote  zip으로  동시에 다 처리되면  뿌려지게 수정
         Single.zip(userRepository.getSearchUsers(binding.editSearchUser.text.toString(), page, perPage)
             .subscribeOn(Schedulers.io())
-            .retry()
+            .retry(2)
             .observeOn(AndroidSchedulers.mainThread()),
             userRepository.getFavoriteUsers()!!.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread()),{
