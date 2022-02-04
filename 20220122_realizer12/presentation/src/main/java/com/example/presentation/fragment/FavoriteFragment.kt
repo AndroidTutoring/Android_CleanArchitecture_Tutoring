@@ -41,8 +41,9 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
     }
 
     //리스너 기능 모음.
-    private fun listenerEvent(){
-        favoriteMarkedRvAdapter.setFavoriteMarkClickListener(object:UserListRvAdapter.FavoriteClickListener{
+    private fun listenerEvent() {
+        favoriteMarkedRvAdapter.setFavoriteMarkClickListener(object :
+            UserListRvAdapter.FavoriteClickListener {
             override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
 
                 userRepository.deleteFavoriteUser(searchedUser)
