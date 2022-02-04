@@ -2,7 +2,7 @@ package com.example.presentation.fragment
 
 import android.os.Bundle
 import android.view.View
-import com.example.presentation.adapter.UserListRcyAdapter
+import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentFavoriteBinding
 import com.example.presentation.model.SearchedUser
@@ -15,12 +15,11 @@ import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
-import timber.log.Timber
 
 //즐겨찾기 프래그먼트
 class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBinding::inflate) {
 
-    private lateinit var favoriteMarkedRcyAdapter: UserListRcyAdapter
+    private lateinit var favoriteMarkedRvAdapter: UserListRvAdapter
 
 
     private val userRepository: UserRepository by lazy {
@@ -43,16 +42,16 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
 
     //리스너 기능 모음.
     private fun listenerEvent(){
-        favoriteMarkedRcyAdapter.setFavoriteMarkClickListener(object:UserListRcyAdapter.FavoriteClickListener{
+        favoriteMarkedRvAdapter.setFavoriteMarkClickListener(object:UserListRvAdapter.FavoriteClickListener{
             override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
 
                 userRepository.deleteFavoriteUser(searchedUser)
                     ?.subscribeOn(Schedulers.io())
                     ?.observeOn(AndroidSchedulers.mainThread())
                     ?.doOnComplete {
-                        val newList= favoriteMarkedRcyAdapter.currentList.toMutableList()
+                        val newList= favoriteMarkedRvAdapter.currentList.toMutableList()
                         newList.removeAll { it.id == searchedUser.id }
-                        favoriteMarkedRcyAdapter.submitList(newList.toList())
+                        favoriteMarkedRvAdapter.submitList(newList.toList())
                      }
                     ?.subscribe()?.addTo(compositeDisposable)
             }
@@ -63,9 +62,9 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
     private fun initSet(){
 
         //리사이클러뷰 세팅
-       favoriteMarkedRcyAdapter = UserListRcyAdapter()
+        favoriteMarkedRvAdapter = UserListRvAdapter()
        binding.rcyFavoriteList.apply {
-           adapter = favoriteMarkedRcyAdapter
+           adapter = favoriteMarkedRvAdapter
        }
     }
 
@@ -73,7 +72,7 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
     private fun getFavoriteGitUsers(){
         userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ favoriteUsers ->
-                favoriteMarkedRcyAdapter.submitList(favoriteUsers)
+                favoriteMarkedRvAdapter.submitList(favoriteUsers)
             }, {
                 showToast("로컬 디비 가져오는 중 문제가 생김")
             })?.addTo(compositeDisposable)

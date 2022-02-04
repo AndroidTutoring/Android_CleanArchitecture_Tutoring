@@ -8,7 +8,7 @@ import com.example.presentation.databinding.ItemRepoUserBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.viewholder.UserViewHolder
 
-class UserListRcyAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
+class UserListRvAdapter:ListAdapter<SearchedUser,UserViewHolder> (diffUtil){
 
     private var onItemClickListener: ItemClickListener? = null
     private var onFavoriteMarkClickListener: FavoriteClickListener? = null

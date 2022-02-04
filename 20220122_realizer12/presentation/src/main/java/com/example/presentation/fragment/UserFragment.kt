@@ -6,7 +6,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.activity.DetailActivity
 import com.example.presentation.activity.SplashActivity
-import com.example.presentation.adapter.UserListRcyAdapter
+import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.SearchedUser
@@ -32,7 +32,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
    private var totalDataCount:Int? = 0//query 에 대한 전체 검색어 수
 
    private var searchedUsersList:ArrayList<SearchedUser>? = ArrayList()
-   private lateinit var userListRcyAdapter: UserListRcyAdapter
+   private lateinit var userListRcyAdapter: UserListRvAdapter
 
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = LocalDataBase.getInstance(requireContext().applicationContext)
@@ -53,7 +53,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
 
         binding.emptyView.visibility = View.VISIBLE
 
-        userListRcyAdapter = UserListRcyAdapter()
+        userListRcyAdapter = UserListRvAdapter()
         binding.rcyUserList.apply {
             adapter = userListRcyAdapter
         }
@@ -136,14 +136,14 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
         })
 
         //아이템 클릭시 처리
-        userListRcyAdapter.setItemClickListener(object :UserListRcyAdapter.ItemClickListener{
+        userListRcyAdapter.setItemClickListener(object :UserListRvAdapter.ItemClickListener{
             override fun onItemClickListener(searchedUser: SearchedUser) {
                 gotoDetailActivity(searchedUser)
             }
         })
 
         //즐겨 찾기 클릭시 처리
-            userListRcyAdapter.setFavoriteMarkClickListener(object :UserListRcyAdapter.FavoriteClickListener{
+            userListRcyAdapter.setFavoriteMarkClickListener(object :UserListRvAdapter.FavoriteClickListener{
                 override fun onFavoriteMarkListener(searchedUser: SearchedUser,position:Int) {
 
                 if(searchedUser.isMyFavorite){
