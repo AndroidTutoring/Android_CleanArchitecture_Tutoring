@@ -150,31 +150,31 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
                     showToast("즐겨찾기 취소")
                     searchedUser.isMyFavorite = false
                     userRepository.deleteFavoriteUser(searchedUser)
-                        ?.subscribeOn(Schedulers.io())
-                        ?.observeOn(AndroidSchedulers.mainThread())
-                        ?.doOnComplete {
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnComplete {
                             userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
                             userListRcyAdapter.notifyItemChanged(position)
                         }
-                        ?.onErrorReturn{
+                        .onErrorReturn{
                             showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
                         }
-                        ?.subscribe()
+                        .subscribe()
                 }else{
                     showToast("즐겨찾기 추가")
                     searchedUser.isMyFavorite = true
                     userRepository
                         .addFavoriteUser(searchedUser)
                         .subscribeOn(Schedulers.io())
-                        ?.observeOn(AndroidSchedulers.mainThread())
-                        ?.doOnComplete {
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnComplete {
                             userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
                             userListRcyAdapter.notifyItemChanged(position)
                         }
-                        ?.onErrorReturn{
+                        .onErrorReturn{
                             showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
                         }
-                        ?.subscribe()
+                        .subscribe()
                 }
             }
         })
