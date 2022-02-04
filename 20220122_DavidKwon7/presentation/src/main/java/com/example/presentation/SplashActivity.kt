@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit
 
 class SplashActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySplashBinding
-    private lateinit var disposables: CompositeDisposable
+    private var binding: ActivitySplashBinding?=null
+    private val disposables: CompositeDisposable?=null
 
 
     private val backButtonSubject: BehaviorSubject<Long> = BehaviorSubject.createDefault(0L)
@@ -25,7 +25,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding!!.root)
 
         initTimer()
         back2()
@@ -34,7 +34,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        disposables.clear()
+        disposables?.clear()
         super.onDestroy()
     }
 
