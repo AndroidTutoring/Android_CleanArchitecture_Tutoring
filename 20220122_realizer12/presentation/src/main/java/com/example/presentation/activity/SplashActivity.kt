@@ -6,6 +6,7 @@ import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.repository.UserRepository
 import com.example.presentation.repository.UserRepositoryImpl
+import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
@@ -21,7 +22,7 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
 
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = LocalDataBase.getInstance(this.applicationContext)
-        val remoteDataSource = UserRemoteDataSourceImpl()
+        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
         val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
         UserRepositoryImpl(localDataSource,remoteDataSource)
     }

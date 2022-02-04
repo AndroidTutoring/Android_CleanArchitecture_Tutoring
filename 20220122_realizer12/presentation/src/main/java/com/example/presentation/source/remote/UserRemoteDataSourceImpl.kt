@@ -5,7 +5,7 @@ import com.example.presentation.retrofit.RetrofitHelper
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
 
-class UserRemoteDataSourceImpl:UserRemoteDataSource {
+class UserRemoteDataSourceImpl(private val retrofitHelper: RetrofitHelper) : UserRemoteDataSource {
 
     //유저 검색
     override fun getSearchUsers(
@@ -13,7 +13,7 @@ class UserRemoteDataSourceImpl:UserRemoteDataSource {
         page: Int,
         perPage: Int
     ): Single<Response<SearchedUsers>> {
-       return RetrofitHelper.apiServices.searchUsers(query, page, perPage)
+        return retrofitHelper.apiServices.searchUsers(query, page, perPage)
     }
 
 }

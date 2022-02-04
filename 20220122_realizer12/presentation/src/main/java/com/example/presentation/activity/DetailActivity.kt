@@ -9,6 +9,7 @@ import com.example.presentation.fragment.UserFragment
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.repository.RepoRepository
 import com.example.presentation.repository.RepoRepositoryImpl
+import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.source.remote.RepoRemoteDataSourceImpl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -20,7 +21,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
 
     private lateinit var repoRvAdapter: RepoListRvAdapter
     private val repoRepository: RepoRepository by lazy {
-        val remoteDataSource = RepoRemoteDataSourceImpl()
+        val remoteDataSource = RepoRemoteDataSourceImpl(RetrofitHelper)
         RepoRepositoryImpl(remoteDataSource)
     }
 
