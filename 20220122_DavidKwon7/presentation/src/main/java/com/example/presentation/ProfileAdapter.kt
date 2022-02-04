@@ -31,8 +31,8 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
 
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+         private var listener : OnItemClickListener? = null
         private val txtName: TextView = itemView.findViewById(R.id.tv_rv_name)
         private val txtId: TextView = itemView.findViewById(R.id.tv_rv_id)
         private val txtTime : TextView = itemView.findViewById(R.id.created_time)
