@@ -52,7 +52,7 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
     }
 
     //유저 정보 가져오기
-    private fun getGitHubUserInfo()=userRepository.getSearchUsers(query = "realizer12",1,10)
+    private fun getGitHubUserInfo() = userRepository.getSearchUsers(query = "realizer12", 1, 10)
 
     override fun onPause() {
         super.onPause()
