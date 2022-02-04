@@ -7,8 +7,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.example.presentation.databinding.ActivityMainBinding
-import com.example.recylcerviewtest01.githubRepository.GetRepoRepository
 import com.example.recylcerviewtest01.githubRepository.GithubRepository
+import com.example.recylcerviewtest01.githubRepository.GithubRepositoryImpl
+import com.example.recylcerviewtest01.githubSource.local.LocalDataSource
+import com.example.recylcerviewtest01.githubSource.local.LocalDataSourceImpl
+import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSource
+import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSourceImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -22,6 +26,7 @@ class MainActivity : AppCompatActivity()  {
     private val listData = listOf<User>()
     private val position: Int?=null
     private lateinit var api: Api
+    private lateinit var userdao: UserDao
     private lateinit var binding: ActivityMainBinding
     private val disposables : CompositeDisposable by lazy {
         CompositeDisposable()
@@ -31,7 +36,10 @@ class MainActivity : AppCompatActivity()  {
         ProfileAdapter(listData,this)
     }
     private val backButtonSubject : Subject<Long> = BehaviorSubject.createDefault(0L)
-    val getRepoRepository = GetRepoRepository(api)
+    val localDataSource = LocalDataSourceImpl(dao = userdao)
+    val remoteDataSource = RemoteDataSourceImpl(api)
+    val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
+    remoteDataSource = remoteDataSource)
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +74,7 @@ class MainActivity : AppCompatActivity()  {
     @SuppressLint("CheckResult")
     private fun setAdapter(){
         AdapterData()
-            disposables.add(getRepoRepository.getRepos()
+            disposables.add(githubRepository.getRepos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(2)
@@ -90,7 +98,8 @@ class MainActivity : AppCompatActivity()  {
         adapter.setOnItemClickListener(object :
             OnItemClickListener {
             override fun onItemClick(v: View, data: User, pos: Int) {
-                repository.deleteFav()
+                repository.deleteFav(deleteUser = User(
+                    name=String(),id= String(),date = String(),url = String() ))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()

@@ -33,13 +33,7 @@ class GithubRepositoryImpl(
     }
 
 
-    override fun getRepos(): Single<List<User>> {
-        return remoteDataSource.getRepos()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError { Log.e("seungmin", "$it 발생") }
-            .retry(2)
-    }
+    override fun getRepos(): Single<List<User>> = remoteDataSource.getRepos(userName = String())
 
 
 }

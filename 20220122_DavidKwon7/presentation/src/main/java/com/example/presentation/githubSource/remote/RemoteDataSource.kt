@@ -5,7 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 interface RemoteDataSource {
-    fun getRepos() : Single<List<User>>
+    fun getRepos(userName:String) : Single<List<User>>
 
 
 }

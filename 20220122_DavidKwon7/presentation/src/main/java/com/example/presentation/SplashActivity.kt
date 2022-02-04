@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.presentation.databinding.ActivitySplashBinding
-import com.example.recylcerviewtest01.githubRepository.GetRepoRepository
 import com.example.recylcerviewtest01.githubRepository.GithubRepository
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -23,7 +22,6 @@ class SplashActivity : AppCompatActivity() {
     private var binding: ActivitySplashBinding?=null
     private var disposables: CompositeDisposable?=null
     private val githubRepository:GithubRepository?=null
-    val getRepoRepository = GetRepoRepository()
 
     private val backButtonSubject: BehaviorSubject<Long> = BehaviorSubject.createDefault(0L)
 
@@ -71,7 +69,7 @@ class SplashActivity : AppCompatActivity() {
 
 
     }
-    private fun getgithubRepository() =getRepoRepository.getRepos()
+    private fun getgithubRepository() =githubRepository?.getRepos()
 
     private fun nextPage(){
         val intent = Intent(this,MainActivity::class.java)
