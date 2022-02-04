@@ -38,7 +38,9 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
                 throw Throwable()
             }
         }.retryWhen {errorObservable ->
-            errorObservable.delay(3,TimeUnit.SECONDS).take(2)
+                errorObservable
+                    .delay(3, TimeUnit.SECONDS)
+                    .take(2)
         }.observeOn(AndroidSchedulers.mainThread())
             ,Single.timer(2,TimeUnit.SECONDS),
             { searchedUsers,_->
