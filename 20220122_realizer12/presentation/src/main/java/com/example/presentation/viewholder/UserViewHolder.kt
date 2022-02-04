@@ -10,13 +10,13 @@ class UserViewHolder(val binding: ItemRepoUserBinding) : RecyclerView.ViewHolder
     fun bind(searchedUser: SearchedUser) {
 
         //즐겨찾기 true일때  별을 색칠해준다.
-        if (searchedUser.isMyFavorite) {
-            Glide.with(itemView.context).load(android.R.drawable.btn_star_big_on)
-                .into(binding.imgBtnFavorite)
-        } else {
-            Glide.with(itemView.context).load(android.R.drawable.btn_star_big_off)
-                .into(binding.imgBtnFavorite)
-        }
+        Glide.with(itemView.context)
+            .load(if (searchedUser.isMyFavorite)
+                android.R.drawable.btn_star_big_on
+                else
+                android.R.drawable.btn_star_big_off)
+            .into(binding.imgBtnFavorite)
+
 
         Glide.with(itemView.context).load(searchedUser.avatar_url).into(binding.imgUserProfile)//유저 프로필 추가
         binding.tvNickname.text = searchedUser.login//유저 닉네임 추가
