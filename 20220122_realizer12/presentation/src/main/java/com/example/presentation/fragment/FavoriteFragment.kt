@@ -46,14 +46,14 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
             override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
 
                 userRepository.deleteFavoriteUser(searchedUser)
-                    ?.subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.doOnComplete {
-                        val newList= favoriteMarkedRvAdapter.currentList.toMutableList()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnComplete {
+                        val newList = favoriteMarkedRvAdapter.currentList.toMutableList()
                         newList.removeAll { it.id == searchedUser.id }
                         favoriteMarkedRvAdapter.submitList(newList.toList())
-                     }
-                    ?.subscribe()?.addTo(compositeDisposable)
+                    }
+                    .subscribe()?.addTo(compositeDisposable)
             }
         })
     }
