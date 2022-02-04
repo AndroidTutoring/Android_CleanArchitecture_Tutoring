@@ -5,7 +5,9 @@ import com.example.presentation.room.FavoriteDao
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
-class UserLocalDataSourceImpl(private val favoriteDao: FavoriteDao):UserLocalDataSource {
+class UserLocalDataSourceImpl(
+    private val favoriteDao: FavoriteDao
+) : UserLocalDataSource {
 
     override fun addFavoriteUser(favoriteUser: SearchedUser): Completable {
        return favoriteDao.setFavoriteMark(favoriteUser)
