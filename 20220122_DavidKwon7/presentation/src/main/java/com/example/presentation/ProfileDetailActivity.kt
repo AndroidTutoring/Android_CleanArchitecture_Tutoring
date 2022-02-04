@@ -6,8 +6,6 @@ import android.widget.TextView
 
 class ProfileDetailActivity : AppCompatActivity() {
 
-    lateinit var datas : List<User>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_detail)

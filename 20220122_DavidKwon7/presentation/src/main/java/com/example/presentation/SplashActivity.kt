@@ -30,7 +30,6 @@ class SplashActivity : AppCompatActivity() {
         initTimer()
         back2()
 
-
     }
 
     override fun onDestroy() {
