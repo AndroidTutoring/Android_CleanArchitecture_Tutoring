@@ -193,10 +193,6 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
     //유저 검색
     private fun searchUsers() {
 
-        RxJavaPlugins.setErrorHandler {
-            Timber.v("이거여 ->"+it.message)
-        }
-
         //local , remote  zip으로  동시에 다 처리되면  뿌려지게 수정
         Single.zip(
             userRepository.getSearchUsers(
