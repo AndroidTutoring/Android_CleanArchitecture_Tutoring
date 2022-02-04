@@ -79,6 +79,8 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
     fun update(githubRepos: List<User>) {
         this.githubRepos.clear()
         this.githubRepos.addAll(githubRepos)
+        this.githubRepos.size
+        this.githubRepos.take(30)
         notifyDataSetChanged()
     }
 
