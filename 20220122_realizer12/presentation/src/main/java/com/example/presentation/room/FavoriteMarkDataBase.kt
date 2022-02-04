@@ -15,20 +15,15 @@ abstract class FavoriteMarkDataBase : RoomDatabase() {
     abstract fun getFavoriteMarkDao(): FavoriteDao
 
     companion object {
-        private var INSTANCE: FavoriteMarkDataBase? = null
-        fun getInstance(context: Context): FavoriteMarkDataBase? {
-            if (INSTANCE == null) {
+        fun getInstance(context: Context): FavoriteMarkDataBase {
                 synchronized(FavoriteMarkDataBase::class) {//중복생성  방지
-                    INSTANCE = Room.databaseBuilder(
+                    return  Room.databaseBuilder(
                         context.applicationContext,
                         FavoriteMarkDataBase::class.java, "local-database.db"
-                    )
-                        .fallbackToDestructiveMigration()//버전 업데이트시 기존 데이터 못찾으면, illegalStateException  방지
-                        .allowMainThreadQueries()
-                        .build()
+                    ).fallbackToDestructiveMigration()//버전 업데이트시 기존 데이터 못찾으면, illegalStateException  방지
+                     .allowMainThreadQueries()
+                     .build()
                 }
-            }
-            return INSTANCE
         }
     }
 }
