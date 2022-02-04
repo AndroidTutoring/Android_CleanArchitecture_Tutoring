@@ -19,9 +19,8 @@ class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
     private lateinit var disposables: CompositeDisposable
 
-    private val backPressedDisposable: Disposable? = null
-    private var backPressedSubject = BehaviorSubject.createDefault(0L)
-    private val backButtonSubject: Subject<Long> = BehaviorSubject.createDefault(0L)
+
+    private val backButtonSubject: BehaviorSubject<Long> = BehaviorSubject.createDefault(0L)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
