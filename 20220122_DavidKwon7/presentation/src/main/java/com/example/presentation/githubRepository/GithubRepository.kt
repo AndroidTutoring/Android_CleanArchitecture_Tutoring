@@ -9,8 +9,8 @@ import io.reactivex.Single
 interface GithubRepository {
 
     fun getCachedUserList() : Single<List<User>>
-    fun addFav()  : Completable
-    fun deleteFav() : Completable
+    fun addFav(favoriteUser: User)  : Completable
+    fun deleteFav(deleteUser: User) : Completable
 
     fun getRepos() : Single<List<User>>
 

@@ -24,12 +24,12 @@ class GithubRepositoryImpl(
         return localDataSource.getCachedUserList()
     }
 
-    override fun addFav(): Completable {
-        return localDataSource.addFav()
+    override fun addFav(favoriteUser: User): Completable {
+        return localDataSource.addFav(favoriteUser)
     }
 
-    override fun deleteFav(): Completable {
-        return localDataSource.deleteFav()
+    override fun deleteFav(deleteUser: User): Completable {
+        return localDataSource.deleteFav(deleteUser)
     }
 
 

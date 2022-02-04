@@ -7,7 +7,7 @@ import io.reactivex.disposables.Disposable
 
 interface LocalDataSource {
     fun getCachedUserList() : Single<List<User>>
-    fun addFav()  : Completable
-    fun deleteFav() :Completable
+    fun addFav(favoriteUser : User)  : Completable
+    fun deleteFav(deleteUser : User) :Completable
 
 }

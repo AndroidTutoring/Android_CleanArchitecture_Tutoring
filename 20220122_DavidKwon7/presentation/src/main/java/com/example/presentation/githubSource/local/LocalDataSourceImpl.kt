@@ -11,14 +11,13 @@ class LocalDataSourceImpl(private val dao : UserDao) : LocalDataSource {
         return dao.loadUserList()
     }
 
-    override fun addFav() : Completable {
-        return dao.addFav(user = User("null","null","null","null"))
+    override fun addFav(favoriteUser: User): Completable {
+        return dao.addFav(favoriteUser)
     }
 
-    override fun deleteFav() : Completable{
-        return dao.deleteFav(user = User("null","null","null","null"))
+    override fun deleteFav(deleteUser: User): Completable {
+        return dao.deleteFav(deleteUser)
     }
-
 
 
 }
