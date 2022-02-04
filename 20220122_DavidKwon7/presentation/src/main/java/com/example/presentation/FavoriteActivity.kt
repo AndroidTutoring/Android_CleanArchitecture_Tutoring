@@ -4,12 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Adapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.databinding.ActivityFavoriteBinding
 import com.example.recylcerviewtest01.githubRepository.GithubRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,7 +14,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
@@ -86,7 +82,7 @@ class FavoriteActivity : AppCompatActivity() {
     private fun itemDeleteClick() {
         adapter.setOnItemClickListener(object :
             OnItemClickListener {
-            override fun onItemClick(v: View, data: User, pos: Int) {
+            override fun onItemClick(v: View, data: List<User>, pos: Int) {
                 repository.deleteFav()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

@@ -5,10 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.presentation.databinding.ActivitySplashBinding
+import com.example.recylcerviewtest01.githubRepository.GetRepoRepository
+import com.example.recylcerviewtest01.githubRepository.GithubRepository
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import java.lang.Exception
@@ -17,8 +21,9 @@ import java.util.concurrent.TimeUnit
 class SplashActivity : AppCompatActivity() {
 
     private var binding: ActivitySplashBinding?=null
-    private val disposables: CompositeDisposable?=null
-
+    private var disposables: CompositeDisposable?=null
+    private val githubRepository:GithubRepository?=null
+    val getRepoRepository = GetRepoRepository()
 
     private val backButtonSubject: BehaviorSubject<Long> = BehaviorSubject.createDefault(0L)
 
@@ -50,7 +55,7 @@ class SplashActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun back2() {
-        backButtonSubject.buffer(2, 1)
+        /*backButtonSubject.buffer(2, 1)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { t ->
                 if (t[1] - t[0] <= 1500) {
@@ -58,9 +63,19 @@ class SplashActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "뒤로가기 한 번 더 누르면 꺼짐 ", Toast.LENGTH_SHORT).show()
                 }
-            }
+            } */
+
+
+
+
+
 
     }
+    private fun getgithubRepository() =getRepoRepository.getRepos()
 
-
+    private fun nextPage(){
+        val intent = Intent(this,MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }

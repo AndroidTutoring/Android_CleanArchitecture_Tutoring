@@ -66,6 +66,7 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
             intent.putExtra("date", postList.get(position).date)
             intent.putExtra("url", postList.get(position).url)
             ContextCompat.startActivity(holder.itemView.context,intent,null)
+
         }
 
 

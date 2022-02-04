@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class FavoriteAdapter(var postList: List<User>, val context: Context) :
+class FavoriteAdapter(val postList: List<User>, val context:Context) :
 RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
 

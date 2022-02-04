@@ -19,9 +19,9 @@ import io.reactivex.subjects.Subject
 class MainActivity : AppCompatActivity()  {
 
 
-    val listData = listOf<User>()
-
-
+    private val listData = listOf<User>()
+    private val position: Int?=null
+    private lateinit var api: Api
     private lateinit var binding: ActivityMainBinding
     private val disposables : CompositeDisposable by lazy {
         CompositeDisposable()
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity()  {
         ProfileAdapter(listData,this)
     }
     private val backButtonSubject : Subject<Long> = BehaviorSubject.createDefault(0L)
-    val getRepoRepository = GetRepoRepository()
+    val getRepoRepository = GetRepoRepository(api)
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity()  {
 
     @SuppressLint("CheckResult")
     private fun setAdapter(){
-
+        AdapterData()
             disposables.add(getRepoRepository.getRepos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -75,6 +75,16 @@ class MainActivity : AppCompatActivity()  {
                 }
             )
     }
+    private fun AdapterData(){
+        with(adapter){
+            intent.putExtra("name", position?.let { postList.get(it).name })
+            intent.putExtra("id", position?.let { postList.get(it).id })
+            intent.putExtra("date", position?.let { postList.get(it).date })
+            intent.putExtra("url", position?.let { postList.get(it).url })
+        }
+    }
+
+
     //item click
     private fun itemFavClick() {
         adapter.setOnItemClickListener(object :
