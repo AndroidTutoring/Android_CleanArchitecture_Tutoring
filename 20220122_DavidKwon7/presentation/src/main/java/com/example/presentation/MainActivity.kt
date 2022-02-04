@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityMainBinding
-    private val disposable : CompositeDisposable by lazy {
+    private val disposables : CompositeDisposable by lazy {
         CompositeDisposable()
     }
     lateinit var repository : GithubRepository
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
+        disposables.clear()
     }
 
 
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("CheckResult")
     private fun setAdapter(){
 
-            disposable.add(getRepoRepository.getRepos()
+            disposables.add(getRepoRepository.getRepos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(2)
@@ -119,6 +119,6 @@ class MainActivity : AppCompatActivity() {
             .subscribe { willFinish ->
                 if (willFinish) finish()
                 else Toast.makeText(this, "다시 한 번 더 눌러주세요", Toast.LENGTH_SHORT).show()
-            } .addTo(disposable)
+            } .addTo(disposables)
     }
 }

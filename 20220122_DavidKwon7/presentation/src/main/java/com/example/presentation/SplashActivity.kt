@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
-    private lateinit var disposable: CompositeDisposable
+    private lateinit var disposables: CompositeDisposable
 
     private val backPressedDisposable: Disposable? = null
     private var backPressedSubject = BehaviorSubject.createDefault(0L)
@@ -36,7 +36,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
+        disposables.clear()
     }
 
     //timer, zip

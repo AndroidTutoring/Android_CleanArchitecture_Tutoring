@@ -28,7 +28,7 @@ class FavoriteActivity : AppCompatActivity() {
     lateinit var repository : GithubRepository
     lateinit var adapter: FavoriteAdapter
     private val backButtonSubject : Subject<Long> = BehaviorSubject.createDefault(0L)
-    private lateinit var disposable: CompositeDisposable
+    private lateinit var disposables: CompositeDisposable
 
 
 
@@ -47,7 +47,7 @@ class FavoriteActivity : AppCompatActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
+        disposables.clear()
     }
 
 
