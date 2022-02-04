@@ -12,7 +12,7 @@ import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.repository.UserRepository
 import com.example.presentation.repository.UserRepositoryImpl
-import com.example.presentation.room.FavoriteMarkDataBase
+import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util.hideKeyboard
@@ -34,7 +34,7 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
    private lateinit var userListRcyAdapter: UserListRcyAdapter
 
     private val userRepository: UserRepository by lazy {
-        val favoriteMarkDataBase = FavoriteMarkDataBase.getInstance(requireContext().applicationContext)
+        val favoriteMarkDataBase = LocalDataBase.getInstance(requireContext().applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl()
         val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
         UserRepositoryImpl(localDataSource,remoteDataSource)

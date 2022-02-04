@@ -6,7 +6,7 @@ import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.repository.UserRepository
 import com.example.presentation.repository.UserRepositoryImpl
-import com.example.presentation.room.FavoriteMarkDataBase
+import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -20,7 +20,7 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
     private lateinit var disposable:Disposable
 
     private val userRepository: UserRepository by lazy {
-        val favoriteMarkDataBase = FavoriteMarkDataBase.getInstance(this.applicationContext)
+        val favoriteMarkDataBase = LocalDataBase.getInstance(this.applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl()
         val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
         UserRepositoryImpl(localDataSource,remoteDataSource)

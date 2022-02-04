@@ -11,15 +11,15 @@ import com.example.presentation.model.SearchedUser
     version = 3,
     exportSchema = false//schema 구조 export false처리
 )
-abstract class FavoriteMarkDataBase : RoomDatabase() {
+abstract class LocalDataBase : RoomDatabase() {
     abstract fun getFavoriteMarkDao(): FavoriteDao
 
     companion object {
-        fun getInstance(context: Context): FavoriteMarkDataBase {
-                synchronized(FavoriteMarkDataBase::class) {//중복생성  방지
+        fun getInstance(context: Context): LocalDataBase {
+                synchronized(LocalDataBase::class) {//중복생성  방지
                     return  Room.databaseBuilder(
                         context.applicationContext,
-                        FavoriteMarkDataBase::class.java, "local-database.db"
+                        LocalDataBase::class.java, "local-database.db"
                     ).fallbackToDestructiveMigration()//버전 업데이트시 기존 데이터 못찾으면, illegalStateException  방지
                      .allowMainThreadQueries()
                      .build()
