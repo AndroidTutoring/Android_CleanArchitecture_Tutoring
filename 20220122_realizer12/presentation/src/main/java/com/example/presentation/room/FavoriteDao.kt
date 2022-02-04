@@ -18,5 +18,5 @@ interface FavoriteDao {
     fun getFavoriteGitUsers(isMyFavorite:Boolean): Single<List<SearchedUser>>
 
     @Query("DELETE FROM favoriteMarkTable WHERE user_id = :userId")
-    fun deleteFavoriteUser(userId:Long?):Completable
+    fun deleteFavoriteUser(userId:Long):Completable
 }
