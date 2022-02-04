@@ -22,6 +22,6 @@ interface ApiService {
     @GET("/users/{userName}/repos")
     fun getUserRepoInfo(
       @Path("userName") userName:String
-    ): Single<ArrayList<UserRepo>>
+    ): Single<List<UserRepo>>
 
 }

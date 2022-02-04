@@ -9,5 +9,5 @@ import retrofit2.Callback
 interface RepoRemoteDataSource {
     fun getUserRepoList(
         userName:String
-    ): Single<ArrayList<UserRepo>>
+    ): Single<List<UserRepo>>
 }

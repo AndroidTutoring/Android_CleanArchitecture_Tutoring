@@ -13,7 +13,7 @@ class RepoRemoteDataSourceImpl:RepoRemoteDataSource {
     //해당 유저의  repository 검색
     override fun getUserRepoList(
         userName: String
-    ): Single<ArrayList<UserRepo>> {
+    ): Single<List<UserRepo>> {
        return RetrofitHelper.apiServices.getUserRepoInfo(userName)
     }
 

@@ -6,5 +6,5 @@ import io.reactivex.rxjava3.core.Single
 interface RepoRepository {
     fun getUserRepoList(
         userName:String
-    ): Single<ArrayList<UserRepo>>
+    ): Single<List<UserRepo>>
 }
