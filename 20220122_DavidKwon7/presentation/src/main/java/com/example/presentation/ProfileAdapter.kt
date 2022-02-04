@@ -5,15 +5,9 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recylcerviewtest01.githubRepository.GithubRepository
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
@@ -25,7 +19,7 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
 
 
     private var listener : OnItemClickListener? = null
-    fun setOnItemClickListener(listener : OnItemClickListener) {
+    fun setOnItemClickListener(listener:OnItemClickListener) {
         this.listener = listener
     }
 

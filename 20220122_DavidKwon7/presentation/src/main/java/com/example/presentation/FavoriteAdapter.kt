@@ -7,10 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-interface OnItemClickListener{
-    fun onItemClick(v:View, data : User, pos:Int)
-}
-
 class FavoriteAdapter(var postList: List<User>, val context: Context) :
 RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
@@ -49,6 +45,7 @@ RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
 
     }
+
 
 
     override fun getItemCount(): Int {
