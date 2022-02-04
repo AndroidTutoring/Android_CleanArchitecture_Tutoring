@@ -19,6 +19,7 @@ import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
@@ -146,41 +147,35 @@ class UserFragment:BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflat
             userListRcyAdapter.setFavoriteMarkClickListener(object :UserListRvAdapter.FavoriteClickListener{
                 override fun onFavoriteMarkListener(searchedUser: SearchedUser,position:Int) {
 
-                if(searchedUser.isMyFavorite){
-                    showToast("즐겨찾기 취소")
-                    searchedUser.isMyFavorite = false
-                    userRepository.deleteFavoriteUser(searchedUser)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnComplete {
-                            userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
-                            userListRcyAdapter.notifyItemChanged(position)
-                        }
-                        .onErrorReturn{
-                            showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
-                        }
-                        .subscribe()
-                }else{
-                    showToast("즐겨찾기 추가")
-                    searchedUser.isMyFavorite = true
-                    userRepository
-                        .addFavoriteUser(searchedUser)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnComplete {
-                            userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
-                            userListRcyAdapter.notifyItemChanged(position)
-                        }
-                        .onErrorReturn{
-                            showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
-                        }
-                        .subscribe()
-                }
+                    returnFavoriteMarkStatus(searchedUser = searchedUser)
+                      .subscribeOn(Schedulers.io())
+                      .observeOn(AndroidSchedulers.mainThread())
+                      .doOnComplete {
+                          userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
+                          userListRcyAdapter.notifyItemChanged(position)
+                      }
+                      .onErrorReturn{
+                          showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
+                      }
+                      .subscribe()
+
             }
         })
 
     }
 
+    //즐겨 찾기 취소 또는 추가 여부에 따른  delete  add 를 리턴
+    private fun returnFavoriteMarkStatus(searchedUser: SearchedUser):Completable{
+        return  if(searchedUser.isMyFavorite){
+            showToast("즐겨찾기 취소")
+            searchedUser.isMyFavorite = false
+            userRepository.deleteFavoriteUser(searchedUser)
+        }else{
+            showToast("즐겨찾기 추가")
+            searchedUser.isMyFavorite = true
+            userRepository.addFavoriteUser(searchedUser)
+        }
+    }
 
     //상세화면으로 가기
     private fun gotoDetailActivity(searchedUser: SearchedUser){
