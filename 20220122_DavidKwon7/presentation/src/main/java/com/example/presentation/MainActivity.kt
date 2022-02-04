@@ -113,9 +113,9 @@ class MainActivity : AppCompatActivity() {
     //뒤로 가기
     private fun back2() {
         backButtonSubject
-            .observeOn(AndroidSchedulers.mainThread())
             .buffer(2, 1)
             .map { it[1] - it[0] < 1500 }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe { willFinish ->
                 if (willFinish) finish()
                 else Toast.makeText(this, "다시 한 번 더 눌러주세요", Toast.LENGTH_SHORT).show()
