@@ -16,19 +16,18 @@ import com.example.recylcerviewtest01.githubRepository.GithubRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
+
+
 class ProfileAdapter(var postList : List<User>, val context: Context) :
 RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
     private val githubRepos: ArrayList<User> = ArrayList()
 
 
-     interface OnItemClickListener{
-        fun onItemClick(v:View, data: User, pos : Int)
-    }
+
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener : OnItemClickListener) {
         this.listener = listener
     }
-
 
 
      class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

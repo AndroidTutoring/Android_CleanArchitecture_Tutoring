@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+
+interface OnItemClickListener{
+    fun onItemClick(v:View, data : User, pos:Int)
+}
+
 class FavoriteAdapter(var postList: List<User>, val context: Context) :
 RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
-    interface OnItemClickListener{
-        fun onItemClick(v:View, data : User, pos:Int)
-    }
+
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener : OnItemClickListener) {
         this.listener = listener
