@@ -1,7 +1,6 @@
-package com.example.presentation.application
+package com.example.cleanarchitecturetutoring.application
 
 import android.app.Application
-import com.example.presentation.util.TimberDebugTree
 import timber.log.Timber
 
 
