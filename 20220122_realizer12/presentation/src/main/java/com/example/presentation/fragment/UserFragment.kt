@@ -31,7 +31,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private var perPage: Int = 10//페이지당 요청하는 데이터 수
     private var totalDataCount: Int? = 0//query 에 대한 전체 검색어 수
 
-    private var searchedUsersList: ArrayList<SearchedUser>? = ArrayList()
+    private var searchedUsersList: MutableList<SearchedUser>? = mutableListOf()
     private lateinit var userListRcyAdapter: UserListRvAdapter
 
     private val userRepository: UserRepository by lazy {
@@ -92,14 +92,14 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
             searchedUsersList?.map { searchUser ->
                 userRepository.getFavoriteUsers()
-                    ?.subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe({ favoriteUser ->
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ favoriteUser ->
                         if (favoriteUser.any { eachUser -> eachUser.id == searchUser.id }) {
                             searchUser.isMyFavorite = true
                         }
-                        userListRcyAdapter.submitList(searchedUsersList!!.toMutableList())
-                        binding.editSearchUser.setText(searchedUsersList!![0].login.toString())
+                        userListRcyAdapter.submitList(searchedUsersList)
+                        binding.editSearchUser.setText(searchedUsersList!![0].login)
                         binding.emptyView.visibility = View.GONE
                     }, {
                         showToast("로컬 디비 가져오는 중 문제가 생김")
@@ -144,19 +144,20 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
         userListRcyAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
             override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
-
-                returnFavoriteMarkStatus(searchedUser = searchedUser)
+                val deepCopiedList =userListRcyAdapter.currentList.map { it.copy() }
+                val deepCopiedSearchedUser = searchedUser.copy()
+                returnFavoriteMarkStatus(searchedUser = deepCopiedSearchedUser)
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnComplete {
-                        userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
-                        userListRcyAdapter.notifyItemChanged(position)
+                    .doOnComplete {//submitlist 백그라운드에서 실행
+                        deepCopiedList.find {
+                            it.id == searchedUser.id
+                        }?.isMyFavorite = !searchedUser.isMyFavorite
+                        userListRcyAdapter.submitList(deepCopiedList.toMutableList())
                     }
+                    .observeOn(AndroidSchedulers.mainThread())
                     .onErrorReturn {
                         showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
-                    }
-                    .subscribe()
-
+                    }.subscribe()
             }
         })
 
