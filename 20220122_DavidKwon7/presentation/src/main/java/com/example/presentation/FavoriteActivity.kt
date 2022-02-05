@@ -82,8 +82,9 @@ class FavoriteActivity : AppCompatActivity() {
     private fun itemDeleteClick() {
         adapter.setOnItemClickListener(object :
             OnItemClickListener {
-            override fun onItemClick(v: View, data: List<User>, pos: Int) {
-                repository.deleteFav()
+            override fun onItemClick(v: View, data: User, pos: Int) {
+                repository.deleteFav(deleteUser = User(
+                    name=String(),id= String(),date = String(),url = String() ))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()

@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class FavoriteAdapter(val postList: List<User>, val context:Context) :
-RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
+class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
+    var postList = listOf<User>()
 
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener : OnItemClickListener) {
@@ -18,7 +18,7 @@ RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteAdapter.ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_recycler_ex,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_ex,parent,false)
         return ViewHolder(view)
     }
 
