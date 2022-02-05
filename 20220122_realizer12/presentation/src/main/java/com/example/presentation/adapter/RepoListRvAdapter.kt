@@ -8,7 +8,7 @@ import com.example.presentation.databinding.ItemRepoInfoBinding
 import com.example.presentation.model.UserRepo
 import com.example.presentation.viewholder.RepoInfoViewHolder
 
-class RepoListRcyAdapter : ListAdapter<UserRepo, RepoInfoViewHolder>(diffUtil) {
+class RepoListRvAdapter : ListAdapter<UserRepo, RepoInfoViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoInfoViewHolder {
         val binding =

@@ -15,7 +15,7 @@ import retrofit2.Callback
 object Util {
 
     //retrofit enqueue -> 다시 콜
-    fun <T> retryCall(call:Call<T>, callback: Callback<T>){
+    fun <T> retryCall(call: Call<T>, callback: Callback<T>) {
         call.clone().enqueue(callback)
     }
 
@@ -34,9 +34,10 @@ object Util {
 
 
     //키보드 숨김
-    fun Context.hideKeyboard(view: View){
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken,0)
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     //프래그먼트 확장용

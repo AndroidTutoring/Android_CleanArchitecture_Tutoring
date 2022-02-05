@@ -1,79 +1,72 @@
 package com.example.presentation.activity
 
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.SearchedUser
-import com.example.presentation.model.SearchedUsers
+import com.example.presentation.repository.UserRepository
+import com.example.presentation.repository.UserRepositoryImpl
 import com.example.presentation.retrofit.RetrofitHelper
-import com.example.presentation.util.Util
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.presentation.room.LocalDataBase
+import com.example.presentation.source.local.UserLocalDataSourceImpl
+import com.example.presentation.source.remote.UserRemoteDataSourceImpl
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
-class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding.inflate(it) }) {
+class SplashActivity : BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding.inflate(it) }) {
 
-    private var apiRetryCount = 0
+    private lateinit var disposable: Disposable
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        searUserInfo()
+    private val userRepository: UserRepository by lazy {
+        val favoriteMarkDataBase = LocalDataBase.getInstance(this.applicationContext)
+        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
+        UserRepositoryImpl(localDataSource, remoteDataSource)
     }
 
+    override fun onResume() {
+        super.onResume()
 
-    //유저 검색 -> 내 깃헙 아이디 검색
-    private fun searUserInfo() {
-        RetrofitHelper.apiServices.searchUsers(
-            query = "realizer12",
-            page = 1,
-            perPage = 10
-        ).enqueue(object : Callback<SearchedUsers> {
-            override fun onResponse(call: Call<SearchedUsers>, response: Response<SearchedUsers>) {
-                if(response.isSuccessful){//응답 성공
-                    val items = response.body()?.items
-
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        gotoMainActivity(items)
-                    },2000)//통신 성공하고  2초뒤에 메인으로
-
-                }else{//응답 실패
-                    retryApiCall(call = call,callback = this)
+        disposable = Single.zip(
+            getGitHubUserInfo().subscribeOn(Schedulers.io()).map {
+                if (it.isSuccessful) {
+                    it.body()
+                } else {
+                    throw Throwable()
                 }
-            }
-            override fun onFailure(call: Call<SearchedUsers>, t: Throwable) {
-                //통신 재시도
-                retryApiCall(call = call,callback = this)
-            }
-        })
+            }.retryWhen { errorObservable ->
+                errorObservable
+                    .delay(3, TimeUnit.SECONDS)
+                    .take(2)
+            }.observeOn(AndroidSchedulers.mainThread()), Single.timer(2, TimeUnit.SECONDS),
+            { searchedUsers, _ ->
+                gotoMainActivity(searchedUsers?.items)
+            }).onErrorReturn {
+            showToast("유저 정보를 가져올수가 없습니다.")
+        }.subscribe()
+
+    }
+
+    //유저 정보 가져오기
+    private fun getGitHubUserInfo() = userRepository.getSearchUsers(query = "realizer12", 1, 10)
+
+    override fun onPause() {
+        super.onPause()
+        disposable.dispose()
     }
 
     //메인 가기
-    private fun gotoMainActivity(searchUsers:ArrayList<SearchedUser>?){
-        val intent = Intent(this,MainActivity::class.java)
-        intent.putExtra(PARAM_INIT_USER_INFO,searchUsers)
+    private fun gotoMainActivity(searchUsers: ArrayList<SearchedUser>?) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(PARAM_INIT_USER_INFO, searchUsers)
         startActivity(intent)
         finish()
     }
 
-    //응답 실패시  3초 간격으로 api call 해줌.
-    private fun <T>retryApiCall(call: Call<T>,callback: Callback<T>) {
-        ++apiRetryCount
-        if (apiRetryCount < 3) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                //통신 재시도
-                Util.retryCall(call = call, callback = callback)
-            }, 3000)//3초 간격으로  api call
-        }else{
-            showToast("유저목록을 가져오는데 실패하였습니다. ")
-            apiRetryCount = 0
-        }
-    }
-
-    companion object{
+    companion object {
         const val PARAM_INIT_USER_INFO = "param_init_user_info"
     }
 

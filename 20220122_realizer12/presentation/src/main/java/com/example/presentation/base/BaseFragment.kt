@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 open class BaseFragment<VB : ViewBinding>(
     private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB
 ) : Fragment() {
-
+    protected val compositeDisposable = CompositeDisposable()
     private var mBinding: VB? = null
-    val binding get() = mBinding!!
+    protected val binding get() = mBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,8 +25,14 @@ open class BaseFragment<VB : ViewBinding>(
         return binding.root
     }
 
-    fun showToast(msg:String){
+    fun showToast(msg: String) {
         Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        compositeDisposable.dispose()
     }
 
 }
