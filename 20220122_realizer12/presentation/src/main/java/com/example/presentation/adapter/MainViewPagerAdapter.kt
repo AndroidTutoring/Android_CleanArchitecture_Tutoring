@@ -6,10 +6,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.presentation.fragment.FavoriteFragment
 import com.example.presentation.fragment.UserFragment
 
-class MainViewPagerAdapter(fragmentActivity: FragmentActivity):FragmentStateAdapter(fragmentActivity) {
+class MainViewPagerAdapter(fragmentActivity: FragmentActivity) :
+    FragmentStateAdapter(fragmentActivity) {
     override fun createFragment(position: Int): Fragment {
-        return when(position){
-            0-> UserFragment()//첫번째는  유저 프래그먼트
+        return when (position) {
+            0 -> UserFragment()//첫번째는  유저 프래그먼트
             else -> FavoriteFragment()//두번째는  즐겨찾기 프래그먼트
         }
     }

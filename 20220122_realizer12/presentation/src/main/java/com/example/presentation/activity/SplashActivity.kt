@@ -16,37 +16,36 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding.inflate(it) }) {
+class SplashActivity : BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding.inflate(it) }) {
 
-    private lateinit var disposable:Disposable
+    private lateinit var disposable: Disposable
 
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = LocalDataBase.getInstance(this.applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
         val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
-        UserRepositoryImpl(localDataSource,remoteDataSource)
+        UserRepositoryImpl(localDataSource, remoteDataSource)
     }
 
     override fun onResume() {
         super.onResume()
 
-        disposable= Single.zip(
+        disposable = Single.zip(
             getGitHubUserInfo().subscribeOn(Schedulers.io()).map {
-            if(it.isSuccessful) {
-                it.body()
-            }else {
-                throw Throwable()
-            }
-        }.retryWhen {errorObservable ->
+                if (it.isSuccessful) {
+                    it.body()
+                } else {
+                    throw Throwable()
+                }
+            }.retryWhen { errorObservable ->
                 errorObservable
                     .delay(3, TimeUnit.SECONDS)
                     .take(2)
-        }.observeOn(AndroidSchedulers.mainThread())
-            ,Single.timer(2,TimeUnit.SECONDS),
-            { searchedUsers,_->
+            }.observeOn(AndroidSchedulers.mainThread()), Single.timer(2, TimeUnit.SECONDS),
+            { searchedUsers, _ ->
                 gotoMainActivity(searchedUsers?.items)
             }).onErrorReturn {
-               showToast("유저 정보를 가져올수가 없습니다.")
+            showToast("유저 정보를 가져올수가 없습니다.")
         }.subscribe()
 
     }
@@ -60,14 +59,14 @@ class SplashActivity:BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding
     }
 
     //메인 가기
-    private fun gotoMainActivity(searchUsers:ArrayList<SearchedUser>?){
-        val intent = Intent(this,MainActivity::class.java)
-        intent.putExtra(PARAM_INIT_USER_INFO,searchUsers)
+    private fun gotoMainActivity(searchUsers: ArrayList<SearchedUser>?) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(PARAM_INIT_USER_INFO, searchUsers)
         startActivity(intent)
         finish()
     }
 
-    companion object{
+    companion object {
         const val PARAM_INIT_USER_INFO = "param_init_user_info"
     }
 

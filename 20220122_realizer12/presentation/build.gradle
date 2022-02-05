@@ -30,7 +30,7 @@ android {
     }
 
     //뷰바인딩 적용
-    buildFeatures{
+    buildFeatures {
         viewBinding true
     }
 

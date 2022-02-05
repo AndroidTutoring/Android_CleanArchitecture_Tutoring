@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.core.Single
 class UserRepositoryImpl(
     private val userLocalDataSource: UserLocalDataSource,
     private val userRemoteDataSource: UserRemoteDataSource
-):UserRepository {
+) : UserRepository {
 
     override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUser): Completable =
         userLocalDataSource.deleteFavoriteUser(deletedFavoriteUser)
@@ -29,7 +29,6 @@ class UserRepositoryImpl(
     ) = userRemoteDataSource.getSearchUsers(
         query, page, perPage
     )
-
 
 
 }

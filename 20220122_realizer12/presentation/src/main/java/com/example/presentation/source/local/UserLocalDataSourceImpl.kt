@@ -10,13 +10,14 @@ class UserLocalDataSourceImpl(
 ) : UserLocalDataSource {
 
     override fun addFavoriteUser(favoriteUser: SearchedUser): Completable {
-       return favoriteDao.setFavoriteMark(favoriteUser)
+        return favoriteDao.setFavoriteMark(favoriteUser)
     }
 
-    override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUser):Completable {
-            return favoriteDao.deleteFavoriteUser(deletedFavoriteUser.id)
+    override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUser): Completable {
+        return favoriteDao.deleteFavoriteUser(deletedFavoriteUser.id)
     }
 
     //즐겨찾기 목록 모두 가져옴.
-    override fun getFavoriteUsers(): Single<List<SearchedUser>> = favoriteDao.getFavoriteGitUsers(true)
+    override fun getFavoriteUsers(): Single<List<SearchedUser>> =
+        favoriteDao.getFavoriteGitUsers(true)
 }

@@ -4,7 +4,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.databinding.ItemRepoInfoBinding
 import com.example.presentation.model.UserRepo
 
-class RepoInfoViewHolder(private val binding: ItemRepoInfoBinding):RecyclerView.ViewHolder(binding.root) {
+class RepoInfoViewHolder(private val binding: ItemRepoInfoBinding) :
+    RecyclerView.ViewHolder(binding.root) {
     fun bind(userRepo: UserRepo) {
 
         //레포 이름 넣어줌.

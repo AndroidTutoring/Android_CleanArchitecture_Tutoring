@@ -25,7 +25,7 @@ open class BaseFragment<VB : ViewBinding>(
         return binding.root
     }
 
-    fun showToast(msg:String){
+    fun showToast(msg: String) {
         Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show()
     }
 

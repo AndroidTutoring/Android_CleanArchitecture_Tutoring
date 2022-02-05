@@ -17,7 +17,7 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 //즐겨찾기 프래그먼트
-class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBinding::inflate) {
+class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBinding::inflate) {
 
     private lateinit var favoriteMarkedRvAdapter: UserListRvAdapter
 
@@ -26,7 +26,7 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
         val favoriteMarkDataBase = LocalDataBase.getInstance(requireContext().applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
         val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
-        UserRepositoryImpl(localDataSource,remoteDataSource)
+        UserRepositoryImpl(localDataSource, remoteDataSource)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,17 +60,17 @@ class FavoriteFragment: BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBi
     }
 
     //초기세팅
-    private fun initSet(){
+    private fun initSet() {
 
         //리사이클러뷰 세팅
         favoriteMarkedRvAdapter = UserListRvAdapter()
-       binding.rcyFavoriteList.apply {
-           adapter = favoriteMarkedRvAdapter
-       }
+        binding.rcyFavoriteList.apply {
+            adapter = favoriteMarkedRvAdapter
+        }
     }
 
     //즐겨찾기한 유저들 가져옴.
-    private fun getFavoriteGitUsers(){
+    private fun getFavoriteGitUsers() {
         userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ favoriteUsers ->
                 favoriteMarkedRvAdapter.submitList(favoriteUsers)

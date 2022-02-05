@@ -51,10 +51,10 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBindi
             .subscribeOn(Schedulers.io())
             .filter { !it.isNullOrEmpty() }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({userRepoList->
+            .subscribe({ userRepoList ->
                 binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
                 repoRvAdapter.submitList(userRepoList)
-            }, {t->
+            }, { t ->
                 showToast(t.message.toString())
             })
     }

@@ -24,9 +24,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inf
     }
 
     //뒤로가기 프로세스 체크처리
-    private fun backPressCheck(){
+    private fun backPressCheck() {
         //항상 누른거 이전걸로 체크해야되니까 buffer count 2 주고 skip 1로줌.
-        behaviorSubject.buffer(2,1)
+        behaviorSubject.buffer(2, 1)
             .map { it[0] to it[1] }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
@@ -39,20 +39,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inf
     }
 
     //초기 뷰 세팅
-    private fun initSet(){
+    private fun initSet() {
 
-       //메인 뷰페이져  FragmentStateAdapter 연결
-       binding.vpMain.apply {
-           this.adapter = MainViewPagerAdapter(this@MainActivity)
-       }
+        //메인 뷰페이져  FragmentStateAdapter 연결
+        binding.vpMain.apply {
+            this.adapter = MainViewPagerAdapter(this@MainActivity)
+        }
 
-       //tablayout , 뷰페이저  연결  및 각 탭 구성
-       TabLayoutMediator(binding.tabMain, binding.vpMain){ tab, position ->
-           when(position){
-               0->tab.text = "유저"
-               1->tab.text = "즐겨찾기"
-           }
-       }.attach()
+        //tablayout , 뷰페이저  연결  및 각 탭 구성
+        TabLayoutMediator(binding.tabMain, binding.vpMain) { tab, position ->
+            when (position) {
+                0 -> tab.text = "유저"
+                1 -> tab.text = "즐겨찾기"
+            }
+        }.attach()
 
     }
 }
