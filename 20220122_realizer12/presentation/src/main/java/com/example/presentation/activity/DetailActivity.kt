@@ -14,7 +14,7 @@ import com.example.presentation.source.remote.RepoRemoteDataSourceImpl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class DetailActivity : BaseActivity<ActivityDetailBinding>({ ActivityDetailBinding.inflate(it) }) {
+class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding::inflate) {
 
     //유저 정보
     private var userInfo: SearchedUser? = null
