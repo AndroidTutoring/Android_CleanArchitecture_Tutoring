@@ -1,9 +1,18 @@
 package com.example.presentation.activity
 
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.example.presentation.adapter.MainViewPagerAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityMainBinding
+import com.example.presentation.repository.UserRepository
+import com.example.presentation.repository.UserRepositoryImpl
+import com.example.presentation.retrofit.RetrofitHelper
+import com.example.presentation.room.LocalDataBase
+import com.example.presentation.source.local.UserLocalDataSourceImpl
+import com.example.presentation.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.viewmodel.MainViewModel
+import com.example.presentation.viewmodel.MainViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.addTo
@@ -11,6 +20,17 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     private val behaviorSubject = BehaviorSubject.createDefault(0L)
+
+    private val userRepository: UserRepository by lazy {
+        val favoriteMarkDataBase = LocalDataBase.getInstance(applicationContext)
+        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
+        UserRepositoryImpl(localDataSource, remoteDataSource)
+    }
+
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProvider(this,MainViewModelFactory(userRepository)).get(MainViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +60,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     //초기 뷰 세팅
     private fun initSet() {
+
+
 
         //메인 뷰페이져  FragmentStateAdapter 연결
         binding.vpMain.apply {

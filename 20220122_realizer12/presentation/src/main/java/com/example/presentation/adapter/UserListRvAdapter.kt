@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.presentation.databinding.ItemRepoUserBinding
 import com.example.presentation.model.SearchedUser
 import com.example.presentation.viewholder.UserViewHolder
+import timber.log.Timber
 
 class UserListRvAdapter : ListAdapter<SearchedUser, UserViewHolder>(diffUtil) {
 
@@ -59,6 +60,18 @@ class UserListRvAdapter : ListAdapter<SearchedUser, UserViewHolder>(diffUtil) {
                 onItemClickListener?.onItemClickListener(currentList[adapterPosition])
             }
         }
+    }
+
+    override fun submitList(list: MutableList<SearchedUser>?) {
+        try {
+            Timber.v("  new list ->"+list?.get(0)?.id+ " ismyfavorite->"+list?.get(0)?.isMyFavorite)
+            Timber.v("  old list ->"+ this.currentList[0]?.id+ " ismyfavorite->"+ this.currentList[0]?.isMyFavorite)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+
+        super.submitList(list)
     }
 
     override fun getItemCount() = currentList.size

@@ -3,6 +3,7 @@ package com.example.presentation.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.activity.DetailActivity
 import com.example.presentation.activity.SplashActivity
@@ -18,6 +19,8 @@ import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
+import com.example.presentation.viewmodel.MainViewModel
+import com.example.presentation.viewmodel.MainViewModelFactory
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -41,6 +44,13 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
         UserRepositoryImpl(localDataSource, remoteDataSource)
     }
 
+    //메인 activity와 공유하는  뷰모델
+    private val mainSharedViewModel: MainViewModel by lazy {
+        ViewModelProvider(
+            requireActivity(),
+            MainViewModelFactory(userRepository)
+        ).get(MainViewModel::class.java)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
