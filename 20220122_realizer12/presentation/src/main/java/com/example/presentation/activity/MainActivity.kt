@@ -2,9 +2,11 @@ package com.example.presentation.activity
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.example.presentation.adapter.MainViewPagerAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityMainBinding
+import com.example.presentation.fragment.UserFragment
 import com.example.presentation.repository.UserRepository
 import com.example.presentation.repository.UserRepositoryImpl
 import com.example.presentation.retrofit.RetrofitHelper

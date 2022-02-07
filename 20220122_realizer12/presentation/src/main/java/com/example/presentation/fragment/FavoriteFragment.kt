@@ -56,10 +56,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        getFavoriteGitUsers()
-    }
 
     //리스너 기능 모음.
     private fun listenerEvent() {
@@ -82,6 +78,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         binding.rcyFavoriteList.apply {
             adapter = favoriteMarkedRvAdapter
         }
+
+        getFavoriteGitUsers()
     }
 
     //즐겨찾기한 유저들 가져옴.

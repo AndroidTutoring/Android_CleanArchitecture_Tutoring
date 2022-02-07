@@ -79,24 +79,18 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     }
 
 
-    override fun onResume() {
-        super.onResume()
-
-        val currentList = userListRcyAdapter.currentList.toMutableList()
-        if(!currentList.isNullOrEmpty()){
-          mainSharedViewModel.filterFavoriteUser(currentList)
-        }
-    }
-
 
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList() {
         searchedUsersList =
             requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO) as List<SearchedUser>
         if (!searchedUsersList.isNullOrEmpty()) {
+
             binding.editSearchUser.setText(searchedUsersList!![0].login)
             binding.emptyView.visibility = View.GONE
-            mainSharedViewModel.filterFavoriteUser((searchedUsersList!!))
+
+            mainSharedViewModel.getSearchUserList(searchedUsersList!!)
+            mainSharedViewModel.filterFavoriteUser()
         }
     }
 

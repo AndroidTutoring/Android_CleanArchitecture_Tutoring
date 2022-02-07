@@ -21,8 +21,11 @@ class MainViewModel(
     val userFragmentUpdateUserList: PublishSubject<List<SearchedUser>> =
         PublishSubject.create()
 
+    var searchedUsersList: MutableList<SearchedUser>? = mutableListOf()
 
-    private var searchedUsersList: MutableList<SearchedUser>? = mutableListOf()
+    fun getSearchUserList(searchedUserList: List<SearchedUser>){
+       this.searchedUsersList = searchedUserList as MutableList<SearchedUser>
+    }
 
     fun searchUser(searchQuery:String,page:Int,perPage:Int){
         //local , remote  zip으로  동시에 다 처리되면  뿌려지게 수정
@@ -78,6 +81,7 @@ class MainViewModel(
                     it.id == searchedUser.id
                 }?.isMyFavorite = true
                 userFragmentUpdateUserList.onNext(newList)
+                getFavoriteUsers()
             }
             .subscribe()
             .addTo(compositeDisposable)
@@ -104,12 +108,16 @@ class MainViewModel(
                 val newList = currentList.toMutableList()
                 if(shouldRemoveData){//데이터를 지워야 하는 경우
                     newList.removeAll { it.id == searchedUser.id }
+
                     favoriteFragmentUpdateUserList.onNext(newList)
+                    filterFavoriteUser()
+
                 }else{//데이터를 변경만 하는 경우
                     newList.find {
                         it.id == searchedUser.id
                     }?.isMyFavorite = false
                     userFragmentUpdateUserList.onNext(newList)
+                    getFavoriteUsers()
                 }
 
             }.subscribe()
@@ -117,13 +125,13 @@ class MainViewModel(
     }
 
     //즐겨찾기 유저가  업데이트가 안된 경우에 업데이트를 진행한다.
-    fun filterFavoriteUser(currentList: List<SearchedUser>){
+    fun filterFavoriteUser(){
           //현재  검색된걸로 뿌려져있는 리스트에서 favorite에 있는 애들만 뽑아서 주고 나머지는 안줘야되는
           userRepository.getFavoriteUsers()
               .subscribeOn(Schedulers.io())
               .map { localFavoriteUsers->
-                  val newList = currentList.map { it.copy() }
-                  newList.map { searchedUsersList->
+                  val newList = searchedUsersList?.map { it.copy() }
+                  newList?.map { searchedUsersList->
                       searchedUsersList.isMyFavorite = localFavoriteUsers.any{it.id == searchedUsersList.id}
                   }
                   newList
