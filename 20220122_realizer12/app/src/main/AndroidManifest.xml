@@ -24,12 +24,10 @@
         <activity
             android:name="com.example.presentation.activity.MainActivity"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"
             android:exported="true">
         </activity>
 
         <activity android:name="com.example.presentation.activity.DetailActivity"
-                  android:screenOrientation="portrait"
             >
 
         </activity>

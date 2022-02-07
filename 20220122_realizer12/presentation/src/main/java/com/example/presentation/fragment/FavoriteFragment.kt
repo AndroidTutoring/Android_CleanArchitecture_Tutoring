@@ -49,10 +49,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     //뷰모델로부터  데이터 받아옴
     private fun getDataFromViewModel(){
         //즐겨 찾기 유저 리스트 업데이트
-        mainSharedViewModel.currentFavoriteUserListPublishSubject.subscribe({
+        mainSharedViewModel.favoriteFragmentUpdateUserList.subscribe({
             favoriteMarkedRvAdapter.submitList(it as MutableList<SearchedUser>?)
         },{
-            showToast("에러 발생")
+            showToast(it.message.toString())
         })
     }
 
@@ -66,7 +66,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         favoriteMarkedRvAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
             override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
-                mainSharedViewModel.deleteFavoriteUsers(searchedUser,favoriteMarkedRvAdapter.currentList)
+                mainSharedViewModel.deleteFavoriteUsers(
+                    searchedUser = searchedUser,
+                    currentList = favoriteMarkedRvAdapter.currentList,
+                    shouldRemoveData = true)
             }
         })
     }
