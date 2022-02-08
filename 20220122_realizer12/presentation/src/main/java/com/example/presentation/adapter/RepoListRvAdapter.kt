@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.presentation.databinding.ItemRepoInfoBinding
-import com.example.presentation.model.UserRepo
+import com.example.data.model.UserRepo
 import com.example.presentation.viewholder.RepoInfoViewHolder
 
 class RepoListRvAdapter : ListAdapter<UserRepo, RepoInfoViewHolder>(diffUtil) {

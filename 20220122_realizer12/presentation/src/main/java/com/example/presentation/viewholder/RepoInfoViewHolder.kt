@@ -2,7 +2,7 @@ package com.example.presentation.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.databinding.ItemRepoInfoBinding
-import com.example.presentation.model.UserRepo
+import com.example.data.model.UserRepo
 
 class RepoInfoViewHolder(private val binding: ItemRepoInfoBinding) :
     RecyclerView.ViewHolder(binding.root) {

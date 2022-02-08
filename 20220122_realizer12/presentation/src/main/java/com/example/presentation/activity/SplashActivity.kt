@@ -5,13 +5,13 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
-import com.example.presentation.model.SearchedUser
-import com.example.presentation.repository.UserRepository
-import com.example.presentation.repository.UserRepositoryImpl
-import com.example.presentation.retrofit.RetrofitHelper
-import com.example.presentation.room.LocalDataBase
-import com.example.presentation.source.local.UserLocalDataSourceImpl
-import com.example.presentation.source.remote.UserRemoteDataSourceImpl
+import com.example.data.model.SearchedUser
+import com.example.data.repository.UserRepository
+import com.example.data.repository.UserRepositoryImpl
+import com.example.data.retrofit.RetrofitHelper
+import com.example.data.room.LocalDataBase
+import com.example.data.source.local.UserLocalDataSourceImpl
+import com.example.data.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.example.presentation.viewmodel.SplashViewModel
 

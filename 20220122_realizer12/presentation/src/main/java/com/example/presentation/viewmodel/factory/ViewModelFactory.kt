@@ -2,7 +2,7 @@ package com.example.presentation.viewmodel.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.presentation.repository.UserRepository
+import com.example.data.repository.UserRepository
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.SplashViewModel
 

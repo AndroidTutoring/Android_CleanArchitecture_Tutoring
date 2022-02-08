@@ -1,10 +1,8 @@
 package com.example.presentation.viewmodel
 
-import android.view.View
 import com.example.presentation.base.BaseViewModel
-import com.example.presentation.model.UserRepo
-import com.example.presentation.repository.RepoRepository
-import com.example.presentation.repository.UserRepository
+import com.example.data.model.UserRepo
+import com.example.data.repository.RepoRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -26,7 +24,8 @@ class DetailViewModel(
                 repoDetailPublishSubject.onNext(userRepoList)
             }, { t ->
                 repoDetailPublishSubject.onError(Throwable("레포지토리 리스트 받아오는 중 문제 생김"))
-            }).addTo(compositeDisposable)
+            })
+            .addTo(compositeDisposable)
     }
 
 }

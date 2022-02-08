@@ -9,15 +9,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import retrofit2.Call
-import retrofit2.Callback
 
 object Util {
 
-    //retrofit enqueue -> 다시 콜
-    fun <T> retryCall(call: Call<T>, callback: Callback<T>) {
-        call.clone().enqueue(callback)
-    }
+
 
     //키보드 imeoption  action search 가능하게
     fun EditText.search(view: View) {

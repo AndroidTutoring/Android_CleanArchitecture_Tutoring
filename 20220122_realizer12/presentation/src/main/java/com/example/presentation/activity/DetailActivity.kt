@@ -7,11 +7,11 @@ import com.example.presentation.adapter.RepoListRvAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityDetailBinding
 import com.example.presentation.fragment.UserFragment
-import com.example.presentation.model.SearchedUser
-import com.example.presentation.repository.RepoRepository
-import com.example.presentation.repository.RepoRepositoryImpl
-import com.example.presentation.retrofit.RetrofitHelper
-import com.example.presentation.source.remote.RepoRemoteDataSourceImpl
+import com.example.data.model.SearchedUser
+import com.example.data.repository.RepoRepository
+import com.example.data.repository.RepoRepositoryImpl
+import com.example.data.retrofit.RetrofitHelper
+import com.example.data.source.remote.RepoRemoteDataSourceImpl
 import com.example.presentation.viewmodel.DetailViewModel
 import com.example.presentation.viewmodel.factory.DetailViewModelFactory
 

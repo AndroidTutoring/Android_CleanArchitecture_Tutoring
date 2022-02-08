@@ -5,9 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.presentation.databinding.ItemRepoUserBinding
-import com.example.presentation.model.SearchedUser
+import com.example.data.model.SearchedUser
 import com.example.presentation.viewholder.UserViewHolder
-import timber.log.Timber
 
 class UserListRvAdapter : ListAdapter<SearchedUser, UserViewHolder>(diffUtil) {
 

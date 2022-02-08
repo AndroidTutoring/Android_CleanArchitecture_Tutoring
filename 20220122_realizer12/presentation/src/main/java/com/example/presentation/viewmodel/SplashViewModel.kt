@@ -1,11 +1,10 @@
 package com.example.presentation.viewmodel
 
 import com.example.presentation.base.BaseViewModel
-import com.example.presentation.model.SearchedUser
-import com.example.presentation.repository.UserRepository
+import com.example.data.model.SearchedUser
+import com.example.data.repository.UserRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject

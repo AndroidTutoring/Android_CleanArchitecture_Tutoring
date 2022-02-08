@@ -2,7 +2,7 @@ package com.example.presentation.viewmodel.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.presentation.repository.RepoRepository
+import com.example.data.repository.RepoRepository
 import com.example.presentation.viewmodel.DetailViewModel
 
 class DetailViewModelFactory  (

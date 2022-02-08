@@ -3,7 +3,7 @@ package com.example.presentation.viewholder
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.presentation.databinding.ItemRepoUserBinding
-import com.example.presentation.model.SearchedUser
+import com.example.data.model.SearchedUser
 
 class UserViewHolder(val binding: ItemRepoUserBinding) : RecyclerView.ViewHolder(binding.root) {
 
