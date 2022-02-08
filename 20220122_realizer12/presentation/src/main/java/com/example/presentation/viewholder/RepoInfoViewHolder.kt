@@ -3,10 +3,11 @@ package com.example.presentation.viewholder
 import androidx.recyclerview.widget.RecyclerView
 import com.example.presentation.databinding.ItemRepoInfoBinding
 import com.example.data.model.UserRepo
+import com.example.presentation.model.PresentationUserRepo
 
 class RepoInfoViewHolder(private val binding: ItemRepoInfoBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(userRepo: UserRepo) {
+    fun bind(userRepo: PresentationUserRepo) {
 
         //레포 이름 넣어줌.
         binding.tvRepoName.text = userRepo.full_name
