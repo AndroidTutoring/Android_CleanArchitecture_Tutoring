@@ -5,15 +5,18 @@ import com.example.data.model.UserRepo
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class PresentationUserRepo(var id: Long? = null,
-                                var full_name: String? = null,
-                                var url: String? = null,
-                                var stargazers_count: Int? = null
-) : Parcelable{
-    companion object{
+data class PresentationUserRepo(
+    var id: Long? = null,
+    var full_name: String? = null,
+    var url: String? = null,
+    var stargazers_count: Int? = null
+) : Parcelable {
+    companion object {
 
         //데이터 모듈 데이터 모델로
-        fun toDataModel(presentationUserRepo: PresentationUserRepo): UserRepo {
+        fun toDataModel(
+            presentationUserRepo: PresentationUserRepo
+        ): UserRepo {
             return UserRepo(
                 id = presentationUserRepo.id,
                 full_name = presentationUserRepo.full_name,
@@ -23,7 +26,9 @@ data class PresentationUserRepo(var id: Long? = null,
         }
 
         //presentation 모듈 데이터 모델로
-        fun toPresentationModel(userRepo: UserRepo):PresentationUserRepo{
+        fun toPresentationModel(
+            userRepo: UserRepo
+        ): PresentationUserRepo {
             return PresentationUserRepo(
                 id = userRepo.id,
                 full_name = userRepo.full_name,

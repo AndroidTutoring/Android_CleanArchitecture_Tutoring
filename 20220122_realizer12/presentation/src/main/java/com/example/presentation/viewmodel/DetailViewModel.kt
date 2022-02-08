@@ -1,8 +1,7 @@
 package com.example.presentation.viewmodel
 
-import com.example.presentation.base.BaseViewModel
-import com.example.data.model.UserRepo
 import com.example.data.repository.RepoRepository
+import com.example.presentation.base.BaseViewModel
 import com.example.presentation.model.PresentationUserRepo
 import com.example.presentation.model.PresentationUserRepo.Companion.toPresentationModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -14,10 +13,10 @@ class DetailViewModel(
     private val repoRepository: RepoRepository
 ) : BaseViewModel() {
 
-    val repoDetailPublishSubject: PublishSubject<List<PresentationUserRepo>>
-        = PublishSubject.create()
+    val repoDetailPublishSubject: PublishSubject<List<PresentationUserRepo>> =
+        PublishSubject.create()
 
-    fun getRepoDetails(userName:String){
+    fun getRepoDetails(userName: String) {
         repoRepository.getUserRepoList(userName = userName)
             .subscribeOn(Schedulers.io())
             .filter { !it.isNullOrEmpty() }

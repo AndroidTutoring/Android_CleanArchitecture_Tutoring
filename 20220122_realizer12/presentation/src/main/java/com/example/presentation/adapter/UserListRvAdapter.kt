@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.presentation.databinding.ItemRepoUserBinding
-import com.example.data.model.SearchedUser
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewholder.UserViewHolder
 
@@ -68,11 +67,17 @@ class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(
 
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<PresentationSearchedUser>() {
-            override fun areContentsTheSame(oldItem: PresentationSearchedUser, newItem: PresentationSearchedUser): Boolean {
+            override fun areContentsTheSame(
+                oldItem: PresentationSearchedUser,
+                newItem: PresentationSearchedUser
+            ): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areItemsTheSame(oldItem: PresentationSearchedUser, newItem: PresentationSearchedUser): Boolean {
+            override fun areItemsTheSame(
+                oldItem: PresentationSearchedUser,
+                newItem: PresentationSearchedUser
+            ): Boolean {
                 return oldItem.id == newItem.id
             }
         }

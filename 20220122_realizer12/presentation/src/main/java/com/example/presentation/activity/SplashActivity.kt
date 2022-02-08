@@ -3,19 +3,17 @@ package com.example.presentation.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.example.presentation.base.BaseActivity
-import com.example.presentation.databinding.ActivitySplashBinding
-import com.example.data.model.SearchedUser
 import com.example.data.repository.UserRepository
 import com.example.data.repository.UserRepositoryImpl
 import com.example.data.retrofit.RetrofitHelper
 import com.example.data.room.LocalDataBase
 import com.example.data.source.local.UserLocalDataSourceImpl
 import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.base.BaseActivity
+import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.PresentationSearchedUser
-import com.example.presentation.model.PresentationSearchedUsers
-import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.example.presentation.viewmodel.SplashViewModel
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
 
@@ -28,16 +26,18 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     }
 
     private val splashViewModel: SplashViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory(userRepository)).get(SplashViewModel::class.java)
+        ViewModelProvider(this,
+            ViewModelFactory(userRepository))
+            .get(SplashViewModel::class.java)
     }
 
 
     //뷰모델로부터  데이터 받아옴
-    private fun getDataFromViewModel(){
+    private fun getDataFromViewModel() {
         //검색  유저 리스트 업데이트
         splashViewModel.searchedUserPublishSubject.subscribe({
             gotoMainActivity(it as ArrayList<PresentationSearchedUser>?)
-        },{
+        }, {
             showToast(it.message.toString())
             finish()//문제 있으면 앱종료
         })

@@ -3,16 +3,15 @@ package com.example.presentation.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import com.example.presentation.adapter.UserListRvAdapter
-import com.example.presentation.base.BaseFragment
-import com.example.presentation.databinding.FragmentFavoriteBinding
-import com.example.data.model.SearchedUser
 import com.example.data.repository.UserRepository
 import com.example.data.repository.UserRepositoryImpl
 import com.example.data.retrofit.RetrofitHelper
 import com.example.data.room.LocalDataBase
 import com.example.data.source.local.UserLocalDataSourceImpl
 import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.adapter.UserListRvAdapter
+import com.example.presentation.base.BaseFragment
+import com.example.presentation.databinding.FragmentFavoriteBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
@@ -45,11 +44,11 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     }
 
     //뷰모델로부터  데이터 받아옴
-    private fun getDataFromViewModel(){
+    private fun getDataFromViewModel() {
         //즐겨 찾기 유저 리스트 업데이트
         mainSharedViewModel.favoriteFragmentUpdateUserList.subscribe({
             favoriteMarkedRvAdapter.submitList(it as MutableList<PresentationSearchedUser>?)
-        },{
+        }, {
             showToast(it.message.toString())
         })
     }
@@ -59,11 +58,15 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     private fun listenerEvent() {
         favoriteMarkedRvAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
-            override fun onFavoriteMarkListener(searchedUser: PresentationSearchedUser, position: Int) {
+            override fun onFavoriteMarkListener(
+                searchedUser: PresentationSearchedUser,
+                position: Int
+            ) {
                 mainSharedViewModel.deleteFavoriteUsers(
                     presentationSearchedUser = searchedUser,
                     presentationSearchedUserList = favoriteMarkedRvAdapter.currentList,
-                    shouldRemoveData = true)
+                    shouldRemoveData = true
+                )
             }
         })
     }

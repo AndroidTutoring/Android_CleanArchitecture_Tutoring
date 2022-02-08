@@ -3,15 +3,14 @@ package com.example.presentation.activity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import com.example.presentation.adapter.RepoListRvAdapter
-import com.example.presentation.base.BaseActivity
-import com.example.presentation.databinding.ActivityDetailBinding
-import com.example.presentation.fragment.UserFragment
-import com.example.data.model.SearchedUser
 import com.example.data.repository.RepoRepository
 import com.example.data.repository.RepoRepositoryImpl
 import com.example.data.retrofit.RetrofitHelper
 import com.example.data.source.remote.RepoRemoteDataSourceImpl
+import com.example.presentation.adapter.RepoListRvAdapter
+import com.example.presentation.base.BaseActivity
+import com.example.presentation.databinding.ActivityDetailBinding
+import com.example.presentation.fragment.UserFragment
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.DetailViewModel
 import com.example.presentation.viewmodel.factory.DetailViewModelFactory
@@ -55,16 +54,15 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding
     }
 
     //뷰모델로부터  데이터 받아옴
-    private fun getDataFromViewModel(){
+    private fun getDataFromViewModel() {
         //검색  유저 리스트 업데이트
         detailViewModel.repoDetailPublishSubject.subscribe({
             binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
             repoRvAdapter.submitList(it.toMutableList())
-        },{
+        }, {
             showToast(it.message.toString())
         })
     }
-
 
 
     //유저의  레포지토리 리스트를 받아온다.

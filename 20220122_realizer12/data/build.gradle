@@ -35,7 +35,7 @@ android {
 dependencies {
     def retrofitVersion = "2.9.0"
     def roomVersion = "2.4.1"
-    
+
     //rx적용
     implementation 'io.reactivex.rxjava3:rxjava:3.1.2'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'

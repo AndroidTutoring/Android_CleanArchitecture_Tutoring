@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 object Util {
 
 
-
     //키보드 imeoption  action search 가능하게
     fun EditText.search(view: View) {
         this.setOnEditorActionListener(object : TextView.OnEditorActionListener {

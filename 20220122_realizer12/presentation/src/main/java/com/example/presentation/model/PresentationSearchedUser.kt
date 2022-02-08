@@ -13,10 +13,12 @@ data class PresentationSearchedUser(
     var html_url: String = "",//유저 repo url
     var isMyFavorite: Boolean = false//유저 repo url
 ) : Parcelable {
-    companion object{
+    companion object {
 
         //데이터 모듈 데이터 모델로
-        fun toDataModel(presentationSearchedUser: PresentationSearchedUser):SearchedUser{
+        fun toDataModel(
+            presentationSearchedUser: PresentationSearchedUser
+        ): SearchedUser {
             return SearchedUser(
                 uid = presentationSearchedUser.uid,
                 id = presentationSearchedUser.id,
@@ -28,7 +30,9 @@ data class PresentationSearchedUser(
         }
 
         //presentation 모듈 데이터 모델로
-        fun toPresentationModel(searchedUser: SearchedUser):PresentationSearchedUser{
+        fun toPresentationModel(
+            searchedUser: SearchedUser
+        ): PresentationSearchedUser {
             return PresentationSearchedUser(
                 uid = searchedUser.uid,
                 id = searchedUser.id,

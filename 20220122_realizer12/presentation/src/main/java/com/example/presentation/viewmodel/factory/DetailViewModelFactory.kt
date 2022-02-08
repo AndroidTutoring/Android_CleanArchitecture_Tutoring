@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.RepoRepository
 import com.example.presentation.viewmodel.DetailViewModel
 
-class DetailViewModelFactory  (
+class DetailViewModelFactory(
     private val repoRepository: RepoRepository
 ) : ViewModelProvider.Factory {
 

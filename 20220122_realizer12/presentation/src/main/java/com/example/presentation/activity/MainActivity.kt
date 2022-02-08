@@ -2,21 +2,18 @@ package com.example.presentation.activity
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.example.presentation.adapter.MainViewPagerAdapter
-import com.example.presentation.base.BaseActivity
-import com.example.presentation.databinding.ActivityMainBinding
 import com.example.data.repository.UserRepository
 import com.example.data.repository.UserRepositoryImpl
 import com.example.data.retrofit.RetrofitHelper
 import com.example.data.room.LocalDataBase
 import com.example.data.source.local.UserLocalDataSourceImpl
 import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.adapter.MainViewPagerAdapter
+import com.example.presentation.base.BaseActivity
+import com.example.presentation.databinding.ActivityMainBinding
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
@@ -28,17 +25,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(this, ViewModelFactory(userRepository)).get(MainViewModel::class.java)
+        ViewModelProvider(
+            this,
+            ViewModelFactory(userRepository))
+            .get(MainViewModel::class.java)
     }
 
-   private fun dataFromViewModel(){
-        mainViewModel.mainBackPressPublishSubject.subscribe({isBackPressPossible->
-            if(isBackPressPossible){//뒤로가기 두번
+    private fun dataFromViewModel() {
+        mainViewModel.mainBackPressPublishSubject.subscribe({ isBackPressPossible ->
+            if (isBackPressPossible) {//뒤로가기 두번
                 super.onBackPressed()
-            }else{
+            } else {
                 showToast("뒤로가기 두번 눌러주세요")
             }
-        },{
+        }, {
             showToast(it.message.toString())
         })
     }
@@ -57,7 +57,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     //초기 뷰 세팅
     private fun initSet() {
-
 
 
         //메인 뷰페이져  FragmentStateAdapter 연결
