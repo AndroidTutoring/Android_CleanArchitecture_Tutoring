@@ -19,7 +19,6 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
-    private val behaviorSubject = BehaviorSubject.createDefault(0L)
 
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = LocalDataBase.getInstance(applicationContext)
@@ -32,31 +31,29 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         ViewModelProvider(this, ViewModelFactory(userRepository)).get(MainViewModel::class.java)
     }
 
+   private fun dataFromViewModel(){
+        mainViewModel.mainBackPressPublishSubject.subscribe({isBackPressPossible->
+            if(isBackPressPossible){//뒤로가기 두번
+                super.onBackPressed()
+            }else{
+                showToast("뒤로가기 두번 눌러주세요")
+            }
+        },{
+            showToast(it.message.toString())
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSet()
-        backPressCheck()
+        dataFromViewModel()
+        mainViewModel.backPressCheck()
     }
 
     override fun onBackPressed() {
-        //누른 시점 시간 넘겨줌.
-        behaviorSubject.onNext(System.currentTimeMillis())
+        mainViewModel.behaviorSubject.onNext(System.currentTimeMillis())
     }
 
-    //뒤로가기 프로세스 체크처리
-    private fun backPressCheck() {
-        //항상 누른거 이전걸로 체크해야되니까 buffer count 2 주고 skip 1로줌.
-        behaviorSubject.buffer(2, 1)
-            .map { it[0] to it[1] }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                if (it.second - it.first < 2000L) {//첫번째 누른것과 두번째 누른 값의 차가 2초이내이면 뒤로가기 처리
-                    super.onBackPressed()
-                } else {
-                    showToast("앱을 종료 하려면 한번 더 눌러주세요.")
-                }
-            }.addTo(compositeDisposable)
-    }
 
     //초기 뷰 세팅
     private fun initSet() {

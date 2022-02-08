@@ -3,15 +3,23 @@ package com.example.presentation.viewmodel
 import com.example.presentation.base.BaseViewModel
 import com.example.data.model.SearchedUser
 import com.example.data.repository.UserRepository
+import com.example.presentation.model.PresentationSearchedUser
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import timber.log.Timber
 
 class MainViewModel(
     private val userRepository: UserRepository
 ) : BaseViewModel() {
+
+    val behaviorSubject = BehaviorSubject.createDefault(0L)
+
+    //메인 엑티비티 뒤로가기 관련 publish subject
+    val mainBackPressPublishSubject: PublishSubject<Boolean> = PublishSubject.create()
 
     //즐겨찾기 프래그먼트 유저리스트 업데이트용
     val favoriteFragmentUpdateUserList: PublishSubject<List<SearchedUser>> =
@@ -25,6 +33,26 @@ class MainViewModel(
 
     fun getSearchUserList(searchedUserList: List<SearchedUser>){
        this.searchedUsersList = searchedUserList as MutableList<SearchedUser>
+    }
+
+
+    //뒤로가기 프로세스 체크처리
+    fun backPressCheck() {
+
+        //항상 누른거 이전걸로 체크해야되니까 buffer count 2 주고 skip 1로줌.
+        behaviorSubject.buffer(2, 1)
+            .map { it[0] to it[1] }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                mainBackPressPublishSubject.onError(Throwable("뒤로가기 진행중 문제 발생"))
+            }
+            .subscribe {
+                if (it.second - it.first < 2000L) {//첫번째 누른것과 두번째 누른 값의 차가 2초이내이면 뒤로가기 처리
+                    mainBackPressPublishSubject.onNext(true)
+                } else {
+                    mainBackPressPublishSubject.onNext(false)
+                }
+            }.addTo(compositeDisposable)
     }
 
     fun searchUser(searchQuery:String,page:Int,perPage:Int){
