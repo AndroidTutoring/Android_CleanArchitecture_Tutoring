@@ -2,6 +2,7 @@ package com.example.presentation.activity
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.example.presentation.adapter.RepoListRvAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityDetailBinding
@@ -11,8 +12,8 @@ import com.example.presentation.repository.RepoRepository
 import com.example.presentation.repository.RepoRepositoryImpl
 import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.source.remote.RepoRemoteDataSourceImpl
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.example.presentation.viewmodel.DetailViewModel
+import com.example.presentation.viewmodel.factory.DetailViewModelFactory
 
 class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding::inflate) {
 
@@ -25,9 +26,18 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding
         RepoRepositoryImpl(remoteDataSource)
     }
 
+    //정보화면 뷰모델
+    private val detailViewModel: DetailViewModel by lazy {
+        ViewModelProvider(
+            this,
+            DetailViewModelFactory(repoRepository)
+        ).get(DetailViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSet()
+        getDataFromViewModel()
         getUserRepoList(userInfo?.login.toString())//해당 유저의  레포 리스트 가져오기
     }
 
@@ -43,20 +53,22 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding
         }
     }
 
+    //뷰모델로부터  데이터 받아옴
+    private fun getDataFromViewModel(){
+        //검색  유저 리스트 업데이트
+        detailViewModel.repoDetailPublishSubject.subscribe({
+            binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
+            repoRvAdapter.submitList(it.toMutableList())
+        },{
+            showToast(it.message.toString())
+        })
+    }
+
+
 
     //유저의  레포지토리 리스트를 받아온다.
     private fun getUserRepoList(userName: String) {
-
-        repoRepository.getUserRepoList(userName = userName)
-            .subscribeOn(Schedulers.io())
-            .filter { !it.isNullOrEmpty() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ userRepoList ->
-                binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
-                repoRvAdapter.submitList(userRepoList)
-            }, { t ->
-                showToast(t.message.toString())
-            })
+        detailViewModel.getRepoDetails(userName = userName)
     }
 
 }

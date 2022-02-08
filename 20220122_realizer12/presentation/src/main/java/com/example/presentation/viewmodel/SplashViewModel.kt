@@ -16,13 +16,11 @@ class SplashViewModel(
 ) : BaseViewModel() {
 
     //유저 프래그먼트 유저리스트 업데이트 용
-    val searchedUserPublishSubject: PublishSubject<List<SearchedUser>> =
-        PublishSubject.create()
-
-    lateinit var disposable: Disposable
+    val searchedUserPublishSubject: PublishSubject<List<SearchedUser>>
+        = PublishSubject.create()
 
     fun searchUsers(){
-       disposable = Single.zip(
+        Single.zip(
             userRepository.getSearchUsers(query = "realizer12", 1, 10)
                 .subscribeOn(Schedulers.io()).map {
                 if (it.isSuccessful) {

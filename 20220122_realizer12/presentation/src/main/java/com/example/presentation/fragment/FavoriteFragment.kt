@@ -14,7 +14,7 @@ import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.viewmodel.MainViewModel
-import com.example.presentation.viewmodel.ViewModelFactory
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 
 //즐겨찾기 프래그먼트
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBinding::inflate) {

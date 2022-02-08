@@ -2,7 +2,6 @@ package com.example.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
@@ -13,13 +12,8 @@ import com.example.presentation.retrofit.RetrofitHelper
 import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
-import com.example.presentation.viewmodel.ViewModelFactory
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.example.presentation.viewmodel.SplashViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
 

@@ -12,7 +12,7 @@ import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.viewmodel.MainViewModel
-import com.example.presentation.viewmodel.ViewModelFactory
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.addTo
@@ -29,7 +29,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(this,ViewModelFactory(userRepository)).get(MainViewModel::class.java)
+        ViewModelProvider(this, ViewModelFactory(userRepository)).get(MainViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

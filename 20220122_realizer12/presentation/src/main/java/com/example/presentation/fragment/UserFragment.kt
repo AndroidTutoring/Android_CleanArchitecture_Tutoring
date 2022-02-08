@@ -20,7 +20,7 @@ import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
 import com.example.presentation.viewmodel.MainViewModel
-import com.example.presentation.viewmodel.ViewModelFactory
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 
 //유저 프래그먼트
 class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
