@@ -17,6 +17,7 @@ import com.example.data.retrofit.RetrofitHelper
 import com.example.data.room.LocalDataBase
 import com.example.data.source.local.UserLocalDataSourceImpl
 import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
 import com.example.presentation.viewmodel.MainViewModel
@@ -28,7 +29,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private var page: Int = 1//페이지목록
     private var perPage: Int = 10//페이지당 요청하는 데이터 수
 
-    private var searchedUsersList: List<SearchedUser>? = listOf()
+    private var searchedUsersList: List<PresentationSearchedUser>? = listOf()
     private lateinit var userListRcyAdapter: UserListRvAdapter
 
     private val userRepository: UserRepository by lazy {
@@ -71,7 +72,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private fun getDataFromViewModel(){
         //검색  유저 리스트 업데이트
         mainSharedViewModel.userFragmentUpdateUserList.subscribe({
-            userListRcyAdapter.submitList(it as MutableList<SearchedUser>?)
+            userListRcyAdapter.submitList(it as MutableList<PresentationSearchedUser>?)
             binding.emptyView.visibility = View.GONE
          },{
             showToast(it.message.toString())
@@ -83,7 +84,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList() {
         searchedUsersList =
-            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO) as List<SearchedUser>
+            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO) as List<PresentationSearchedUser>
         if (!searchedUsersList.isNullOrEmpty()) {
 
             binding.editSearchUser.setText(searchedUsersList!![0].login)
@@ -121,7 +122,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
         //아이템 클릭시 처리
         userListRcyAdapter.setItemClickListener(object : UserListRvAdapter.ItemClickListener {
-            override fun onItemClickListener(searchedUser: SearchedUser) {
+            override fun onItemClickListener(searchedUser: PresentationSearchedUser) {
                 gotoDetailActivity(searchedUser)
             }
         })
@@ -129,7 +130,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
         //즐겨 찾기 클릭시 처리
         userListRcyAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
-            override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
+            override fun onFavoriteMarkListener(searchedUser: PresentationSearchedUser, position: Int) {
                 val deepCopiedList =userListRcyAdapter.currentList.map { it.copy() }
                 val deepCopiedSearchedUser = searchedUser.copy()
                 returnFavoriteMarkStatus(deepCopiedSearchedUser,deepCopiedList)
@@ -139,26 +140,26 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     }
 
     //즐겨 찾기 취소 또는 추가 여부에 따른  delete  add 를 리턴
-    private fun returnFavoriteMarkStatus(searchedUser: SearchedUser,currentList: List<SearchedUser>) {
+    private fun returnFavoriteMarkStatus(searchedUser: PresentationSearchedUser,currentList: List<PresentationSearchedUser>) {
          if (searchedUser.isMyFavorite) {
             showToast("즐겨찾기 취소")
             searchedUser.isMyFavorite = false
             mainSharedViewModel.deleteFavoriteUsers(
-                searchedUser = searchedUser,
-                currentList = currentList,
+                presentationSearchedUser = searchedUser,
+                presentationSearchedUserList = currentList,
                 shouldRemoveData = false)
 
         } else {
             showToast("즐겨찾기 추가")
             searchedUser.isMyFavorite = true
             mainSharedViewModel.addFavoriteUsers(
-                searchedUser = searchedUser,
-                currentList = currentList)
+                presentationSearchedUser = searchedUser,
+                presentationSearchedUserList = currentList)
         }
     }
 
     //상세화면으로 가기
-    private fun gotoDetailActivity(searchedUser: SearchedUser) {
+    private fun gotoDetailActivity(searchedUser: PresentationSearchedUser) {
         val intent = Intent(requireActivity(), DetailActivity::class.java)
         intent.putExtra(PARAM_USER_INFO, searchedUser)
         startActivity(intent)

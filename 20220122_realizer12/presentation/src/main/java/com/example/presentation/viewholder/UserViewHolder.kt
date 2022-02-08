@@ -4,10 +4,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.presentation.databinding.ItemRepoUserBinding
 import com.example.data.model.SearchedUser
+import com.example.presentation.model.PresentationSearchedUser
 
 class UserViewHolder(val binding: ItemRepoUserBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(searchedUser: SearchedUser) {
+    fun bind(searchedUser: PresentationSearchedUser) {
 
         //즐겨찾기 true일때  별을 색칠해준다.
         Glide.with(itemView.context)

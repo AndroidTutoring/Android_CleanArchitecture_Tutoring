@@ -12,6 +12,8 @@ import com.example.data.retrofit.RetrofitHelper
 import com.example.data.room.LocalDataBase
 import com.example.data.source.local.UserLocalDataSourceImpl
 import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.model.PresentationSearchedUsers
 import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.example.presentation.viewmodel.SplashViewModel
 
@@ -21,7 +23,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = LocalDataBase.getInstance(this.applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
         UserRepositoryImpl(localDataSource, remoteDataSource)
     }
 
@@ -34,7 +36,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     private fun getDataFromViewModel(){
         //검색  유저 리스트 업데이트
         splashViewModel.searchedUserPublishSubject.subscribe({
-            gotoMainActivity(it as ArrayList<SearchedUser>?)
+            gotoMainActivity(it as ArrayList<PresentationSearchedUser>?)
         },{
             showToast(it.message.toString())
             finish()//문제 있으면 앱종료
@@ -48,7 +50,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     }
 
     //메인 가기
-    private fun gotoMainActivity(searchUsers: ArrayList<SearchedUser>?) {
+    private fun gotoMainActivity(searchUsers: ArrayList<PresentationSearchedUser>?) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(PARAM_INIT_USER_INFO, searchUsers)
         startActivity(intent)

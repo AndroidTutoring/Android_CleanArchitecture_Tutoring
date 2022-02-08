@@ -3,6 +3,9 @@ package com.example.presentation.viewmodel
 import com.example.presentation.base.BaseViewModel
 import com.example.data.model.SearchedUser
 import com.example.data.repository.UserRepository
+import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.model.PresentationSearchedUsers
+import com.example.presentation.model.PresentationSearchedUsers.Companion.toPresentationModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
@@ -15,7 +18,7 @@ class SplashViewModel(
 ) : BaseViewModel() {
 
     //유저 프래그먼트 유저리스트 업데이트 용
-    val searchedUserPublishSubject: PublishSubject<List<SearchedUser>>
+    val searchedUserPublishSubject: PublishSubject<List<PresentationSearchedUser>>
         = PublishSubject.create()
 
     fun searchUsers(){
@@ -33,8 +36,12 @@ class SplashViewModel(
                     .take(2)
             }.observeOn(AndroidSchedulers.mainThread()),
               Single.timer(2, TimeUnit.SECONDS),
-            { searchedUsers, _ ->
-                searchedUserPublishSubject.onNext(searchedUsers?.items)
+            { dataModelSearchedUsers, _ ->
+                searchedUserPublishSubject.onNext(dataModelSearchedUsers?.let {
+                    toPresentationModel(
+                        it
+                    ).items
+                })
             }).onErrorReturn {
             searchedUserPublishSubject.onError(Throwable("유저 정보를 가져올수가 없습니다."))
         }.subscribe()
