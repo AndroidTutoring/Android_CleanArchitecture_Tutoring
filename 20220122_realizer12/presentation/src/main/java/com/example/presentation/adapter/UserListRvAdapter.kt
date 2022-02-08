@@ -62,17 +62,6 @@ class UserListRvAdapter : ListAdapter<SearchedUser, UserViewHolder>(diffUtil) {
         }
     }
 
-    override fun submitList(list: MutableList<SearchedUser>?) {
-        try {
-            Timber.v("  new list ->"+list?.get(0)?.id+ " ismyfavorite->"+list?.get(0)?.isMyFavorite)
-            Timber.v("  old list ->"+ this.currentList[0]?.id+ " ismyfavorite->"+ this.currentList[0]?.isMyFavorite)
-        }catch (e:Exception){
-            e.printStackTrace()
-        }
-
-
-        super.submitList(list)
-    }
 
     override fun getItemCount() = currentList.size
 

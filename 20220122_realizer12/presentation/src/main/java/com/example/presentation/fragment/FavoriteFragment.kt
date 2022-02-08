@@ -14,10 +14,7 @@ import com.example.presentation.room.LocalDataBase
 import com.example.presentation.source.local.UserLocalDataSourceImpl
 import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.viewmodel.MainViewModel
-import com.example.presentation.viewmodel.MainViewModelFactory
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.example.presentation.viewmodel.ViewModelFactory
 
 //즐겨찾기 프래그먼트
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBinding::inflate) {
@@ -28,7 +25,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     private val mainSharedViewModel: MainViewModel by lazy {
         ViewModelProvider(
             requireActivity(),
-            MainViewModelFactory(userRepository)
+            ViewModelFactory(userRepository)
         ).get(MainViewModel::class.java)
     }
 

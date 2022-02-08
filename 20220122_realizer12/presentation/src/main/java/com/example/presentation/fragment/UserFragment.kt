@@ -20,7 +20,7 @@ import com.example.presentation.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
 import com.example.presentation.viewmodel.MainViewModel
-import com.example.presentation.viewmodel.MainViewModelFactory
+import com.example.presentation.viewmodel.ViewModelFactory
 
 //유저 프래그먼트
 class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
@@ -42,7 +42,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private val mainSharedViewModel: MainViewModel by lazy {
         ViewModelProvider(
             requireActivity(),
-            MainViewModelFactory(userRepository)
+            ViewModelFactory(userRepository)
         ).get(MainViewModel::class.java)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
