@@ -12,13 +12,14 @@ import com.example.data.repository.RepoRepository
 import com.example.data.repository.RepoRepositoryImpl
 import com.example.data.retrofit.RetrofitHelper
 import com.example.data.source.remote.RepoRemoteDataSourceImpl
+import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.DetailViewModel
 import com.example.presentation.viewmodel.factory.DetailViewModelFactory
 
 class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding::inflate) {
 
     //유저 정보
-    private var userInfo: SearchedUser? = null
+    private var userInfo: PresentationSearchedUser? = null
 
     private lateinit var repoRvAdapter: RepoListRvAdapter
     private val repoRepository: RepoRepository by lazy {
