@@ -16,10 +16,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
 class MainActivity : AppCompatActivity()  {
 
+    private val githubRepos: ArrayList<User> = ArrayList()
 
     private val listData = listOf<User>()
     private val position: Int?=null
@@ -46,11 +48,8 @@ class MainActivity : AppCompatActivity()  {
         setContentView(binding.root)
 
         clickFavorite()
-        setAdapter()
         back2()
         itemFavClick()
-
-
 
 
     }
@@ -69,19 +68,13 @@ class MainActivity : AppCompatActivity()  {
         }
 
 
-    //vm 이
-    @SuppressLint("CheckResult")
-    private fun setAdapter(){
-        AdapterData()
-            disposables.add(githubRepository.getRepos()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .retry(2)
-                .subscribe{ item ->
-                    adapter.update(item)
-                }
-            )
+    fun update(githubRepos: List<User>) {
+        this.githubRepos.clear()
+        this.githubRepos.addAll(githubRepos)
+        this.githubRepos.size
+        this.githubRepos.take(30)
     }
+
     private fun AdapterData(){
         with(adapter){
             intent.putExtra("name", position?.let { postList.get(it).name })
