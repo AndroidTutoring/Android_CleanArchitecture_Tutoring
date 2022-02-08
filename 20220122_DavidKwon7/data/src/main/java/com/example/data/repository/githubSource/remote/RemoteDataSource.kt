@@ -1,4 +1,4 @@
-package com.example.recylcerviewtest01.githubSource.remote
+package com.example.data.repository.githubSource.remote
 
 import com.example.presentation.User
 import io.reactivex.Completable

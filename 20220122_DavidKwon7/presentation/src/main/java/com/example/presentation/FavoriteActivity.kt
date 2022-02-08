@@ -7,15 +7,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.data.repository.githubRepository.GithubRepository
 import com.example.presentation.databinding.ActivityFavoriteBinding
-import com.example.recylcerviewtest01.githubRepository.GithubRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import retrofit2.Callback
-import retrofit2.Response
 
 class FavoriteActivity : AppCompatActivity() {
 

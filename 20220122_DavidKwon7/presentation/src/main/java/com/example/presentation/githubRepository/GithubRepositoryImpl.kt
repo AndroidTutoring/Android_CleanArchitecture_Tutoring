@@ -1,18 +1,10 @@
-package com.example.recylcerviewtest01.githubRepository
+package com.example.data.repository.githubRepository
 
-import android.util.Log
+import com.example.data.repository.githubSource.local.LocalDataSource
 import com.example.presentation.User
-import com.example.recylcerviewtest01.githubSource.local.LocalDataSource
-import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSource
-import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSourceImpl
+import com.example.data.repository.githubSource.remote.RemoteDataSource
 import io.reactivex.Completable
-import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
 class GithubRepositoryImpl(
     private val localDataSource: LocalDataSource,

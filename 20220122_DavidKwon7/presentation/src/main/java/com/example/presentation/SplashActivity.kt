@@ -3,25 +3,18 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.example.presentation.databinding.ActivitySplashBinding
-import com.example.recylcerviewtest01.githubRepository.GithubRepository
+import com.example.presentation.githubRepository.GithubRepository
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class SplashActivity : AppCompatActivity() {
 
     private var binding: ActivitySplashBinding?=null
     private var disposables: CompositeDisposable?=null
-    private val githubRepository:GithubRepository?=null
+    private val githubRepository: GithubRepository?=null
 
     private val backButtonSubject: BehaviorSubject<Long> = BehaviorSubject.createDefault(0L)
 

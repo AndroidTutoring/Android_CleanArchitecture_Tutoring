@@ -6,13 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.example.data.repository.githubRepository.GithubRepository
+import com.example.data.repository.githubRepository.GithubRepositoryImpl
+import com.example.data.repository.githubSource.local.LocalDataSourceImpl
 import com.example.presentation.databinding.ActivityMainBinding
-import com.example.recylcerviewtest01.githubRepository.GithubRepository
-import com.example.recylcerviewtest01.githubRepository.GithubRepositoryImpl
-import com.example.recylcerviewtest01.githubSource.local.LocalDataSource
-import com.example.recylcerviewtest01.githubSource.local.LocalDataSourceImpl
-import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSource
-import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSourceImpl
+import com.example.data.repository.githubSource.remote.RemoteDataSourceImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -71,6 +69,7 @@ class MainActivity : AppCompatActivity()  {
         }
 
 
+    //vm 이
     @SuppressLint("CheckResult")
     private fun setAdapter(){
         AdapterData()
