@@ -198,8 +198,4 @@ class MainViewModel(
             .addTo(compositeDisposable)
     }
 
-
-    override fun onCleared() {
-        super.onCleared()
-    }
 }
