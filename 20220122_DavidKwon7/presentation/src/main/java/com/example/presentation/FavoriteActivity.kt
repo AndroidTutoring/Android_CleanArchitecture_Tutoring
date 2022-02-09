@@ -38,7 +38,6 @@ class FavoriteActivity : AppCompatActivity() {
         clickFavorite()
         setAdapter()
         itemDeleteClick()
-        back2()
         initVMFactory()
 
     }
@@ -67,14 +66,6 @@ class FavoriteActivity : AppCompatActivity() {
 
     }
 
-    override fun onBackPressed() {
-        if(System.currentTimeMillis() - backPressedTime <2000){
-            finish()
-            return
-        }
-        Toast.makeText(this, "한 번 더 뒤로가기 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
-        backPressedTime = System.currentTimeMillis()
-    }
 
     private fun clickFavorite() {
             binding.btn1.setOnClickListener {
@@ -99,20 +90,6 @@ class FavoriteActivity : AppCompatActivity() {
             }
         })
     }
-    @SuppressLint("CheckResult")
-    private fun back2() {
-        backButtonSubject.buffer(2,1)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { t ->
-                if (t[1] - t[0] <= 1500) {
-                    finish()
-                } else {
-                    Toast.makeText(this, "뒤로가기 한 번 더 누르면 꺼짐 ", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-    }
-
     private fun initVMFactory(){
         val viewModelFactory = ViewModelProvider(
             this,ViewModelProvider.NewInstanceFactory())

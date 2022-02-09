@@ -81,9 +81,9 @@ class MainActivity : AppCompatActivity()  {
         })
     }
 
-    @SuppressLint("CheckResult")
+    /*@SuppressLint("CheckResult")
     private fun backFromVM(){
-        mainViewModel.publishSubject.subscribe{ it ->
+        mainViewModel. subscribe{ it ->
             if (true){
                 super.onBackPressed()
             }  else{
@@ -91,6 +91,9 @@ class MainActivity : AppCompatActivity()  {
             }
             
         }
+    }*/
+    private fun backFromVM2(){
+        mainViewModel.s
     }
 
 
