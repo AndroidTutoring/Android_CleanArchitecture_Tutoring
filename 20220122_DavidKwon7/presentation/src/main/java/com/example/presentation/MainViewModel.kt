@@ -39,7 +39,6 @@ class MainViewModel : ViewModel() {
         this.githubRepos.take(30)
     }
 
-    @SuppressLint("CheckResult")
     private fun initRepo(){
         githubRepository
         disposables.add(githubRepository.getRepos()
@@ -54,7 +53,6 @@ class MainViewModel : ViewModel() {
     }
 
     //뒤로 가기
-    @SuppressLint("CheckResult")
     private fun back2() {
         backButtonSubject
             .buffer(2, 1)
