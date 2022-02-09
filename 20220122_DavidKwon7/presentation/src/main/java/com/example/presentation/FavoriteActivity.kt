@@ -41,10 +41,6 @@ class FavoriteActivity : AppCompatActivity() {
         back2()
         initVMFactory()
 
-        val viewModelFactory = ViewModelProvider(
-            this,ViewModelProvider.NewInstanceFactory())
-            .get(MainViewModel::class.java)
-
     }
     override fun onDestroy() {
         super.onDestroy()
