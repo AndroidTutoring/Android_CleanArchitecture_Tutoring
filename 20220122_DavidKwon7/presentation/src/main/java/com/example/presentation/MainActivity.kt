@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity()  {
     private lateinit var api: Api
     private lateinit var userdao: UserDao
     private lateinit var binding: ActivityMainBinding
-    private val disposables : CompositeDisposable by lazy {
+    private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
     lateinit var repository : GithubRepository
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity()  {
     }
     override fun onDestroy() {
         super.onDestroy()
-        disposables.clear()
+        compositeDisposable.clear()
     }
 
 

@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
     val githubRepository = GithubRepositoryImpl(
         localDataSource = localDataSource,
         remoteDataSource = remoteDataSource)
-    private val disposables : CompositeDisposable by lazy {
+    private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
     fun update(githubRepos: List<User>) {
@@ -40,15 +40,14 @@ class MainViewModel : ViewModel() {
     }
 
     private fun initRepo(){
-        githubRepository
-        disposables.add(githubRepository.getRepos()
+        compositeDisposable.add(githubRepository.getRepos()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry(2)
             .subscribe{ item ->
                 update(item)
                 publishSubject.onNext(item)
-            }
+            }.addTo(compositeDisposable)
         )
     }
 
@@ -67,13 +66,13 @@ class MainViewModel : ViewModel() {
                 }
                 else
                     backButtonSubject.retry(3)
-            } .addTo(disposables)
+            } .addTo(compositeDisposable)
     }
 
 
     override fun onCleared() {
         super.onCleared()
-        disposables.dispose()
+        compositeDisposable.dispose()
     }
 
 }

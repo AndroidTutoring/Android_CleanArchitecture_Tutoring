@@ -26,7 +26,7 @@ class FavoriteActivity : AppCompatActivity() {
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L)
 
-    private lateinit var disposables: CompositeDisposable
+    private lateinit var compositeDisposable: CompositeDisposable
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class FavoriteActivity : AppCompatActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        disposables.clear()
+        compositeDisposable.clear()
     }
 
 
