@@ -1,9 +1,12 @@
 package com.example.presentation
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
+import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
 import com.example.data.repository.githubSource.remote.RemoteDataSourceImpl
+import com.example.presentation.databinding.ActivityFavoriteBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -24,6 +27,16 @@ class FavoriteViewModel : ViewModel() {
         remoteDataSource = remoteDataSource)
     private val publishSubject : PublishSubject<List<User>> =
         PublishSubject.create()
+
+    lateinit var adapter: FavoriteAdapter
+    lateinit var binding: ActivityFavoriteBinding
+
+
+
+    @SuppressLint("CheckResult")
+    private fun setAdapter(){
+        binding.rvProfile.adapter = this.adapter
+    }
 
 
     fun update(githubRepos: List<User>) {

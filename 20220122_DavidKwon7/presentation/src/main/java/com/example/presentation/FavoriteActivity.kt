@@ -36,7 +36,6 @@ class FavoriteActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         clickFavorite()
-        setAdapter()
         itemDeleteClick()
         initVMFactory()
 
@@ -44,26 +43,6 @@ class FavoriteActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
-    }
-
-
-
-    @SuppressLint("CheckResult")
-    private fun setAdapter(){
-        binding.rvProfile.apply {
-            adapter = this.adapter
-            layoutManager = LinearLayoutManager(this@FavoriteActivity)
-        }
-
-        repository.getRepos()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { data ->
-                adapter.postList = data
-                adapter.notifyDataSetChanged()
-            }
-
-
     }
 
 
