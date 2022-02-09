@@ -5,6 +5,9 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
@@ -18,7 +21,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
-class MainViewModel() : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var api: Api
     private lateinit var userdao: UserDao
     private val listData = listOf<User>()
@@ -37,6 +40,9 @@ class MainViewModel() : ViewModel() {
     private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
+
+
+
     fun update(githubRepos: List<User>) {
         this.githubRepos.clear()
         this.githubRepos.addAll(githubRepos)
@@ -55,27 +61,6 @@ class MainViewModel() : ViewModel() {
             }.addTo(compositeDisposable)
         )
     }
-
-    //뒤로 가기 ~ 질문 하기
-    @SuppressLint("CheckResult")
-    private fun back2() {
-            backButtonSubject.buffer(2,1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .map{t ->
-                    t[1] - t[0] < 1500L
-                }
-                .subscribe { willFinish ->
-                    if (willFinish){
-                        finish();
-                }else {
-                        Toast.makeText(, "", Toast.LENGTH_SHORT).show()
-                    }
-
-        }
-    }
-
-
-
 
     override fun onCleared() {
         super.onCleared()

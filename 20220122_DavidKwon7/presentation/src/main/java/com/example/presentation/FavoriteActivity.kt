@@ -72,7 +72,7 @@ class FavoriteActivity : AppCompatActivity() {
     private fun initVMFactory(){
         val viewModelFactory = ViewModelProvider(
             this,ViewModelProvider.NewInstanceFactory())
-            .get(MainViewModel::class.java)
+            .get(FavoriteViewModel::class.java)
     }
 
 

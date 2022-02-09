@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
@@ -19,6 +21,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import java.util.Set.of
 
 class MainActivity : AppCompatActivity()  {
 
@@ -32,6 +35,8 @@ class MainActivity : AppCompatActivity()  {
     private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
+    private val backButtonSubject : Subject<Long> =
+        BehaviorSubject.createDefault(0L)
     lateinit var repository : GithubRepository
     lateinit var mainViewModel : MainViewModel
     private val adapter: ProfileAdapter by lazy {
@@ -42,6 +47,12 @@ class MainActivity : AppCompatActivity()  {
     private val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
     remoteDataSource = remoteDataSource)
 
+    val viewModelFactory = ViewModelProvider(
+        this, ViewModelProvider.NewInstanceFactory())
+        .get(MainViewModel::class.java)
+
+
+
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,14 +61,12 @@ class MainActivity : AppCompatActivity()  {
 
         clickFavorite()
         itemFavClick()
-        backFromVM()
-
+        back2()
     }
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
     }
-
 
 
         private fun clickFavorite() {
@@ -80,20 +89,22 @@ class MainActivity : AppCompatActivity()  {
             }
         })
     }
-
-    /*@SuppressLint("CheckResult")
-    private fun backFromVM(){
-        mainViewModel. subscribe{ it ->
-            if (true){
-                super.onBackPressed()
-            }  else{
-                Log.d(this.toString(), "backFromVM: 에러.")
+    //뒤로 가기 ~ 질문 하기
+    @SuppressLint("CheckResult")
+    private fun back2() {
+        backButtonSubject.buffer(2,1)
+            .observeOn(AndroidSchedulers.mainThread())
+            .map{t ->
+                t[1] - t[0] < 1500L
             }
-            
-        }
-    }*/
-    private fun backFromVM2(){
-        mainViewModel.s
+            .subscribe { willFinish ->
+                if (willFinish){
+                    finish()
+                } else{
+                    Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+                }
+            }
+
     }
 
 
