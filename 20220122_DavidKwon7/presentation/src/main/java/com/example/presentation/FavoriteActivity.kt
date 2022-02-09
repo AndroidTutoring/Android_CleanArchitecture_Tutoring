@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.presentation.databinding.ActivityFavoriteBinding
@@ -21,10 +22,11 @@ class FavoriteActivity : AppCompatActivity() {
     lateinit var binding: ActivityFavoriteBinding
     lateinit var repository : GithubRepository
     lateinit var adapter: FavoriteAdapter
-    private val backButtonSubject : Subject<Long> = BehaviorSubject.createDefault(0L)
+
+    private val backButtonSubject : Subject<Long> =
+        BehaviorSubject.createDefault(0L)
+
     private lateinit var disposables: CompositeDisposable
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +39,11 @@ class FavoriteActivity : AppCompatActivity() {
         setAdapter()
         itemDeleteClick()
         back2()
+        initVMFactory()
+
+        val viewModelFactory = ViewModelProvider(
+            this,ViewModelProvider.NewInstanceFactory())
+            .get(MainViewModel::class.java)
 
     }
     override fun onDestroy() {
@@ -46,9 +53,13 @@ class FavoriteActivity : AppCompatActivity() {
 
 
 
+    @SuppressLint("CheckResult")
     private fun setAdapter(){
-        binding.rvProfile.adapter = this.adapter
-        binding.rvProfile.layoutManager = LinearLayoutManager(this)
+        binding.rvProfile
+            .adapter = this.adapter
+
+        binding.rvProfile
+            .layoutManager = LinearLayoutManager(this)
 
         repository.getRepos()
             .subscribeOn(Schedulers.io())
@@ -72,7 +83,8 @@ class FavoriteActivity : AppCompatActivity() {
 
     private fun clickFavorite() {
             binding.btn1.setOnClickListener {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(
+                    this, MainActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -82,7 +94,10 @@ class FavoriteActivity : AppCompatActivity() {
             OnItemClickListener {
             override fun onItemClick(v: View, data: User, pos: Int) {
                 repository.deleteFav(deleteUser = User(
-                    name=String(),id= String(),date = String(),url = String() ))
+                    name=String(),
+                    id= String(),
+                    date = String(),
+                    url = String() ))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
@@ -101,6 +116,12 @@ class FavoriteActivity : AppCompatActivity() {
                 }
             }
 
+    }
+
+    private fun initVMFactory(){
+        val viewModelFactory = ViewModelProvider(
+            this,ViewModelProvider.NewInstanceFactory())
+            .get(MainViewModel::class.java)
     }
 
 

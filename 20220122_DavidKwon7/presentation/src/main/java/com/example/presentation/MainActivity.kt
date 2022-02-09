@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.data.repository.githubRepository.GithubRepository
@@ -32,13 +33,13 @@ class MainActivity : AppCompatActivity()  {
         CompositeDisposable()
     }
     lateinit var repository : GithubRepository
+    lateinit var mainViewModel : MainViewModel
     private val adapter: ProfileAdapter by lazy {
         ProfileAdapter(listData,this)
     }
-    private val backButtonSubject : Subject<Long> = BehaviorSubject.createDefault(0L)
-    val localDataSource = LocalDataSourceImpl(dao = userdao)
-    val remoteDataSource = RemoteDataSourceImpl(api)
-    val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
+    private val localDataSource = LocalDataSourceImpl(dao = userdao)
+    private val remoteDataSource = RemoteDataSourceImpl(api)
+    private val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
     remoteDataSource = remoteDataSource)
 
     @SuppressLint("CheckResult")
@@ -48,9 +49,8 @@ class MainActivity : AppCompatActivity()  {
         setContentView(binding.root)
 
         clickFavorite()
-        back2()
         itemFavClick()
-
+        backFromVM()
 
     }
     override fun onDestroy() {
@@ -59,31 +59,12 @@ class MainActivity : AppCompatActivity()  {
     }
 
 
-
         private fun clickFavorite() {
             binding.btn2.setOnClickListener {
                 val intent = Intent(this, FavoriteActivity::class.java)
                 startActivity(intent)
             }
         }
-
-
-    fun update(githubRepos: List<User>) {
-        this.githubRepos.clear()
-        this.githubRepos.addAll(githubRepos)
-        this.githubRepos.size
-        this.githubRepos.take(30)
-    }
-
-    private fun AdapterData(){
-        with(adapter){
-            intent.putExtra("name", position?.let { postList.get(it).name })
-            intent.putExtra("id", position?.let { postList.get(it).id })
-            intent.putExtra("date", position?.let { postList.get(it).date })
-            intent.putExtra("url", position?.let { postList.get(it).url })
-        }
-    }
-
 
     //item click
     private fun itemFavClick() {
@@ -98,16 +79,17 @@ class MainActivity : AppCompatActivity()  {
             }
         })
     }
-    //뒤로 가기
-    private fun back2() {
-        backButtonSubject
-            .buffer(2, 1)
-            .map { it[1] - it[0] < 1500 }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { willFinish ->
-                if (willFinish) finish()
-                else Toast.makeText(this, "다시 한 번 더 눌러주세요", Toast.LENGTH_SHORT).show()
-            } .addTo(disposables)
+
+    @SuppressLint("CheckResult")
+    private fun backFromVM(){
+        mainViewModel.publishSubject.subscribe{ it ->
+            if (true){
+                super.onBackPressed()
+            }  else{
+                Log.d(this.toString(), "backFromVM: 에러.")
+            }
+            
+        }
     }
 
 
