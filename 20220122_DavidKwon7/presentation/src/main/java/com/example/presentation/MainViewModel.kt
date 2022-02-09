@@ -19,14 +19,14 @@ class MainViewModel : ViewModel() {
     private lateinit var userdao: UserDao
     private val listData = listOf<User>()
     private val githubRepos: ArrayList<User> = ArrayList()
-    private val backButtonSubject : Subject<Long> = BehaviorSubject.createDefault(0L)
 
-
-    val publishSubject : PublishSubject<List<User>> =
+    private val backButtonSubject : Subject<Boolean> = PublishSubject.create()
+    private val publishSubject : PublishSubject<List<User>> =
         PublishSubject.create()
-    val localDataSource = LocalDataSourceImpl(dao = userdao)
-    val remoteDataSource = RemoteDataSourceImpl(api)
-    val githubRepository = GithubRepositoryImpl(
+    private val behaviorSubject = BehaviorSubject.createDefault(0L)
+    private val localDataSource = LocalDataSourceImpl(dao = userdao)
+    private val remoteDataSource = RemoteDataSourceImpl(api)
+    private val githubRepository = GithubRepositoryImpl(
         localDataSource = localDataSource,
         remoteDataSource = remoteDataSource)
     private val compositeDisposable : CompositeDisposable by lazy {
@@ -53,19 +53,20 @@ class MainViewModel : ViewModel() {
 
     //뒤로 가기
     private fun back2() {
-        backButtonSubject
+        behaviorSubject
             .buffer(2, 1)
-            .map { it[1] - it[0] < 1500 }
+            .map { it[1] to it[0]  }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
-                publishSubject.onError(Throwable("다시 한 번 시도해주세요"))
+                backButtonSubject.onError(Throwable("다시 한 번 시도해주세요"))
             }
-            .subscribe { item ->
-                if (item) {
-                    publishSubject.onNext(listData)
+            .subscribe {
+                if (it.second - it.first < 2000L){
+                    backButtonSubject.onNext(true)
+                } else {
+                    backButtonSubject.onNext(false)
                 }
-                else
-                    backButtonSubject.retry(3)
+
             } .addTo(compositeDisposable)
     }
 
