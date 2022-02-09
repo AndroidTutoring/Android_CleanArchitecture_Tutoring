@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity()  {
     }
 
 
+
         private fun clickFavorite() {
             binding.btn2.setOnClickListener {
                 val intent = Intent(this, FavoriteActivity::class.java)
