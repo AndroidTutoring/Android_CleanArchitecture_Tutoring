@@ -51,11 +51,10 @@ class FavoriteActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult")
     private fun setAdapter(){
-        binding.rvProfile
-            .adapter = this.adapter
-
-        binding.rvProfile
-            .layoutManager = LinearLayoutManager(this)
+        binding.rvProfile.apply {
+            adapter = this.adapter
+            layoutManager = LinearLayoutManager(this@FavoriteActivity)
+        }
 
         repository.getRepos()
             .subscribeOn(Schedulers.io())
