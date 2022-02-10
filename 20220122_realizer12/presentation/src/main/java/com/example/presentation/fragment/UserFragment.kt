@@ -3,6 +3,7 @@ package com.example.presentation.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.data.model.SearchedUser
@@ -22,6 +23,7 @@ import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
+import timber.log.Timber
 
 //유저 프래그먼트
 class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
@@ -32,20 +34,8 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private var searchedUsersList: List<PresentationSearchedUser>? = listOf()
     private lateinit var userListRcyAdapter: UserListRvAdapter
 
-    private val userRepository: UserRepository by lazy {
-        val favoriteMarkDataBase = LocalDataBase.getInstance(requireContext().applicationContext)
-        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
-        UserRepositoryImpl(localDataSource, remoteDataSource)
-    }
-
     //메인 activity와 공유하는  뷰모델
-    private val mainSharedViewModel: MainViewModel by lazy {
-        ViewModelProvider(
-            requireActivity(),
-            ViewModelFactory(userRepository)
-        ).get(MainViewModel::class.java)
-    }
+    private val mainSharedViewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
