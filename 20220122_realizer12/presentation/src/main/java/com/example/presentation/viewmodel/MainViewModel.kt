@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
+import timber.log.Timber
 
 class MainViewModel(
     private val userRepository: UserRepository
@@ -29,6 +30,7 @@ class MainViewModel(
     val userFragmentUpdateUserList: PublishSubject<List<PresentationSearchedUser>> =
         PublishSubject.create()
 
+    //유저프래그먼트에서 사용되는 유저리스트
     var searchedUsersList: MutableList<PresentationSearchedUser>? = mutableListOf()
 
     fun getSearchUserList(searchedUserList: List<PresentationSearchedUser>) {
@@ -69,6 +71,7 @@ class MainViewModel(
                 if (page == 1) {
                     searchedUsersList = ArrayList()
                 }
+
                 remote.body()?.items.let { dataModelSearchUserList ->
                     if (!dataModelSearchUserList.isNullOrEmpty()) {
                         val presentationSearchUserList =
@@ -81,8 +84,7 @@ class MainViewModel(
                         }
                     }
                 }
-                searchedUsersList
-
+                searchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
             })
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ searchedUsersList ->
@@ -97,7 +99,6 @@ class MainViewModel(
     //유저 즐겨찾기 추가
     fun addFavoriteUsers(
         presentationSearchedUser: PresentationSearchedUser,
-        presentationSearchedUserList: List<PresentationSearchedUser>
     ) {
 
         userRepository.addFavoriteUser(toDataModel(presentationSearchedUser))
@@ -107,11 +108,10 @@ class MainViewModel(
                 userFragmentUpdateUserList.onError(Throwable("즐겨찾기 유저 추가하는 중 문제가 생김"))
             }
             .doOnComplete {
-                val newList = presentationSearchedUserList.toMutableList()
-                newList.find {
+                searchedUsersList?.find {
                     it.id == presentationSearchedUser.id
                 }?.isMyFavorite = true
-                userFragmentUpdateUserList.onNext(newList)
+                userFragmentUpdateUserList.onNext(searchedUsersList?.map { it.copy() })//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
                 getFavoriteUsers()
             }
             .subscribe()
@@ -122,13 +122,10 @@ class MainViewModel(
     //즐겨찾기한 유저 지우기
     fun deleteFavoriteUsers(
         presentationSearchedUser: PresentationSearchedUser,
-        presentationSearchedUserList: List<PresentationSearchedUser>,
         shouldRemoveData: Boolean//favorite fragment에서는 지워주고, userfragment에서는  지워주면 안되고 뷰만 업데이트 해야되서 분기함.
     ) {
 
-        val dataModelSearchedUser = toDataModel(presentationSearchedUser)
-
-        userRepository.deleteFavoriteUser(dataModelSearchedUser)
+        userRepository.deleteFavoriteUser(toDataModel(presentationSearchedUser))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
@@ -139,18 +136,17 @@ class MainViewModel(
                 }
             }
             .doOnComplete {
-                val newList = presentationSearchedUserList.toMutableList()
                 if (shouldRemoveData) {//데이터를 지워야 하는 경우
-                    newList.removeAll { it.id == dataModelSearchedUser.id }
-
-                    favoriteFragmentUpdateUserList.onNext(newList)
-                    filterFavoriteUser()
+//                    newList.removeAll { it.id == dataModelSearchedUser.id }
+//
+//                    favoriteFragmentUpdateUserList.onNext(newList)
+                   filterFavoriteUser()
 
                 } else {//데이터를 변경만 하는 경우
-                    newList.find {
-                        it.id == dataModelSearchedUser.id
+                    searchedUsersList?.find {
+                        it.id == presentationSearchedUser.id
                     }?.isMyFavorite = false
-                    userFragmentUpdateUserList.onNext(newList)
+                    userFragmentUpdateUserList.onNext(searchedUsersList?.map { it.copy() })
                     getFavoriteUsers()
                 }
 

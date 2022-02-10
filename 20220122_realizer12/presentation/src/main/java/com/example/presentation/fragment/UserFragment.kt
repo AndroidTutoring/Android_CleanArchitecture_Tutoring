@@ -31,7 +31,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private var page: Int = 1//페이지목록
     private var perPage: Int = 10//페이지당 요청하는 데이터 수
 
-    private var searchedUsersList: List<PresentationSearchedUser>? = listOf()
+
     private lateinit var userListRcyAdapter: UserListRvAdapter
 
     //메인 activity와 공유하는  뷰모델
@@ -73,17 +73,17 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList() {
-        searchedUsersList =
-            requireActivity().intent
+
+        val splashSearchedUsersList = requireActivity().intent
                 .getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
                     as List<PresentationSearchedUser>
 
-        if (!searchedUsersList.isNullOrEmpty()) {
+        if (!splashSearchedUsersList.isNullOrEmpty()) {
 
-            binding.editSearchUser.setText(searchedUsersList!![0].login)
+            binding.editSearchUser.setText(splashSearchedUsersList[0].login)
             binding.emptyView.visibility = View.GONE
 
-            mainSharedViewModel.getSearchUserList(searchedUsersList!!)
+            mainSharedViewModel.getSearchUserList(splashSearchedUsersList)
             mainSharedViewModel.filterFavoriteUser()
         }
     }
@@ -145,7 +145,6 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
             searchedUser.isMyFavorite = false
             mainSharedViewModel.deleteFavoriteUsers(
                 presentationSearchedUser = searchedUser,
-                presentationSearchedUserList = currentList,
                 shouldRemoveData = false
             )
 
@@ -153,8 +152,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
             showToast("즐겨찾기 추가")
             searchedUser.isMyFavorite = true
             mainSharedViewModel.addFavoriteUsers(
-                presentationSearchedUser = searchedUser,
-                presentationSearchedUserList = currentList
+                presentationSearchedUser = searchedUser
             )
         }
     }

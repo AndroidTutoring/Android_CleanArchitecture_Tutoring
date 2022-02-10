@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.presentation.databinding.ItemRepoUserBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewholder.UserViewHolder
+import timber.log.Timber
 
 class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(diffUtil) {
 
@@ -39,6 +40,13 @@ class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(
     //즐겨찾기 버튼 클릭
     fun setFavoriteMarkClickListener(favoriteClickListener: FavoriteClickListener) {
         this.onFavoriteMarkClickListener = favoriteClickListener
+    }
+
+    override fun submitList(list: MutableList<PresentationSearchedUser>?) {
+        super.submitList(list)
+        Timber.v("aaaaaaaaa 이전->"+currentList[0].isMyFavorite)
+        Timber.v("aaaaaaaaa 이후->"+ list?.get(0)?.isMyFavorite)
+
     }
 
 

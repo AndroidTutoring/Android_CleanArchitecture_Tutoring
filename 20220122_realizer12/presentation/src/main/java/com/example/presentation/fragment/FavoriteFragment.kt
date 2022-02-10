@@ -38,7 +38,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     private fun getDataFromViewModel() {
         //즐겨 찾기 유저 리스트 업데이트
         mainSharedViewModel.favoriteFragmentUpdateUserList.subscribe({
-            favoriteMarkedRvAdapter.submitList(it as MutableList<PresentationSearchedUser>?)
+            favoriteMarkedRvAdapter.submitList(it.toMutableList())
         }, {
             showToast(it.message.toString())
         })
@@ -55,7 +55,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
             ) {
                 mainSharedViewModel.deleteFavoriteUsers(
                     presentationSearchedUser = searchedUser,
-                    presentationSearchedUserList = favoriteMarkedRvAdapter.currentList,
                     shouldRemoveData = true
                 )
             }
