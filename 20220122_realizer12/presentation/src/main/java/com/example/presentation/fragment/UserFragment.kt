@@ -3,48 +3,54 @@ package com.example.presentation.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.example.data.model.SearchedUser
+import com.example.data.repository.UserRepository
+import com.example.data.repository.UserRepositoryImpl
+import com.example.data.retrofit.RetrofitHelper
+import com.example.data.room.LocalDataBase
+import com.example.data.source.local.UserLocalDataSourceImpl
+import com.example.data.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.activity.DetailActivity
 import com.example.presentation.activity.SplashActivity
 import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
-import com.example.presentation.model.SearchedUser
-import com.example.presentation.repository.UserRepository
-import com.example.presentation.repository.UserRepositoryImpl
-import com.example.presentation.retrofit.RetrofitHelper
-import com.example.presentation.room.LocalDataBase
-import com.example.presentation.source.local.UserLocalDataSourceImpl
-import com.example.presentation.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.schedulers.Schedulers
-import timber.log.Timber
+import com.example.presentation.viewmodel.MainViewModel
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 
 //유저 프래그먼트
 class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
+
     private var page: Int = 1//페이지목록
     private var perPage: Int = 10//페이지당 요청하는 데이터 수
-    private var totalDataCount: Int? = 0//query 에 대한 전체 검색어 수
 
-    private var searchedUsersList: ArrayList<SearchedUser>? = ArrayList()
+    private var searchedUsersList: List<PresentationSearchedUser>? = listOf()
     private lateinit var userListRcyAdapter: UserListRvAdapter
 
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = LocalDataBase.getInstance(requireContext().applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
         UserRepositoryImpl(localDataSource, remoteDataSource)
     }
 
+    //메인 activity와 공유하는  뷰모델
+    private val mainSharedViewModel: MainViewModel by lazy {
+        ViewModelProvider(
+            requireActivity(),
+            ViewModelFactory(userRepository)
+        ).get(MainViewModel::class.java)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSet()
+        getDataFromViewModel()
         listenerEvent()
     }
 
@@ -62,49 +68,33 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
         showSplashUserList()
     }
 
-    override fun onResume() {
-        super.onResume()
-        val newList = userListRcyAdapter.currentList.toMutableList()
 
-        newList.map { user ->
-            Timber.v("adasd ->" + user.login)
-            userRepository.getFavoriteUsers()
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe({ favoriteUser ->
-                    if (!favoriteUser.any { it.id == user.id }) {
-                        user.isMyFavorite = false
-                    }
-                    userListRcyAdapter.submitList(newList.toMutableList())
-                    userListRcyAdapter.notifyDataSetChanged()//전체 업데이트가 안되어서 이렇게 notify넣어줌.
-                }, {
-                    showToast("로컬 디비 가져오는 중 문제가 생김")
-                })?.addTo(compositeDisposable)
-        }
+    //뷰모델로부터  데이터 받아옴
+    private fun getDataFromViewModel() {
+        //검색  유저 리스트 업데이트
+        mainSharedViewModel.userFragmentUpdateUserList.subscribe({
+            userListRcyAdapter.submitList(it as MutableList<PresentationSearchedUser>?)
+            binding.emptyView.visibility = View.GONE
+        }, {
+            showToast(it.message.toString())
+        })
     }
 
 
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList() {
         searchedUsersList =
-            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO) as ArrayList<SearchedUser>
+            requireActivity().intent
+                .getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
+                    as List<PresentationSearchedUser>
+
         if (!searchedUsersList.isNullOrEmpty()) {
 
-            searchedUsersList?.map { searchUser ->
-                userRepository.getFavoriteUsers()
-                    ?.subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe({ favoriteUser ->
-                        if (favoriteUser.any { eachUser -> eachUser.id == searchUser.id }) {
-                            searchUser.isMyFavorite = true
-                        }
-                        userListRcyAdapter.submitList(searchedUsersList!!.toMutableList())
-                        binding.editSearchUser.setText(searchedUsersList!![0].login.toString())
-                        binding.emptyView.visibility = View.GONE
-                    }, {
-                        showToast("로컬 디비 가져오는 중 문제가 생김")
-                    })?.addTo(compositeDisposable)
-            }
+            binding.editSearchUser.setText(searchedUsersList!![0].login)
+            binding.emptyView.visibility = View.GONE
+
+            mainSharedViewModel.getSearchUserList(searchedUsersList!!)
+            mainSharedViewModel.filterFavoriteUser()
         }
     }
 
@@ -135,7 +125,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
         //아이템 클릭시 처리
         userListRcyAdapter.setItemClickListener(object : UserListRvAdapter.ItemClickListener {
-            override fun onItemClickListener(searchedUser: SearchedUser) {
+            override fun onItemClickListener(searchedUser: PresentationSearchedUser) {
                 gotoDetailActivity(searchedUser)
             }
         })
@@ -143,40 +133,44 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
         //즐겨 찾기 클릭시 처리
         userListRcyAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
-            override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
-
-                returnFavoriteMarkStatus(searchedUser = searchedUser)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnComplete {
-                        userListRcyAdapter.submitList(userListRcyAdapter.currentList.toMutableList())
-                        userListRcyAdapter.notifyItemChanged(position)
-                    }
-                    .onErrorReturn {
-                        showToast("즐겨찾기 유저 가져오는 데서 문제가 생김 ")
-                    }
-                    .subscribe()
-
+            override fun onFavoriteMarkListener(
+                searchedUser: PresentationSearchedUser,
+                position: Int
+            ) {
+                val deepCopiedList = userListRcyAdapter.currentList.map { it.copy() }
+                val deepCopiedSearchedUser = searchedUser.copy()
+                returnFavoriteMarkStatus(deepCopiedSearchedUser, deepCopiedList)
             }
         })
 
     }
 
     //즐겨 찾기 취소 또는 추가 여부에 따른  delete  add 를 리턴
-    private fun returnFavoriteMarkStatus(searchedUser: SearchedUser): Completable {
-        return if (searchedUser.isMyFavorite) {
+    private fun returnFavoriteMarkStatus(
+        searchedUser: PresentationSearchedUser,
+        currentList: List<PresentationSearchedUser>
+    ) {
+        if (searchedUser.isMyFavorite) {
             showToast("즐겨찾기 취소")
             searchedUser.isMyFavorite = false
-            userRepository.deleteFavoriteUser(searchedUser)
+            mainSharedViewModel.deleteFavoriteUsers(
+                presentationSearchedUser = searchedUser,
+                presentationSearchedUserList = currentList,
+                shouldRemoveData = false
+            )
+
         } else {
             showToast("즐겨찾기 추가")
             searchedUser.isMyFavorite = true
-            userRepository.addFavoriteUser(searchedUser)
+            mainSharedViewModel.addFavoriteUsers(
+                presentationSearchedUser = searchedUser,
+                presentationSearchedUserList = currentList
+            )
         }
     }
 
     //상세화면으로 가기
-    private fun gotoDetailActivity(searchedUser: SearchedUser) {
+    private fun gotoDetailActivity(searchedUser: PresentationSearchedUser) {
         val intent = Intent(requireActivity(), DetailActivity::class.java)
         intent.putExtra(PARAM_USER_INFO, searchedUser)
         startActivity(intent)
@@ -185,41 +179,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
     //유저 검색
     private fun searchUsers() {
-
-        //local , remote  zip으로  동시에 다 처리되면  뿌려지게 수정
-        Single.zip(
-            userRepository.getSearchUsers(
-                binding.editSearchUser.text.toString(),
-                page,
-                perPage
-            ).subscribeOn(Schedulers.io())
-                .retry(2),
-            userRepository.getFavoriteUsers(), { remote, local ->
-                totalDataCount = remote.body()?.total_count
-
-                if (page == 1) {
-                    searchedUsersList = ArrayList()
-                }
-
-                remote.body()?.items.let { searUserList ->
-                    if (!searUserList.isNullOrEmpty()) {
-                        searchedUsersList?.addAll(searUserList)
-                    }
-                    searchedUsersList?.map { searchedUser ->
-                        if (local.any { it.id == searchedUser.id }) {
-                            searchedUser.isMyFavorite = true
-                        }
-                    }
-                }
-                searchedUsersList
-            })
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ searchedUsersList ->
-                userListRcyAdapter.submitList(searchedUsersList?.toMutableList())//recyclerview 업데이트
-                binding.emptyView.visibility = View.GONE
-            }, {
-                showToast("유저 정보를 가져오는데 문제가 생겼습니다.. ")
-            })
+        mainSharedViewModel.searchUser(binding.editSearchUser.text.toString(), page, perPage)
     }
 
     companion object {

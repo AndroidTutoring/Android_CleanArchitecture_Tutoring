@@ -1,45 +1,63 @@
 package com.example.presentation.activity
 
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
+import com.example.data.repository.UserRepository
+import com.example.data.repository.UserRepositoryImpl
+import com.example.data.retrofit.RetrofitHelper
+import com.example.data.room.LocalDataBase
+import com.example.data.source.local.UserLocalDataSourceImpl
+import com.example.data.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.adapter.MainViewPagerAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityMainBinding
+import com.example.presentation.viewmodel.MainViewModel
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class MainActivity : BaseActivity<ActivityMainBinding>({ ActivityMainBinding.inflate(it) }) {
-    private val behaviorSubject = BehaviorSubject.createDefault(0L)
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
+
+    private val userRepository: UserRepository by lazy {
+        val favoriteMarkDataBase = LocalDataBase.getInstance(applicationContext)
+        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
+        UserRepositoryImpl(localDataSource, remoteDataSource)
+    }
+
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProvider(
+            this,
+            ViewModelFactory(userRepository))
+            .get(MainViewModel::class.java)
+    }
+
+    private fun dataFromViewModel() {
+        mainViewModel.mainBackPressPublishSubject.subscribe({ isBackPressPossible ->
+            if (isBackPressPossible) {//뒤로가기 두번
+                super.onBackPressed()
+            } else {
+                showToast("뒤로가기 두번 눌러주세요")
+            }
+        }, {
+            showToast(it.message.toString())
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSet()
-        backPressCheck()
+        dataFromViewModel()
+        mainViewModel.backPressCheck()
     }
 
     override fun onBackPressed() {
-        //누른 시점 시간 넘겨줌.
-        behaviorSubject.onNext(System.currentTimeMillis())
+        mainViewModel.behaviorSubject.onNext(System.currentTimeMillis())
     }
 
-    //뒤로가기 프로세스 체크처리
-    private fun backPressCheck() {
-        //항상 누른거 이전걸로 체크해야되니까 buffer count 2 주고 skip 1로줌.
-        behaviorSubject.buffer(2, 1)
-            .map { it[0] to it[1] }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                if (it.second - it.first < 2000L) {//첫번째 누른것과 두번째 누른 값의 차가 2초이내이면 뒤로가기 처리
-                    super.onBackPressed()
-                } else {
-                    showToast("앱을 종료 하려면 한번 더 눌러주세요.")
-                }
-            }.addTo(compositeDisposable)
-    }
 
     //초기 뷰 세팅
     private fun initSet() {
+
 
         //메인 뷰페이져  FragmentStateAdapter 연결
         binding.vpMain.apply {

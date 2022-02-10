@@ -1,65 +1,56 @@
 package com.example.presentation.activity
 
 import android.content.Intent
+import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
+import com.example.data.repository.UserRepository
+import com.example.data.repository.UserRepositoryImpl
+import com.example.data.retrofit.RetrofitHelper
+import com.example.data.room.LocalDataBase
+import com.example.data.source.local.UserLocalDataSourceImpl
+import com.example.data.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
-import com.example.presentation.model.SearchedUser
-import com.example.presentation.repository.UserRepository
-import com.example.presentation.repository.UserRepositoryImpl
-import com.example.presentation.retrofit.RetrofitHelper
-import com.example.presentation.room.LocalDataBase
-import com.example.presentation.source.local.UserLocalDataSourceImpl
-import com.example.presentation.source.remote.UserRemoteDataSourceImpl
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
+import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.viewmodel.SplashViewModel
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 
-class SplashActivity : BaseActivity<ActivitySplashBinding>({ ActivitySplashBinding.inflate(it) }) {
+class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
 
-    private lateinit var disposable: Disposable
 
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = LocalDataBase.getInstance(this.applicationContext)
         val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase!!.getFavoriteMarkDao())
+        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
         UserRepositoryImpl(localDataSource, remoteDataSource)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        disposable = Single.zip(
-            getGitHubUserInfo().subscribeOn(Schedulers.io()).map {
-                if (it.isSuccessful) {
-                    it.body()
-                } else {
-                    throw Throwable()
-                }
-            }.retryWhen { errorObservable ->
-                errorObservable
-                    .delay(3, TimeUnit.SECONDS)
-                    .take(2)
-            }.observeOn(AndroidSchedulers.mainThread()), Single.timer(2, TimeUnit.SECONDS),
-            { searchedUsers, _ ->
-                gotoMainActivity(searchedUsers?.items)
-            }).onErrorReturn {
-            showToast("유저 정보를 가져올수가 없습니다.")
-        }.subscribe()
-
+    private val splashViewModel: SplashViewModel by lazy {
+        ViewModelProvider(this,
+            ViewModelFactory(userRepository))
+            .get(SplashViewModel::class.java)
     }
 
-    //유저 정보 가져오기
-    private fun getGitHubUserInfo() = userRepository.getSearchUsers(query = "realizer12", 1, 10)
 
-    override fun onPause() {
-        super.onPause()
-        disposable.dispose()
+    //뷰모델로부터  데이터 받아옴
+    private fun getDataFromViewModel() {
+        //검색  유저 리스트 업데이트
+        splashViewModel.searchedUserPublishSubject.subscribe({
+            gotoMainActivity(it as ArrayList<PresentationSearchedUser>?)
+        }, {
+            showToast(it.message.toString())
+            finish()//문제 있으면 앱종료
+        })
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        getDataFromViewModel()
+        splashViewModel.searchUsers()
     }
 
     //메인 가기
-    private fun gotoMainActivity(searchUsers: ArrayList<SearchedUser>?) {
+    private fun gotoMainActivity(searchUsers: ArrayList<PresentationSearchedUser>?) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(PARAM_INIT_USER_INFO, searchUsers)
         startActivity(intent)

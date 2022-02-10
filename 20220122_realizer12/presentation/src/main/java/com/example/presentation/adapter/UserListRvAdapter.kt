@@ -5,22 +5,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.presentation.databinding.ItemRepoUserBinding
-import com.example.presentation.model.SearchedUser
+import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewholder.UserViewHolder
 
-class UserListRvAdapter : ListAdapter<SearchedUser, UserViewHolder>(diffUtil) {
+class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(diffUtil) {
 
     private var onItemClickListener: ItemClickListener? = null
     private var onFavoriteMarkClickListener: FavoriteClickListener? = null
 
     //아이템 전체 클릭
     interface ItemClickListener {
-        fun onItemClickListener(searchedUser: SearchedUser)//아이템 클릭시 -> 디테일 화면으로?
+        fun onItemClickListener(searchedUser: PresentationSearchedUser)//아이템 클릭시 -> 디테일 화면으로?
     }
 
     //즐겨찾기  클릭
     interface FavoriteClickListener {
-        fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int)
+        fun onFavoriteMarkListener(searchedUser: PresentationSearchedUser, position: Int)
     }
 
 
@@ -61,16 +61,23 @@ class UserListRvAdapter : ListAdapter<SearchedUser, UserViewHolder>(diffUtil) {
         }
     }
 
+
     override fun getItemCount() = currentList.size
 
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<SearchedUser>() {
-            override fun areContentsTheSame(oldItem: SearchedUser, newItem: SearchedUser): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<PresentationSearchedUser>() {
+            override fun areContentsTheSame(
+                oldItem: PresentationSearchedUser,
+                newItem: PresentationSearchedUser
+            ): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areItemsTheSame(oldItem: SearchedUser, newItem: SearchedUser): Boolean {
+            override fun areItemsTheSame(
+                oldItem: PresentationSearchedUser,
+                newItem: PresentationSearchedUser
+            ): Boolean {
                 return oldItem.id == newItem.id
             }
         }

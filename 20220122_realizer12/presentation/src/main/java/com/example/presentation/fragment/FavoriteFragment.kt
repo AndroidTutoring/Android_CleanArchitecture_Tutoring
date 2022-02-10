@@ -2,25 +2,32 @@ package com.example.presentation.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
+import com.example.data.repository.UserRepository
+import com.example.data.repository.UserRepositoryImpl
+import com.example.data.retrofit.RetrofitHelper
+import com.example.data.room.LocalDataBase
+import com.example.data.source.local.UserLocalDataSourceImpl
+import com.example.data.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentFavoriteBinding
-import com.example.presentation.model.SearchedUser
-import com.example.presentation.repository.UserRepository
-import com.example.presentation.repository.UserRepositoryImpl
-import com.example.presentation.retrofit.RetrofitHelper
-import com.example.presentation.room.LocalDataBase
-import com.example.presentation.source.local.UserLocalDataSourceImpl
-import com.example.presentation.source.remote.UserRemoteDataSourceImpl
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.viewmodel.MainViewModel
+import com.example.presentation.viewmodel.factory.ViewModelFactory
 
 //즐겨찾기 프래그먼트
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBinding::inflate) {
 
     private lateinit var favoriteMarkedRvAdapter: UserListRvAdapter
 
+    //메인 activity와 공유하는  뷰모델
+    private val mainSharedViewModel: MainViewModel by lazy {
+        ViewModelProvider(
+            requireActivity(),
+            ViewModelFactory(userRepository)
+        ).get(MainViewModel::class.java)
+    }
 
     private val userRepository: UserRepository by lazy {
         val favoriteMarkDataBase = LocalDataBase.getInstance(requireContext().applicationContext)
@@ -32,29 +39,34 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSet()
+        getDataFromViewModel()
         listenerEvent()
     }
 
-    override fun onResume() {
-        super.onResume()
-        getFavoriteGitUsers()
+    //뷰모델로부터  데이터 받아옴
+    private fun getDataFromViewModel() {
+        //즐겨 찾기 유저 리스트 업데이트
+        mainSharedViewModel.favoriteFragmentUpdateUserList.subscribe({
+            favoriteMarkedRvAdapter.submitList(it as MutableList<PresentationSearchedUser>?)
+        }, {
+            showToast(it.message.toString())
+        })
     }
+
 
     //리스너 기능 모음.
     private fun listenerEvent() {
         favoriteMarkedRvAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
-            override fun onFavoriteMarkListener(searchedUser: SearchedUser, position: Int) {
-
-                userRepository.deleteFavoriteUser(searchedUser)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnComplete {
-                        val newList = favoriteMarkedRvAdapter.currentList.toMutableList()
-                        newList.removeAll { it.id == searchedUser.id }
-                        favoriteMarkedRvAdapter.submitList(newList.toList())
-                    }
-                    .subscribe()?.addTo(compositeDisposable)
+            override fun onFavoriteMarkListener(
+                searchedUser: PresentationSearchedUser,
+                position: Int
+            ) {
+                mainSharedViewModel.deleteFavoriteUsers(
+                    presentationSearchedUser = searchedUser,
+                    presentationSearchedUserList = favoriteMarkedRvAdapter.currentList,
+                    shouldRemoveData = true
+                )
             }
         })
     }
@@ -67,16 +79,12 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         binding.rcyFavoriteList.apply {
             adapter = favoriteMarkedRvAdapter
         }
+
+        getFavoriteGitUsers()
     }
 
     //즐겨찾기한 유저들 가져옴.
     private fun getFavoriteGitUsers() {
-        userRepository.getFavoriteUsers()?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ favoriteUsers ->
-                favoriteMarkedRvAdapter.submitList(favoriteUsers)
-            }, {
-                showToast("로컬 디비 가져오는 중 문제가 생김")
-            })?.addTo(compositeDisposable)
-
+        mainSharedViewModel.getFavoriteUsers()
     }
 }
