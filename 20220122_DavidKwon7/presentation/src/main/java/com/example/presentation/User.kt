@@ -3,7 +3,6 @@ package com.example.presentation
 import androidx.room.Entity
 import com.example.data.model.User
 
-@Entity
 data class User(val name: String,
                 val id: String,
                 val date: String,

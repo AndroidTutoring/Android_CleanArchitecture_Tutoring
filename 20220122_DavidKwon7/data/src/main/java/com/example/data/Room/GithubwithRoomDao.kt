@@ -1,6 +1,7 @@
 package com.example.presentation
 
 import androidx.room.*
+import com.example.data.model.User
 import io.reactivex.Completable
 import io.reactivex.Single
 
