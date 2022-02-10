@@ -90,6 +90,8 @@ class FavoriteActivity : AppCompatActivity() {
         val viewModelFactory = ViewModelProvider(
             this,ViewModelProvider.NewInstanceFactory())
             .get(FavoriteViewModel::class.java)
+
+
     }
 
 

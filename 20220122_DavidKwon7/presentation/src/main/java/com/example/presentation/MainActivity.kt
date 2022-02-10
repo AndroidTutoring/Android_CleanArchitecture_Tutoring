@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity()  {
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L)
     lateinit var repository : GithubRepository
-    lateinit var mainViewModel : MainViewModel
     private val adapter: ProfileAdapter by lazy {
         ProfileAdapter(listData,this)
     }
