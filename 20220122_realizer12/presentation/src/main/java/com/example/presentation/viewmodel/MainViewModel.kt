@@ -130,19 +130,14 @@ class MainViewModel(
 
     //즐겨찾기한 유저 지우기
     fun deleteFavoriteUsers(
-        presentationSearchedUser: PresentationSearchedUser,
-        shouldRemoveData: Boolean//favorite fragment에서는 지워주고, userfragment에서는  지워주면 안되고 뷰만 업데이트 해야되서 분기함.
+        presentationSearchedUser: PresentationSearchedUser
     ) {
 
         userRepository.deleteFavoriteUser(toDataModel(presentationSearchedUser))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
-                if (shouldRemoveData) {
-                    favoriteFragmentUpdateUserList.onError(Throwable("즐겨찾기 유저 삭제하는 중 문제가 생김"))
-                } else {
-                    userFragmentUpdateUserList.onError(Throwable("즐겨찾기 유저 삭제하는 중 문제가 생김"))
-                }
+                userFragmentUpdateUserList.onError(Throwable("즐겨찾기 유저 삭제하는 중 문제가 생김"))
             }
             .doOnComplete {
 

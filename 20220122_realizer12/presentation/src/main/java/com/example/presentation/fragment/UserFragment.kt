@@ -144,8 +144,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
             showToast("즐겨찾기 취소")
             searchedUser.isMyFavorite = false
             mainSharedViewModel.deleteFavoriteUsers(
-                presentationSearchedUser = searchedUser,
-                shouldRemoveData = false
+                presentationSearchedUser = searchedUser
             )
 
         } else {

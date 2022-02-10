@@ -54,8 +54,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
                 position: Int
             ) {
                 mainSharedViewModel.deleteFavoriteUsers(
-                    presentationSearchedUser = searchedUser,
-                    shouldRemoveData = true
+                    presentationSearchedUser = searchedUser
                 )
             }
         })
