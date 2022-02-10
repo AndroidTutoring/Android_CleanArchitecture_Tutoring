@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.repository.githubRepository.GithubRepository
@@ -15,6 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import kotlinx.android.synthetic.main.item_recycler_ex.*
 
 class FavoriteActivity : AppCompatActivity() {
 
@@ -29,6 +31,7 @@ class FavoriteActivity : AppCompatActivity() {
     private lateinit var compositeDisposable: CompositeDisposable
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite)
@@ -38,11 +41,25 @@ class FavoriteActivity : AppCompatActivity() {
         clickFavorite()
         itemDeleteClick()
         initVMFactory()
+        connectVM()
 
     }
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+    }
+
+    private fun connectVM(){
+        val viewModelFactory = ViewModelProvider(
+            this, ViewModelProvider.NewInstanceFactory())
+            .get(MainViewModel::class.java)
+
+        viewModelFactory.liveData.observe(this, Observer {
+            tv_rv_id.text = it.id
+            tv_rv_name.text = it.name
+            created_time.text = it.date
+            html_url.text = it.url
+        })
     }
 
 

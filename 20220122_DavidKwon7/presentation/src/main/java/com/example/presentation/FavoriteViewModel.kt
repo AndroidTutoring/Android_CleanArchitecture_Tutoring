@@ -1,6 +1,8 @@
 package com.example.presentation
 
 import android.annotation.SuppressLint
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
@@ -31,6 +33,16 @@ class FavoriteViewModel : ViewModel() {
     lateinit var adapter: FavoriteAdapter
     lateinit var binding: ActivityFavoriteBinding
 
+    private val _liveData = MutableLiveData<User>()
+    val liveData : LiveData<User> = _liveData
+
+    init {
+        _liveData.value = User(
+            name = String(),
+            id = String(),
+            url = String(),
+            date = String())
+    }
 
 
     @SuppressLint("CheckResult")

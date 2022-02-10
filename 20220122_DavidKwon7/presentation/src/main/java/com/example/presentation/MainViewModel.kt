@@ -40,6 +40,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
+    private val _liveData =MutableLiveData<User>()
+    val liveData : LiveData<User> = _liveData
+
+    init {
+        _liveData.value = User(
+            name = String(),
+            id = String(),
+            url = String(),
+            date = String())
+    }
 
 
 

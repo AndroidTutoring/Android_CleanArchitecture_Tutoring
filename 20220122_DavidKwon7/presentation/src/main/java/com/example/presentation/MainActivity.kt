@@ -21,6 +21,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import kotlinx.android.synthetic.main.item_recycler_ex.*
 import java.util.Set.of
 
 class MainActivity : AppCompatActivity()  {
@@ -47,9 +48,7 @@ class MainActivity : AppCompatActivity()  {
     private val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
     remoteDataSource = remoteDataSource)
 
-    val viewModelFactory = ViewModelProvider(
-        this, ViewModelProvider.NewInstanceFactory())
-        .get(MainViewModel::class.java)
+
 
 
 
@@ -62,6 +61,7 @@ class MainActivity : AppCompatActivity()  {
         clickFavorite()
         itemFavClick()
         back2()
+        connectVM()
     }
     override fun onDestroy() {
         super.onDestroy()
@@ -75,6 +75,19 @@ class MainActivity : AppCompatActivity()  {
                 startActivity(intent)
             }
         }
+
+    private fun connectVM(){
+        val viewModelFactory = ViewModelProvider(
+            this, ViewModelProvider.NewInstanceFactory())
+            .get(MainViewModel::class.java)
+
+        viewModelFactory.liveData.observe(this, Observer {
+            tv_rv_id.text = it.id
+            tv_rv_name.text = it.name
+            created_time.text = it.date
+            html_url.text = it.url
+        })
+    }
 
     //item click
     private fun itemFavClick() {
