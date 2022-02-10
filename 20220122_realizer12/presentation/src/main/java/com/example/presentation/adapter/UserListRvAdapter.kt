@@ -42,13 +42,6 @@ class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(
         this.onFavoriteMarkClickListener = favoriteClickListener
     }
 
-    override fun submitList(list: MutableList<PresentationSearchedUser>?) {
-        super.submitList(list)
-        Timber.v("aaaaaaaaa 이전->"+currentList[0].isMyFavorite)
-        Timber.v("aaaaaaaaa 이후->"+ list?.get(0)?.isMyFavorite)
-
-    }
-
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.apply {
