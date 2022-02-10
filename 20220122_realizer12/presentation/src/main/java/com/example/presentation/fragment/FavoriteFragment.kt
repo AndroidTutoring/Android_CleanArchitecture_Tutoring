@@ -73,8 +73,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         getFavoriteGitUsers()
     }
 
-    //즐겨찾기한 유저들 가져옴.
+    //미리 뷰모델 안에서 세팅 되어있던  즐겨찾기 리스트를 가져와 업데이트 해줌
     private fun getFavoriteGitUsers() {
-        mainSharedViewModel.getFavoriteUsers()
+        favoriteMarkedRvAdapter.submitList(mainSharedViewModel.favoriteUserList?.toMutableList())
     }
 }

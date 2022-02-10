@@ -63,7 +63,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private fun getDataFromViewModel() {
         //검색  유저 리스트 업데이트
         mainSharedViewModel.userFragmentUpdateUserList.subscribe({
-            userListRcyAdapter.submitList(it as MutableList<PresentationSearchedUser>?)
+            userListRcyAdapter.submitList(it.toMutableList())
             binding.emptyView.visibility = View.GONE
         }, {
             showToast(it.message.toString())
@@ -83,8 +83,10 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
             binding.editSearchUser.setText(splashSearchedUsersList[0].login)
             binding.emptyView.visibility = View.GONE
 
+            //받아온 검색된 유저리스트  업데이트  해주고, favorite filter 적용하면서, favorite리스트도 미리 받아둔다.
+            //아직  favorite fragment가  create되기 전이므로 ..
             mainSharedViewModel.getSearchUserList(splashSearchedUsersList)
-            mainSharedViewModel.filterFavoriteUser()
+            mainSharedViewModel.initialListSetting()
         }
     }
 
@@ -127,9 +129,8 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
                 searchedUser: PresentationSearchedUser,
                 position: Int
             ) {
-                val deepCopiedList = userListRcyAdapter.currentList.map { it.copy() }
                 val deepCopiedSearchedUser = searchedUser.copy()
-                returnFavoriteMarkStatus(deepCopiedSearchedUser, deepCopiedList)
+                returnFavoriteMarkStatus(deepCopiedSearchedUser)
             }
         })
 
@@ -137,8 +138,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
     //즐겨 찾기 취소 또는 추가 여부에 따른  delete  add 를 리턴
     private fun returnFavoriteMarkStatus(
-        searchedUser: PresentationSearchedUser,
-        currentList: List<PresentationSearchedUser>
+        searchedUser: PresentationSearchedUser
     ) {
         if (searchedUser.isMyFavorite) {
             showToast("즐겨찾기 취소")

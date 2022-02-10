@@ -33,6 +33,9 @@ class MainViewModel(
     //유저프래그먼트에서 사용되는 유저리스트
     var searchedUsersList: MutableList<PresentationSearchedUser>? = mutableListOf()
 
+    //즐겨찾기프래그먼트에 사용되는 유저리스트
+    var favoriteUserList: MutableList<PresentationSearchedUser>? = mutableListOf()
+
     fun getSearchUserList(searchedUserList: List<PresentationSearchedUser>) {
         this.searchedUsersList = searchedUserList as MutableList<PresentationSearchedUser>
     }
@@ -84,7 +87,7 @@ class MainViewModel(
                         }
                     }
                 }
-                searchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
+                return@zip searchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
             })
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ searchedUsersList ->
@@ -108,11 +111,17 @@ class MainViewModel(
                 userFragmentUpdateUserList.onError(Throwable("즐겨찾기 유저 추가하는 중 문제가 생김"))
             }
             .doOnComplete {
+
+                //추가했으니까  favorite user list에도 업데이트 해줌.
+                favoriteUserList?.add(presentationSearchedUser)
+                favoriteFragmentUpdateUserList.onNext(favoriteUserList)
+
+                //searcheduser 리스트에는  관련 id체크 해서  별표 여부 true값 바꿔주고 update
                 searchedUsersList?.find {
                     it.id == presentationSearchedUser.id
                 }?.isMyFavorite = true
                 userFragmentUpdateUserList.onNext(searchedUsersList?.map { it.copy() })//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
-                getFavoriteUsers()
+
             }
             .subscribe()
             .addTo(compositeDisposable)
@@ -136,26 +145,24 @@ class MainViewModel(
                 }
             }
             .doOnComplete {
-                if (shouldRemoveData) {//데이터를 지워야 하는 경우
-//                    newList.removeAll { it.id == dataModelSearchedUser.id }
-//
-//                    favoriteFragmentUpdateUserList.onNext(newList)
-                   filterFavoriteUser()
 
-                } else {//데이터를 변경만 하는 경우
-                    searchedUsersList?.find {
-                        it.id == presentationSearchedUser.id
-                    }?.isMyFavorite = false
-                    userFragmentUpdateUserList.onNext(searchedUsersList?.map { it.copy() })
-                    getFavoriteUsers()
-                }
+                //즐겨찾기 리스트에서 해당값 삭제 해주고 즐겨찾기 리스트 업데이트
+                favoriteUserList?.removeAll { it.id == presentationSearchedUser.id }
+                favoriteFragmentUpdateUserList.onNext(favoriteUserList)
+
+                //searcheduser 리스트에는  관련 id체크 해서  별표 여부 false값 바꿔주고 update
+                searchedUsersList?.find {
+                    it.id == presentationSearchedUser.id
+                }?.isMyFavorite = false
+                userFragmentUpdateUserList.onNext(searchedUsersList?.map { it.copy() })
 
             }.subscribe()
             .addTo(compositeDisposable)
     }
 
-    //즐겨찾기 유저가  업데이트가 안된 경우에 업데이트를 진행한다.
-    fun filterFavoriteUser() {
+    //초기 스플래시에서 넘어온 값들 즐겨찾기 여부 체크해주고,
+    //favoriteuserlist 미리  업데이트 해놓음.
+    fun initialListSetting() {
         //현재  검색된걸로 뿌려져있는 리스트에서 favorite에 있는 애들만 뽑아서 주고 나머지는 안줘야되는
         userRepository.getFavoriteUsers()
             .subscribeOn(Schedulers.io())
@@ -166,30 +173,19 @@ class MainViewModel(
                     searchedUsersList.isMyFavorite =
                         dataModelFavoriteUsers.any { it.id == searchedUsersList.id }
                 }
-                newList
+
+                //즐겨찾기 리스트  미리 업데이트 함.
+                favoriteUserList
+                    ?.addAll(dataModelFavoriteUsers
+                        .map { toPresentationModel(it) })
+
+                return@map newList
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 userFragmentUpdateUserList.onNext(it?.toMutableList())
             }, {
                 userFragmentUpdateUserList.onError(Throwable("즐겨찾기 업데이트 중 문제 생김"))
-            })
-            .addTo(compositeDisposable)
-    }
-
-    //즐겨찾기 유저 가져오기
-    fun getFavoriteUsers() {
-        userRepository.getFavoriteUsers()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ dataModelFavoriteUsers ->
-                favoriteFragmentUpdateUserList.onNext(dataModelFavoriteUsers.map {
-                    toPresentationModel(
-                        it
-                    )
-                })
-            }, {
-                favoriteFragmentUpdateUserList.onError(Throwable("즐겨찾기한 유저를 가져오는 중 문제가 생김"))
             })
             .addTo(compositeDisposable)
     }
