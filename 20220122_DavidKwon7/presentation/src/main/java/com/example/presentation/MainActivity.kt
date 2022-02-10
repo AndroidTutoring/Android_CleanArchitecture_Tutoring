@@ -36,6 +36,9 @@ class MainActivity : AppCompatActivity()  {
     private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
+    val viewModelFactory = ViewModelProvider(
+        this, ViewModelProvider.NewInstanceFactory())
+        .get(MainViewModel::class.java)
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L)
     lateinit var repository : GithubRepository
@@ -49,8 +52,6 @@ class MainActivity : AppCompatActivity()  {
 
 
 
-
-
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,33 +61,23 @@ class MainActivity : AppCompatActivity()  {
         clickFavorite()
         itemFavClick()
         back2()
-        connectVM()
+        getDataFromVM()
     }
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
     }
-
+    fun getDataFromVM(){
+        viewModelFactory.publishSubject.subscribe{
+            adapter.addNewItem(it)
+        }
+    }
 
         private fun clickFavorite() {
             binding.btn2.setOnClickListener {
-                val intent = Intent(this, FavoriteActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this,FavoriteActivity::class.java))
             }
         }
-
-    private fun connectVM(){
-        val viewModelFactory = ViewModelProvider(
-            this, ViewModelProvider.NewInstanceFactory())
-            .get(MainViewModel::class.java)
-
-        viewModelFactory.liveData.observe(this, Observer {
-            tv_rv_id.text = it.id
-            tv_rv_name.text = it.name
-            created_time.text = it.date
-            html_url.text = it.url
-        })
-    }
 
     //item click
     private fun itemFavClick() {

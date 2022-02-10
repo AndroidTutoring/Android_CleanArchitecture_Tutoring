@@ -56,4 +56,12 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(postList[position])
     }
+
+    fun addNewItem(itemsNew: List<User>){
+        val items = ArrayList<User>()
+        items.clear() // ->> optional if you need have clear of object
+        items.addAll(itemsNew)
+        notifyDataSetChanged()
+    }
+
 }

@@ -29,7 +29,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L)
-    private val publishSubject : PublishSubject<List<User>> =
+    val publishSubject : PublishSubject<List<User>> =
         PublishSubject.create()
     private val behaviorSubject = BehaviorSubject.createDefault(0L)
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
@@ -40,17 +40,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
-    private val _liveData =MutableLiveData<User>()
-    val liveData : LiveData<User> = _liveData
-
-    init {
-        _liveData.value = User(
-            name = String(),
-            id = String(),
-            url = String(),
-            date = String())
-    }
-
 
 
     fun update(githubRepos: List<User>) {

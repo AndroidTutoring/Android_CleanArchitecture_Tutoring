@@ -67,13 +67,15 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
 
 
     }
-
-
     override fun getItemCount(): Int {
         return postList.size
     }
-
-
+    fun addNewItem(itemsNew: List<User>){
+        val items = ArrayList<User>()
+        items.clear() // ->> optional if you need have clear of object
+        items.addAll(itemsNew)
+        notifyDataSetChanged()
+    }
 
 }
 

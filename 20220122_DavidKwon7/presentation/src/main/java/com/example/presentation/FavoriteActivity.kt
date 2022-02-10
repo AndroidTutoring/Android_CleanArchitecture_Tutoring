@@ -30,7 +30,11 @@ class FavoriteActivity : AppCompatActivity() {
 
     private lateinit var compositeDisposable: CompositeDisposable
 
+    private lateinit var viewModel: FavoriteViewModel
 
+    val viewModelFactory = ViewModelProvider(
+        this, ViewModelProvider.NewInstanceFactory())
+        .get(FavoriteViewModel::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +44,7 @@ class FavoriteActivity : AppCompatActivity() {
 
         clickFavorite()
         itemDeleteClick()
-        initVMFactory()
-        connectVM()
+        getDataFromVM()
 
     }
     override fun onDestroy() {
@@ -49,17 +52,11 @@ class FavoriteActivity : AppCompatActivity() {
         compositeDisposable.clear()
     }
 
-    private fun connectVM(){
-        val viewModelFactory = ViewModelProvider(
-            this, ViewModelProvider.NewInstanceFactory())
-            .get(MainViewModel::class.java)
-
-        viewModelFactory.liveData.observe(this, Observer {
-            tv_rv_id.text = it.id
-            tv_rv_name.text = it.name
-            created_time.text = it.date
-            html_url.text = it.url
-        })
+    @SuppressLint("CheckResult")
+    fun getDataFromVM(){
+        viewModelFactory.publishSubject.subscribe{
+            adapter.addNewItem(it)
+        }
     }
 
 
@@ -86,13 +83,7 @@ class FavoriteActivity : AppCompatActivity() {
             }
         })
     }
-    private fun initVMFactory(){
-        val viewModelFactory = ViewModelProvider(
-            this,ViewModelProvider.NewInstanceFactory())
-            .get(FavoriteViewModel::class.java)
 
-
-    }
 
 
 }

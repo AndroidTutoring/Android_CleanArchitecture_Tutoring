@@ -27,22 +27,13 @@ class FavoriteViewModel : ViewModel() {
     private val githubRepository = GithubRepositoryImpl(
         localDataSource = localDataSource,
         remoteDataSource = remoteDataSource)
-    private val publishSubject : PublishSubject<List<User>> =
+    val publishSubject : PublishSubject<List<User>> =
         PublishSubject.create()
 
     lateinit var adapter: FavoriteAdapter
     lateinit var binding: ActivityFavoriteBinding
 
-    private val _liveData = MutableLiveData<User>()
-    val liveData : LiveData<User> = _liveData
 
-    init {
-        _liveData.value = User(
-            name = String(),
-            id = String(),
-            url = String(),
-            date = String())
-    }
 
 
     @SuppressLint("CheckResult")
@@ -59,7 +50,7 @@ class FavoriteViewModel : ViewModel() {
     }
 
     private fun initRepo(){
-        compositeDisposable.add(githubRepository.getRepos()
+        githubRepository.getRepos()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry(2)
@@ -67,7 +58,7 @@ class FavoriteViewModel : ViewModel() {
                 update(item)
                 publishSubject.onNext(item)
             }.addTo(compositeDisposable)
-        )
+
     }
 
     override fun onCleared() {
