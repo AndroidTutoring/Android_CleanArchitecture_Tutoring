@@ -65,7 +65,6 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private fun getDataFromViewModel() {
         //검색  유저 리스트 업데이트
         mainSharedViewModel.userFragmentUpdateUserList.subscribe({
-            Timber.v("it ->sdsds $it")
             userListRcyAdapter.submitList(it.toMutableList())
             binding.emptyView.visibility = View.GONE
         }, {
@@ -98,7 +97,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
             //맨처음  splash 적용된후  이제 기존 뷰모델에 저장한 값들  다시 넣어주면됨
             binding.emptyView.visibility = View.GONE
-            userListRcyAdapter.submitList(mainSharedViewModel.searchedUsersList?.toMutableList())
+            userListRcyAdapter.submitList(mainSharedViewModel.searchedUsersList?.map { it.copy() })
         }
     }
 
