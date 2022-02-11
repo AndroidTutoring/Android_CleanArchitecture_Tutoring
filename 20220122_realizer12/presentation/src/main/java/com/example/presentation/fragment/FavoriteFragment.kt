@@ -16,6 +16,7 @@ import com.example.presentation.databinding.FragmentFavoriteBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
+import io.reactivex.rxjava3.kotlin.addTo
 import timber.log.Timber
 
 //즐겨찾기 프래그먼트
@@ -41,7 +42,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
             favoriteMarkedRvAdapter.submitList(it.toMutableList())
         }, {
             showToast(it.message.toString())
-        })
+        }).addTo(compositeDisposable)
     }
 
 

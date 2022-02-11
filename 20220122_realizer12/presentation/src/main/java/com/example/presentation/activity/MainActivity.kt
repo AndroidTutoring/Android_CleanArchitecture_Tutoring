@@ -14,6 +14,7 @@ import com.example.presentation.databinding.ActivityMainBinding
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
+import io.reactivex.rxjava3.kotlin.addTo
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
@@ -40,7 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             }
         }, {
             showToast(it.message.toString())
-        })
+        }).addTo(compositeDisposable)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

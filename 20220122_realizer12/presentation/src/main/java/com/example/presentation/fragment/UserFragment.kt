@@ -1,5 +1,6 @@
 package com.example.presentation.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -23,6 +24,7 @@ import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
+import io.reactivex.rxjava3.kotlin.addTo
 import timber.log.Timber
 
 //유저 프래그먼트
@@ -63,11 +65,12 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private fun getDataFromViewModel() {
         //검색  유저 리스트 업데이트
         mainSharedViewModel.userFragmentUpdateUserList.subscribe({
+            Timber.v("it ->sdsds $it")
             userListRcyAdapter.submitList(it.toMutableList())
             binding.emptyView.visibility = View.GONE
         }, {
             showToast(it.message.toString())
-        })
+        }).addTo(compositeDisposable)
     }
 
 
@@ -85,8 +88,17 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
             //받아온 검색된 유저리스트  업데이트  해주고, favorite filter 적용하면서, favorite리스트도 미리 받아둔다.
             //아직  favorite fragment가  create되기 전이므로 ..
-            mainSharedViewModel.getSearchUserList(splashSearchedUsersList)
+            mainSharedViewModel.getSearchUserList(splashSearchedUsersList.map { it.copy() })
             mainSharedViewModel.initialListSetting()
+
+            //configuration change로 다시 불릴때는 값 적용안되게 clear 시켜줌.
+            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)?.clear()
+
+        }else{
+
+            //맨처음  splash 적용된후  이제 기존 뷰모델에 저장한 값들  다시 넣어주면됨
+            binding.emptyView.visibility = View.GONE
+            userListRcyAdapter.submitList(mainSharedViewModel.searchedUsersList?.toMutableList())
         }
     }
 
