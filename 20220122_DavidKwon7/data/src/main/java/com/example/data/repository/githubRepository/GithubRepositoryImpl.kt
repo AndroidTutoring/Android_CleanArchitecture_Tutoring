@@ -1,5 +1,6 @@
 package com.example.data.repository.githubRepository
 
+import com.example.data.model.User
 import com.example.data.repository.githubSource.local.LocalDataSource
 import com.example.data.repository.githubSource.remote.RemoteDataSource
 import com.example.presentation.User
