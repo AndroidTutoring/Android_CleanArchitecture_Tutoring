@@ -14,6 +14,7 @@ import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.SplashViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
+import io.reactivex.rxjava3.kotlin.addTo
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
 
@@ -40,7 +41,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
         }, {
             showToast(it.message.toString())
             finish()//문제 있으면 앱종료
-        })
+        }).addTo(compositeDisposable)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

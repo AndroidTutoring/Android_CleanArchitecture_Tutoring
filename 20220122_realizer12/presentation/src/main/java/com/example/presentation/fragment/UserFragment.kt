@@ -1,8 +1,10 @@
 package com.example.presentation.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.data.model.SearchedUser
@@ -22,6 +24,8 @@ import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.util.Util.search
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
+import io.reactivex.rxjava3.kotlin.addTo
+import timber.log.Timber
 
 //유저 프래그먼트
 class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
@@ -29,23 +33,11 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private var page: Int = 1//페이지목록
     private var perPage: Int = 10//페이지당 요청하는 데이터 수
 
-    private var searchedUsersList: List<PresentationSearchedUser>? = listOf()
+
     private lateinit var userListRcyAdapter: UserListRvAdapter
 
-    private val userRepository: UserRepository by lazy {
-        val favoriteMarkDataBase = LocalDataBase.getInstance(requireContext().applicationContext)
-        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
-        UserRepositoryImpl(localDataSource, remoteDataSource)
-    }
-
     //메인 activity와 공유하는  뷰모델
-    private val mainSharedViewModel: MainViewModel by lazy {
-        ViewModelProvider(
-            requireActivity(),
-            ViewModelFactory(userRepository)
-        ).get(MainViewModel::class.java)
-    }
+    private val mainSharedViewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,28 +65,39 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     private fun getDataFromViewModel() {
         //검색  유저 리스트 업데이트
         mainSharedViewModel.userFragmentUpdateUserList.subscribe({
-            userListRcyAdapter.submitList(it as MutableList<PresentationSearchedUser>?)
+            userListRcyAdapter.submitList(it.toMutableList())
             binding.emptyView.visibility = View.GONE
         }, {
             showToast(it.message.toString())
-        })
+        }).addTo(compositeDisposable)
     }
 
 
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList() {
-        searchedUsersList =
-            requireActivity().intent
+
+        val splashSearchedUsersList = requireActivity().intent
                 .getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
                     as List<PresentationSearchedUser>
 
-        if (!searchedUsersList.isNullOrEmpty()) {
+        if (!splashSearchedUsersList.isNullOrEmpty()) {
 
-            binding.editSearchUser.setText(searchedUsersList!![0].login)
+            binding.editSearchUser.setText(splashSearchedUsersList[0].login)
             binding.emptyView.visibility = View.GONE
 
-            mainSharedViewModel.getSearchUserList(searchedUsersList!!)
-            mainSharedViewModel.filterFavoriteUser()
+            //받아온 검색된 유저리스트  업데이트  해주고, favorite filter 적용하면서, favorite리스트도 미리 받아둔다.
+            //아직  favorite fragment가  create되기 전이므로 ..
+            mainSharedViewModel.getSearchUserList(splashSearchedUsersList.map { it.copy() })
+            mainSharedViewModel.initialListSetting()
+
+            //configuration change로 다시 불릴때는 값 적용안되게 clear 시켜줌.
+            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)?.clear()
+
+        }else{
+
+            //맨처음  splash 적용된후  이제 기존 뷰모델에 저장한 값들  다시 넣어주면됨
+            binding.emptyView.visibility = View.GONE
+            userListRcyAdapter.submitList(mainSharedViewModel.searchedUsersList?.map { it.copy() })
         }
     }
 
@@ -137,9 +140,8 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
                 searchedUser: PresentationSearchedUser,
                 position: Int
             ) {
-                val deepCopiedList = userListRcyAdapter.currentList.map { it.copy() }
                 val deepCopiedSearchedUser = searchedUser.copy()
-                returnFavoriteMarkStatus(deepCopiedSearchedUser, deepCopiedList)
+                returnFavoriteMarkStatus(deepCopiedSearchedUser)
             }
         })
 
@@ -147,24 +149,20 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
     //즐겨 찾기 취소 또는 추가 여부에 따른  delete  add 를 리턴
     private fun returnFavoriteMarkStatus(
-        searchedUser: PresentationSearchedUser,
-        currentList: List<PresentationSearchedUser>
+        searchedUser: PresentationSearchedUser
     ) {
         if (searchedUser.isMyFavorite) {
             showToast("즐겨찾기 취소")
             searchedUser.isMyFavorite = false
             mainSharedViewModel.deleteFavoriteUsers(
-                presentationSearchedUser = searchedUser,
-                presentationSearchedUserList = currentList,
-                shouldRemoveData = false
+                presentationSearchedUser = searchedUser
             )
 
         } else {
             showToast("즐겨찾기 추가")
             searchedUser.isMyFavorite = true
             mainSharedViewModel.addFavoriteUsers(
-                presentationSearchedUser = searchedUser,
-                presentationSearchedUserList = currentList
+                presentationSearchedUser = searchedUser
             )
         }
     }

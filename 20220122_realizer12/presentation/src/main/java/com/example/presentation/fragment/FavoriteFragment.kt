@@ -2,6 +2,7 @@ package com.example.presentation.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.UserRepository
 import com.example.data.repository.UserRepositoryImpl
@@ -15,6 +16,8 @@ import com.example.presentation.databinding.FragmentFavoriteBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
+import io.reactivex.rxjava3.kotlin.addTo
+import timber.log.Timber
 
 //즐겨찾기 프래그먼트
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBinding::inflate) {
@@ -22,19 +25,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     private lateinit var favoriteMarkedRvAdapter: UserListRvAdapter
 
     //메인 activity와 공유하는  뷰모델
-    private val mainSharedViewModel: MainViewModel by lazy {
-        ViewModelProvider(
-            requireActivity(),
-            ViewModelFactory(userRepository)
-        ).get(MainViewModel::class.java)
-    }
+    private val mainSharedViewModel: MainViewModel by activityViewModels()
 
-    private val userRepository: UserRepository by lazy {
-        val favoriteMarkDataBase = LocalDataBase.getInstance(requireContext().applicationContext)
-        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
-        UserRepositoryImpl(localDataSource, remoteDataSource)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,10 +39,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
     private fun getDataFromViewModel() {
         //즐겨 찾기 유저 리스트 업데이트
         mainSharedViewModel.favoriteFragmentUpdateUserList.subscribe({
-            favoriteMarkedRvAdapter.submitList(it as MutableList<PresentationSearchedUser>?)
+            favoriteMarkedRvAdapter.submitList(it.toMutableList())
         }, {
             showToast(it.message.toString())
-        })
+        }).addTo(compositeDisposable)
     }
 
 
@@ -63,9 +55,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
                 position: Int
             ) {
                 mainSharedViewModel.deleteFavoriteUsers(
-                    presentationSearchedUser = searchedUser,
-                    presentationSearchedUserList = favoriteMarkedRvAdapter.currentList,
-                    shouldRemoveData = true
+                    presentationSearchedUser = searchedUser
                 )
             }
         })
@@ -83,8 +73,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteB
         getFavoriteGitUsers()
     }
 
-    //즐겨찾기한 유저들 가져옴.
+    //미리 뷰모델 안에서 세팅 되어있던  즐겨찾기 리스트를 가져와 업데이트 해줌
     private fun getFavoriteGitUsers() {
-        mainSharedViewModel.getFavoriteUsers()
+        favoriteMarkedRvAdapter.submitList(mainSharedViewModel.favoriteUserList?.toMutableList())
     }
 }

@@ -14,6 +14,7 @@ import com.example.presentation.fragment.UserFragment
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.DetailViewModel
 import com.example.presentation.viewmodel.factory.DetailViewModelFactory
+import io.reactivex.rxjava3.kotlin.addTo
 
 class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding::inflate) {
 
@@ -61,7 +62,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding
             repoRvAdapter.submitList(it.toMutableList())
         }, {
             showToast(it.message.toString())
-        })
+        }).addTo(compositeDisposable)
     }
 
 
