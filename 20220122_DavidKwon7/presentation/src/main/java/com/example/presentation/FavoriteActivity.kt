@@ -5,10 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.presentation.databinding.ActivityFavoriteBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,7 +13,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.item_recycler_ex.*
 
 class FavoriteActivity : AppCompatActivity() {
 
@@ -72,7 +68,8 @@ class FavoriteActivity : AppCompatActivity() {
         adapter.setOnItemClickListener(object :
             OnItemClickListener {
             override fun onItemClick(v: View, data: User, pos: Int) {
-                repository.deleteFav(deleteUser = User(
+                repository.deleteFav(
+                    deleteUser = User(
                     name=String(),
                     id= String(),
                     date = String(),
