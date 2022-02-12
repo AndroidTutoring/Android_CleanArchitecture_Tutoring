@@ -1,5 +1,6 @@
 package com.example.presentation
 
+import com.example.data.model.User
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

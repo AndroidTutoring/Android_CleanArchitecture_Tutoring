@@ -4,42 +4,53 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.data.repository.githubRepository.GithubRepository
+import com.example.data.repository.githubRepository.GithubRepositoryImpl
+import com.example.data.repository.githubSource.local.LocalDataSourceImpl
 import com.example.presentation.databinding.ActivityMainBinding
-import com.example.recylcerviewtest01.githubRepository.GithubRepository
-import com.example.recylcerviewtest01.githubRepository.GithubRepositoryImpl
-import com.example.recylcerviewtest01.githubSource.local.LocalDataSource
-import com.example.recylcerviewtest01.githubSource.local.LocalDataSourceImpl
-import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSource
-import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSourceImpl
+import com.example.data.repository.githubSource.remote.RemoteDataSourceImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import kotlinx.android.synthetic.main.item_recycler_ex.*
+import java.util.Set.of
 
 class MainActivity : AppCompatActivity()  {
 
+    private val githubRepos: ArrayList<User> = ArrayList()
 
     private val listData = listOf<User>()
     private val position: Int?=null
     private lateinit var api: Api
     private lateinit var userdao: UserDao
     private lateinit var binding: ActivityMainBinding
-    private val disposables : CompositeDisposable by lazy {
+    private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
+    val viewModelFactory = ViewModelProvider(
+        this, ViewModelProvider.NewInstanceFactory())
+        .get(MainViewModel::class.java)
+    private val backButtonSubject : Subject<Long> =
+        BehaviorSubject.createDefault(0L)
     lateinit var repository : GithubRepository
     private val adapter: ProfileAdapter by lazy {
         ProfileAdapter(listData,this)
     }
-    private val backButtonSubject : Subject<Long> = BehaviorSubject.createDefault(0L)
-    val localDataSource = LocalDataSourceImpl(dao = userdao)
-    val remoteDataSource = RemoteDataSourceImpl(api)
-    val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
+    private val localDataSource = LocalDataSourceImpl(dao = userdao)
+    private val remoteDataSource = RemoteDataSourceImpl(api)
+    private val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
     remoteDataSource = remoteDataSource)
+
+
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,50 +59,25 @@ class MainActivity : AppCompatActivity()  {
         setContentView(binding.root)
 
         clickFavorite()
-        setAdapter()
-        back2()
         itemFavClick()
-
-
-
-
+        back2()
+        getDataFromVM()
     }
     override fun onDestroy() {
         super.onDestroy()
-        disposables.clear()
+        compositeDisposable.clear()
     }
-
-
+    fun getDataFromVM(){
+        viewModelFactory.publishSubject.subscribe{
+            adapter.addNewItem(it)
+        }
+    }
 
         private fun clickFavorite() {
             binding.btn2.setOnClickListener {
-                val intent = Intent(this, FavoriteActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this,FavoriteActivity::class.java))
             }
         }
-
-
-    @SuppressLint("CheckResult")
-    private fun setAdapter(){
-        AdapterData()
-            disposables.add(githubRepository.getRepos()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .retry(2)
-                .subscribe{ item ->
-                    adapter.update(item)
-                }
-            )
-    }
-    private fun AdapterData(){
-        with(adapter){
-            intent.putExtra("name", position?.let { postList.get(it).name })
-            intent.putExtra("id", position?.let { postList.get(it).id })
-            intent.putExtra("date", position?.let { postList.get(it).date })
-            intent.putExtra("url", position?.let { postList.get(it).url })
-        }
-    }
-
 
     //item click
     private fun itemFavClick() {
@@ -106,16 +92,22 @@ class MainActivity : AppCompatActivity()  {
             }
         })
     }
-    //뒤로 가기
+    //뒤로 가기 ~ 질문 하기
+    @SuppressLint("CheckResult")
     private fun back2() {
-        backButtonSubject
-            .buffer(2, 1)
-            .map { it[1] - it[0] < 1500 }
+        backButtonSubject.buffer(2,1)
             .observeOn(AndroidSchedulers.mainThread())
+            .map{t ->
+                t[1] - t[0] < 1500L
+            }
             .subscribe { willFinish ->
-                if (willFinish) finish()
-                else Toast.makeText(this, "다시 한 번 더 눌러주세요", Toast.LENGTH_SHORT).show()
-            } .addTo(disposables)
+                if (willFinish){
+                    finish()
+                } else{
+                    Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+                }
+            }
+
     }
 
 

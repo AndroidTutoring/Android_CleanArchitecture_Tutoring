@@ -1,8 +1,6 @@
-package com.example.recylcerviewtest01.githubRepository
+package com.example.data.repository.githubRepository
 
 import com.example.presentation.User
-import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSource
-import com.example.recylcerviewtest01.githubSource.remote.RemoteDataSourceImpl
 import io.reactivex.Completable
 import io.reactivex.Single
 

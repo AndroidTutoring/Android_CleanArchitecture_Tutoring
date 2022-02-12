@@ -14,11 +14,15 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener : OnItemClickListener) {
         this.listener = listener
+
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recycler_ex,parent,false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) :
+            FavoriteAdapter.ViewHolder {
+        val view = LayoutInflater
+            .from(parent.context)
+            .inflate(R.layout.item_recycler_ex,parent,false)
         return ViewHolder(view)
     }
 
@@ -42,10 +46,7 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
                 }
             }
         }
-
-
     }
-
 
 
     override fun getItemCount(): Int {
@@ -55,4 +56,12 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(postList[position])
     }
+
+    fun addNewItem(itemsNew: List<User>){
+        val items = ArrayList<User>()
+        items.clear() // ->> optional if you need have clear of object
+        items.addAll(itemsNew)
+        notifyDataSetChanged()
+    }
+
 }

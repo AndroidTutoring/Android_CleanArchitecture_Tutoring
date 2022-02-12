@@ -1,6 +1,5 @@
 package com.example.presentation
 
-import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -8,19 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import io.reactivex.schedulers.Schedulers
 
 
-
-class ProfileAdapter(var postList : List<User>, val context: Context) :
+class ProfileAdapter(var postList: List<User>, val context: MainActivity) :
 RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
     private val githubRepos: ArrayList<User> = ArrayList()
-
-
 
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener:OnItemClickListener) {
         this.listener = listener
+        notifyDataSetChanged()
     }
 
 
@@ -43,6 +39,7 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
             {
                 itemView.setOnClickListener {
                     listener?.onItemClick(itemView,item,pos)
+
                 }
             }
         }
@@ -57,7 +54,6 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
     override fun onBindViewHolder(holder: ProfileAdapter.ViewHolder, position: Int) {
         holder.bind(postList[position])
 
-
         //클릭 이벤트
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView?.context, ProfileDetailActivity::class.java)
@@ -71,17 +67,13 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
 
 
     }
-
-
     override fun getItemCount(): Int {
         return postList.size
     }
-
-    fun update(githubRepos: List<User>) {
-        this.githubRepos.clear()
-        this.githubRepos.addAll(githubRepos)
-        this.githubRepos.size
-        this.githubRepos.take(30)
+    fun addNewItem(itemsNew: List<User>){
+        val items = ArrayList<User>()
+        items.clear() // ->> optional if you need have clear of object
+        items.addAll(itemsNew)
         notifyDataSetChanged()
     }
 
