@@ -1,7 +1,7 @@
 package com.example.data.repository.githubSource.remote
 
+import com.example.data.model.User
 import com.example.presentation.Api
-import com.example.presentation.User
 import io.reactivex.Single
 
 class RemoteDataSourceImpl(

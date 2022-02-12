@@ -1,61 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingHorizontal="20dp"
-    android:paddingVertical="30dp"
-    android:background="@color/cardview_dark_background"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="User"
+            type="com.example.data.model.User" />
 
-    <TextView
-        android:id="@+id/tv_rv_name"
-        android:layout_width="wrap_content"
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="이름"
-        android:textStyle="bold"
-        android:layout_marginLeft="20dp"
-        android:textSize="24sp"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:id="@+id/tv_rv_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="나이"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_rv_name"/>
-
-    <TextView
-        android:id="@+id/created_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="만든 시간"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_rv_id"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textColor="@color/white"/>
-
-    <TextView
-        android:id="@+id/html_url"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="주소"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/created_time"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textColor="@color/white"/>
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="30dp"
+        android:background="@color/cardview_dark_background">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_rv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{User.name}"
+            android:textStyle="bold"
+            android:layout_marginLeft="20dp"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_rv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{User.id}"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_rv_name" />
+
+        <TextView
+            android:id="@+id/created_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{User.date}"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_rv_id"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/html_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{User.url}"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/created_time"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/white" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
