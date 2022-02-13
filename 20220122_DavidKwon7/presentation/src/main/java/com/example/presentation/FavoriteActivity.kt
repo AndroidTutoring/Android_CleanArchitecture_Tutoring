@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.presentation.databinding.ActivityFavoriteBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -67,9 +68,9 @@ class FavoriteActivity : AppCompatActivity() {
     private fun itemDeleteClick() {
         adapter.setOnItemClickListener(object :
             OnItemClickListener {
-            override fun onItemClick(v: View, data: User, pos: Int) {
+            override fun onItemClick(v: View, data: UserDataModel, pos: Int) {
                 repository.deleteFav(
-                    deleteUser = User(
+                    deleteUser = UserDataModel(
                     name=String(),
                     id= String(),
                     date = String(),

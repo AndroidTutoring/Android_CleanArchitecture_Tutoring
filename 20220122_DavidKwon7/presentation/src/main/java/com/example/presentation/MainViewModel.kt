@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
 import com.example.data.repository.githubSource.remote.RemoteDataSourceImpl
@@ -24,12 +25,12 @@ import io.reactivex.subjects.Subject
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var api: Api
     private lateinit var userdao: UserDao
-    private val listData = listOf<User>()
-    private val githubRepos: ArrayList<User> = ArrayList()
+    private val listData = listOf<UserDataModel>()
+    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
 
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L)
-    val publishSubject : PublishSubject<List<User>> =
+    val publishSubject : PublishSubject<List<UserDataModel>> =
         PublishSubject.create()
     private val behaviorSubject = BehaviorSubject.createDefault(0L)
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
@@ -41,8 +42,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         CompositeDisposable()
     }
 
+    private val _count = MutableLiveData<UserDataModel>()
+    val count : LiveData<UserDataModel> = _count
 
-    fun update(githubRepos: List<User>) {
+/*    init {
+        compositeDisposable.add(githubRepository.getRepos()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .retry(2)
+            .subscribe({it->
+                _count.value = it
+            }
+            )
+        )
+    }*/
+
+
+    fun update(githubRepos: List<UserDataModel>) {
         this.githubRepos.clear()
         this.githubRepos.addAll(githubRepos)
         this.githubRepos.size

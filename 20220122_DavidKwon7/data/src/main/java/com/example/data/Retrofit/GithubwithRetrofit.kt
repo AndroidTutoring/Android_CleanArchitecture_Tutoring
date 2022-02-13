@@ -1,6 +1,6 @@
 package com.example.presentation
 
-import com.example.data.model.User
+import com.example.data.model.UserDataModel
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -12,7 +12,7 @@ import retrofit2.http.Path
 interface Api {
     @GET("users/{owner}/repos")
     fun getRepos(@Path("owner") owner: String)
-            : Single<List<User>>
+            : Single<List<UserDataModel>>
 
 
 }

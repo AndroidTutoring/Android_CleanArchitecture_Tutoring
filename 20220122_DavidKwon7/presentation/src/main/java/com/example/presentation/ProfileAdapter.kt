@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.data.model.UserDataModel
+import com.example.presentation.databinding.ItemRecyclerExBinding
 
 
-class ProfileAdapter(var postList: List<User>, val context: MainActivity) :
+class ProfileAdapter(var postList: List<UserDataModel>, val context: MainActivity) :
 RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
-    private val githubRepos: ArrayList<User> = ArrayList()
+    lateinit var binding : ItemRecyclerExBinding
+    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
 
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener:OnItemClickListener) {
@@ -20,7 +23,9 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
     }
 
 
-     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+     class ViewHolder(
+         private val binding: ItemRecyclerExBinding
+     ) : RecyclerView.ViewHolder(binding.root) {
          private var listener : OnItemClickListener? = null
         private val txtName: TextView = itemView.findViewById(R.id.tv_rv_name)
         private val txtId: TextView = itemView.findViewById(R.id.tv_rv_id)
@@ -28,11 +33,16 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
         private val txtUrl : TextView = itemView.findViewById(R.id.html_url)
 
 
-        fun bind(item: User) {
+        fun bind(item: UserDataModel) {
+            //삭제 예정
             txtName.text = item.name
             txtId.text = item.id
             txtTime.text = item.date
             txtUrl.text = item.url
+
+            //data change 요구!
+            binding.executePendingBindings()
+
 
             val pos = adapterPosition
             if(pos!= RecyclerView.NO_POSITION)
@@ -49,7 +59,8 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileAdapter.ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_recycler_ex,parent,false)
-        return ViewHolder(view)    }
+        return ViewHolder(binding)
+    }
 
     override fun onBindViewHolder(holder: ProfileAdapter.ViewHolder, position: Int) {
         holder.bind(postList[position])
@@ -70,8 +81,8 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
     override fun getItemCount(): Int {
         return postList.size
     }
-    fun addNewItem(itemsNew: List<User>){
-        val items = ArrayList<User>()
+    fun addNewItem(itemsNew: List<UserDataModel>){
+        val items = ArrayList<UserDataModel>()
         items.clear() // ->> optional if you need have clear of object
         items.addAll(itemsNew)
         notifyDataSetChanged()
