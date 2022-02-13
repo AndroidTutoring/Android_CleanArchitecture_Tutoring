@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
@@ -19,7 +20,7 @@ class FavoriteViewModel : ViewModel() {
 
     private lateinit var api: Api
     private lateinit var userdao: UserDao
-    private val githubRepos: ArrayList<User> = ArrayList()
+    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
     private lateinit var compositeDisposable: CompositeDisposable
 
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
@@ -27,7 +28,7 @@ class FavoriteViewModel : ViewModel() {
     private val githubRepository = GithubRepositoryImpl(
         localDataSource = localDataSource,
         remoteDataSource = remoteDataSource)
-    val publishSubject : PublishSubject<List<User>> =
+    val publishSubject : PublishSubject<List<UserDataModel>> =
         PublishSubject.create()
 
     lateinit var adapter: FavoriteAdapter
@@ -42,7 +43,7 @@ class FavoriteViewModel : ViewModel() {
     }
 
 
-    fun update(githubRepos: List<User>) {
+    fun update(githubRepos: List<UserDataModel>) {
         this.githubRepos.clear()
         this.githubRepos.addAll(githubRepos)
         this.githubRepos.size

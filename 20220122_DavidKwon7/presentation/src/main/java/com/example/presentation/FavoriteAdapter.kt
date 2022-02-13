@@ -2,14 +2,14 @@ package com.example.presentation
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.data.model.UserDataModel
+import com.example.presentation.databinding.ItemRecyclerExBinding
 
 class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
-    var postList = listOf<User>()
+    var postList = listOf<com.example.data.model.UserDataModel>()
 
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener : OnItemClickListener) {
@@ -20,24 +20,18 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) :
             FavoriteAdapter.ViewHolder {
-        val view = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_recycler_ex,parent,false)
-        return ViewHolder(view)
+
+        val inflater = LayoutInflater.from(parent.context)
+        val listItemBinding = ItemRecyclerExBinding.inflate(inflater,parent,false)
+        return ViewHolder(listItemBinding)
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder (val binding: ItemRecyclerExBinding) : RecyclerView.ViewHolder(binding.root) {
         private var listener : OnItemClickListener? =null
-        private val txtName: TextView = itemView.findViewById(R.id.tv_rv_name)
-        private val txtId: TextView = itemView.findViewById(R.id.tv_rv_id)
-        private val txtTime : TextView = itemView.findViewById(R.id.created_time)
-        private val txtUrl : TextView = itemView.findViewById(R.id.html_url)
 
-        fun bind(item: User) {
-            txtName.text = item.name
-            txtId.text = item.id
-            txtTime.text = item.date
-            txtUrl.text = item.url
+
+        fun bind(item: com.example.data.model.UserDataModel) {
+            binding.user = item
 
             val pos = adapterPosition
             if(pos!= RecyclerView.NO_POSITION){
@@ -57,8 +51,8 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
         holder.bind(postList[position])
     }
 
-    fun addNewItem(itemsNew: List<User>){
-        val items = ArrayList<User>()
+    fun addNewItem(itemsNew: List<UserDataModel>){
+        val items = ArrayList<UserDataModel>()
         items.clear() // ->> optional if you need have clear of object
         items.addAll(itemsNew)
         notifyDataSetChanged()

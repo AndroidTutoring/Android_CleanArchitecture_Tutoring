@@ -1,16 +1,15 @@
 package com.example.presentation
 
-import androidx.room.Entity
-import com.example.data.model.User
+import com.example.data.model.UserDataModel
 
-data class User(val name: String,
+data class UserPresentationDataModel(val name: String,
                 val id: String,
                 val date: String,
                 val url: String?)
 
-fun mapper(user:List<User>) : List<com.example.data.model.User>{
+fun toPresentationModel(user:List<UserDataModel>) : List<com.example.data.model.UserDataModel>{
     return user.toList().map {
-        User(
+        UserDataModel(
             it.name,
             it.id,
             it.date,

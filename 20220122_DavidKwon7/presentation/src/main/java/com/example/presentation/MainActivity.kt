@@ -6,7 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
@@ -20,9 +24,9 @@ import io.reactivex.subjects.Subject
 
 class MainActivity : AppCompatActivity()  {
 
-    private val githubRepos: ArrayList<User> = ArrayList()
+    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
 
-    private val listData = listOf<User>()
+    private val listData = listOf<UserDataModel>()
     private val position: Int?=null
     private lateinit var api: Api
     private lateinit var userdao: UserDao
@@ -45,7 +49,6 @@ class MainActivity : AppCompatActivity()  {
     remoteDataSource = remoteDataSource)
 
 
-
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,13 @@ class MainActivity : AppCompatActivity()  {
         itemFavClick()
         back2()
         getDataFromVM()
+
+        //삭제 가능...
+        binding.rvProfile.apply {
+            adapter = ProfileAdapter(listData,this@MainActivity)
+            layoutManager = LinearLayoutManager(context)
+        }
+
     }
     override fun onDestroy() {
         super.onDestroy()
@@ -77,9 +87,9 @@ class MainActivity : AppCompatActivity()  {
     private fun itemFavClick() {
         adapter.setOnItemClickListener(object :
             OnItemClickListener {
-            override fun onItemClick(v: View, data: User, pos: Int) {
+            override fun onItemClick(v: View, data: UserDataModel, pos: Int) {
                 repository.deleteFav(
-                    deleteUser = User(
+                    deleteUser = UserDataModel(
                     name=String(),id= String(),date = String(),url = String() ))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

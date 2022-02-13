@@ -1,7 +1,7 @@
 package com.example.presentation
 
 import androidx.room.*
-import com.example.data.model.User
+import com.example.data.model.UserDataModel
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -9,11 +9,11 @@ import io.reactivex.Single
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addFav(user: User) : Completable
+    fun addFav(user: UserDataModel) : Completable
 
     @Query("SELECT * FROM user")
-    fun loadUserList(): Single<List<User>>
+    fun loadUserList(): Single<List<UserDataModel>>
 
     @Delete
-    fun deleteFav(user: User) : Completable
+    fun deleteFav(user: UserDataModel) : Completable
 }
