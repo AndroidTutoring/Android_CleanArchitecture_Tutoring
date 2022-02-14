@@ -29,9 +29,9 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 
-    //뷰바인딩 적용
+    //데이터 바인딩 적용
     buildFeatures {
-        viewBinding true
+        dataBinding true
     }
 
     kotlinOptions {

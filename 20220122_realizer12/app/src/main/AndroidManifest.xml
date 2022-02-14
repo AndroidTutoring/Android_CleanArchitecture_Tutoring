@@ -25,7 +25,7 @@
         <activity
             android:name="com.example.presentation.activity.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name="com.example.presentation.activity.DetailActivity">
 

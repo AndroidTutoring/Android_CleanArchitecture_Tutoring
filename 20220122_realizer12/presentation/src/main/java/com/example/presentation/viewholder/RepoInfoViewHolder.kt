@@ -5,8 +5,9 @@ import com.example.presentation.databinding.ItemRepoInfoBinding
 import com.example.presentation.model.PresentationUserRepo
 
 class RepoInfoViewHolder(
-    private val binding: ItemRepoInfoBinding) : RecyclerView.ViewHolder(binding.root
-) {
+    val binding: ItemRepoInfoBinding
+) : RecyclerView.ViewHolder(binding.root) {
+
     fun bind(userRepo: PresentationUserRepo) {
 
         //레포 이름 넣어줌.

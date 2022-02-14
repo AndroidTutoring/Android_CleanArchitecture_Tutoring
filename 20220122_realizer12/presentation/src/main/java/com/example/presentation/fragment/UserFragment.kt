@@ -14,6 +14,7 @@ import com.example.data.retrofit.RetrofitHelper
 import com.example.data.room.LocalDataBase
 import com.example.data.source.local.UserLocalDataSourceImpl
 import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.R
 import com.example.presentation.activity.DetailActivity
 import com.example.presentation.activity.SplashActivity
 import com.example.presentation.adapter.UserListRvAdapter
@@ -28,7 +29,7 @@ import io.reactivex.rxjava3.kotlin.addTo
 import timber.log.Timber
 
 //유저 프래그먼트
-class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
+class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
     private var page: Int = 1//페이지목록
     private var perPage: Int = 10//페이지당 요청하는 데이터 수

@@ -7,6 +7,7 @@ import com.example.data.repository.RepoRepository
 import com.example.data.repository.RepoRepositoryImpl
 import com.example.data.retrofit.RetrofitHelper
 import com.example.data.source.remote.RepoRemoteDataSourceImpl
+import com.example.presentation.R
 import com.example.presentation.adapter.RepoListRvAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityDetailBinding
@@ -16,7 +17,7 @@ import com.example.presentation.viewmodel.DetailViewModel
 import com.example.presentation.viewmodel.factory.DetailViewModelFactory
 import io.reactivex.rxjava3.kotlin.addTo
 
-class DetailActivity : BaseActivity<ActivityDetailBinding>(ActivityDetailBinding::inflate) {
+class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_detail) {
 
     //유저 정보
     private var userInfo: PresentationSearchedUser? = null

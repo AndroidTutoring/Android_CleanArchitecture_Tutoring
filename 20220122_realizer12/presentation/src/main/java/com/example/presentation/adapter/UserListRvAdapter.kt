@@ -2,8 +2,10 @@ package com.example.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.example.presentation.R
 import com.example.presentation.databinding.ItemRepoUserBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewholder.UserViewHolder
@@ -26,8 +28,13 @@ class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val binding =
-            ItemRepoUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding:ItemRepoUserBinding =
+            DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.item_repo_user,
+                parent,
+                false
+            )
         return UserViewHolder(binding)
     }
 

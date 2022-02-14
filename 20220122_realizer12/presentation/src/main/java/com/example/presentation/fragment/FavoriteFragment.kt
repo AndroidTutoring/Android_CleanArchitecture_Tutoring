@@ -10,6 +10,7 @@ import com.example.data.retrofit.RetrofitHelper
 import com.example.data.room.LocalDataBase
 import com.example.data.source.local.UserLocalDataSourceImpl
 import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.R
 import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentFavoriteBinding
@@ -20,7 +21,7 @@ import io.reactivex.rxjava3.kotlin.addTo
 import timber.log.Timber
 
 //즐겨찾기 프래그먼트
-class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(FragmentFavoriteBinding::inflate) {
+class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment_favorite) {
 
     private lateinit var favoriteMarkedRvAdapter: UserListRvAdapter
 

@@ -9,6 +9,7 @@ import com.example.data.retrofit.RetrofitHelper
 import com.example.data.room.LocalDataBase
 import com.example.data.source.local.UserLocalDataSourceImpl
 import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.R
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.PresentationSearchedUser
@@ -16,7 +17,7 @@ import com.example.presentation.viewmodel.SplashViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
 import io.reactivex.rxjava3.kotlin.addTo
 
-class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) {
+class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
 
 
     private val userRepository: UserRepository by lazy {
