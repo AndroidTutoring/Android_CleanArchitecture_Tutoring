@@ -1,5 +1,7 @@
 package com.example.presentation.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.data.repository.UserRepository
 import com.example.presentation.base.BaseViewModel
 import com.example.presentation.model.PresentationSearchedUser
@@ -8,16 +10,18 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
 class SplashViewModel(
     private val userRepository: UserRepository
 ) : BaseViewModel() {
 
-    //유저 프래그먼트 유저리스트 업데이트 용
-    val searchedUserPublishSubject: PublishSubject<List<PresentationSearchedUser>> =
-        PublishSubject.create()
+    //유저리스트 라이브데이터
+    private var _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
+    val searchedUsersList: LiveData<List<PresentationSearchedUser>> = _searchedUserList
+
+    private var _error = MutableLiveData<Throwable>()
+    val error: LiveData<Throwable> = _error
 
     fun searchUsers() {
         Single.zip(
@@ -35,14 +39,18 @@ class SplashViewModel(
                 }.observeOn(AndroidSchedulers.mainThread()),
             Single.timer(2, TimeUnit.SECONDS),
             { dataModelSearchedUsers, _ ->
-                searchedUserPublishSubject.onNext(dataModelSearchedUsers?.let {
+                return@zip dataModelSearchedUsers
+            })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ searchedUsersList ->
+                _searchedUserList.value = searchedUsersList?.let {
                     toPresentationModel(
                         it
                     ).items
-                })
-            }).onErrorReturn {
-            searchedUserPublishSubject.onError(Throwable("유저 정보를 가져올수가 없습니다."))
-        }.subscribe()
+                }
+            }, {
+                _error.value = Throwable("유저를 검색하는 중에문제가 생감")
+            })
             .addTo(compositeDisposable)
     }
 
