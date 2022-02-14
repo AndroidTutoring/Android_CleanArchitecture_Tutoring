@@ -30,15 +30,12 @@ class MainActivity : AppCompatActivity()  {
     private val githubRepos: ArrayList<UserDataModel> = ArrayList()
     private val listData = listOf<UserDataModel>()
     private val position: Int?=null
-    private lateinit var api: Api
     private lateinit var userdao: UserDao
     private lateinit var binding: ActivityMainBinding
     private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
-    val viewModelFactory = ViewModelProvider(
-        this, ViewModelProvider.NewInstanceFactory())
-        .get(MainViewModel::class.java)
+
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L)
     lateinit var repository : GithubRepository
@@ -46,7 +43,7 @@ class MainActivity : AppCompatActivity()  {
         ProfileAdapter(listData,this)
     }
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl(api)
+    private val remoteDataSource = RemoteDataSourceImpl()
     private val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
     remoteDataSource = remoteDataSource)
 
@@ -60,15 +57,9 @@ class MainActivity : AppCompatActivity()  {
         clickFavorite()
         itemFavClick()
         back2()
-        getDataFromVM()
 
-        //삭제 가능...
-        binding.rvProfile.apply {
-            adapter = ProfileAdapter(listData,this@MainActivity)
-            layoutManager = LinearLayoutManager(context)
-        }
+        setAdapter()
 
-        //재확인 필요!
         mainViewModel.list.observe(this, Observer {
             it ->
             adapter.addItem(it)
@@ -79,17 +70,13 @@ class MainActivity : AppCompatActivity()  {
         super.onDestroy()
         compositeDisposable.clear()
     }
-    fun getDataFromVM(){
-        viewModelFactory.publishSubject.subscribe{
-            adapter.addNewItem(it)
-        }
-    }
 
         private fun clickFavorite() {
             binding.btn2.setOnClickListener {
                 startActivity(Intent(this,FavoriteActivity::class.java))
             }
         }
+
 
     //item click
     private fun itemFavClick() {
@@ -105,7 +92,7 @@ class MainActivity : AppCompatActivity()  {
             }
         })
     }
-    //뒤로 가기 ~ 질문 하기
+    //뒤로 가기
     @SuppressLint("CheckResult")
     private fun back2() {
         backButtonSubject.buffer(2,1)
@@ -122,6 +109,11 @@ class MainActivity : AppCompatActivity()  {
             }
 
     }
-
+    private fun setAdapter(){
+        binding.rvProfile.apply {
+            adapter = ProfileAdapter(listData,this@MainActivity)
+            layoutManager = LinearLayoutManager(context)
+        }
+    }
 
 }

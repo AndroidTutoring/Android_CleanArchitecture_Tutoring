@@ -8,7 +8,7 @@ interface GithubRepository {
 
     fun getCachedUserList() : Single<List<UserDataModel>>
     fun addFav(favoriteUser: UserDataModel)  : Completable
-    fun deleteFav(deleteUser: com.example.data.model.UserDataModel) : Completable
+    fun deleteFav(deleteUser: UserDataModel) : Completable
 
     fun getRepos() : Single<List<UserDataModel>>
 
