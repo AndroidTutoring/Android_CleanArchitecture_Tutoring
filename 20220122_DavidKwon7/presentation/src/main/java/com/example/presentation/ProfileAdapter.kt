@@ -88,5 +88,12 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
         notifyDataSetChanged()
     }
 
+    //addAll 말고?
+    fun addItem(list: List<UserDataModel>) {
+        val items = ArrayList<UserDataModel>()
+        items.clear()
+        items.addAll(list)
+    }
+
 }
 

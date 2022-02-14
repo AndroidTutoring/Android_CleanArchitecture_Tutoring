@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.model.UserDataModel
@@ -24,8 +26,8 @@ import io.reactivex.subjects.Subject
 
 class MainActivity : AppCompatActivity()  {
 
+    private lateinit var mainViewModel : MainViewModel
     private val githubRepos: ArrayList<UserDataModel> = ArrayList()
-
     private val listData = listOf<UserDataModel>()
     private val position: Int?=null
     private lateinit var api: Api
@@ -65,6 +67,12 @@ class MainActivity : AppCompatActivity()  {
             adapter = ProfileAdapter(listData,this@MainActivity)
             layoutManager = LinearLayoutManager(context)
         }
+
+        //재확인 필요!
+        mainViewModel.list.observe(this, Observer {
+            it ->
+            adapter.addItem(it)
+        })
 
     }
     override fun onDestroy() {
