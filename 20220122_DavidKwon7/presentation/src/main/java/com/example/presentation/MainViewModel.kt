@@ -1,19 +1,14 @@
 package com.example.presentation
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.data.Room.RoomDatabase
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
 import com.example.data.repository.githubSource.remote.RemoteDataSourceImpl
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -23,7 +18,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private lateinit var api: Api
+    private var api= GithubAPI::class.java
     private lateinit var userdao: UserDao
     private val listData = listOf<UserDataModel>()
     private val githubRepos: ArrayList<UserDataModel> = ArrayList()
@@ -34,7 +29,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         PublishSubject.create()
     private val behaviorSubject = BehaviorSubject.createDefault(0L)
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl(api)
+    private val remoteDataSource = RemoteDataSourceImpl()
     private val githubRepository = GithubRepositoryImpl(
         localDataSource = localDataSource,
         remoteDataSource = remoteDataSource)
@@ -44,6 +39,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _list = MutableLiveData<List<UserDataModel>>()
     val list : LiveData<List<UserDataModel>> = _list
+
+    private var roomDatabaseInstance : RoomDatabase?=null
+    fun setInstanceDB(roomDatabaseInstance : RoomDatabase){
+        this.roomDatabaseInstance = roomDatabaseInstance
+    }
+
+    fun saveData(data:UserDataModel){
+        roomDatabaseInstance?.userDao()?.loadUserList()
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe({ it->
+                    _list.value = it
+            })?.addTo(compositeDisposable)
+    }
 
     init {
         compositeDisposable.add(githubRepository.getRepos()
@@ -57,25 +66,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-
-    fun update(githubRepos: List<UserDataModel>) {
-        this.githubRepos.clear()
-        this.githubRepos.addAll(githubRepos)
-        this.githubRepos.size
-        this.githubRepos.take(30)
-    }
-
-    private fun initRepo(){
-        compositeDisposable.add(githubRepository.getRepos()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .retry(2)
-            .subscribe{ item ->
-                update(item)
-                publishSubject.onNext(item)
-            }.addTo(compositeDisposable)
-        )
-    }
 
     override fun onCleared() {
         super.onCleared()

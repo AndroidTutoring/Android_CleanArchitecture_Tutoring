@@ -20,7 +20,7 @@ class GithubRepositoryImpl (
             return localDataSource.addFav(favoriteUser)
         }
 
-        override fun deleteFav(deleteUser: com.example.data.model.UserDataModel): Completable {
+        override fun deleteFav(deleteUser: UserDataModel): Completable {
             return localDataSource.deleteFav(deleteUser)
         }
 

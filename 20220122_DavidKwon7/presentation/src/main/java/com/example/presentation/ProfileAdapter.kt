@@ -27,19 +27,10 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
          private val binding: ItemRecyclerExBinding
      ) : RecyclerView.ViewHolder(binding.root) {
          private var listener : OnItemClickListener? = null
-        private val txtName: TextView = itemView.findViewById(R.id.tv_rv_name)
-        private val txtId: TextView = itemView.findViewById(R.id.tv_rv_id)
-        private val txtTime : TextView = itemView.findViewById(R.id.created_time)
-        private val txtUrl : TextView = itemView.findViewById(R.id.html_url)
 
 
         fun bind(item: UserDataModel) {
-            //삭제 예정
-            txtName.text = item.name
-            txtId.text = item.id
-            txtTime.text = item.date
-            txtUrl.text = item.url
-
+            binding.user = item
             //data change 요구!
             binding.executePendingBindings()
 
@@ -81,14 +72,7 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
     override fun getItemCount(): Int {
         return postList.size
     }
-    fun addNewItem(itemsNew: List<UserDataModel>){
-        val items = ArrayList<UserDataModel>()
-        items.clear() // ->> optional if you need have clear of object
-        items.addAll(itemsNew)
-        notifyDataSetChanged()
-    }
 
-    //addAll 말고?
     fun addItem(list: List<UserDataModel>) {
         val items = ArrayList<UserDataModel>()
         items.clear()

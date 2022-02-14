@@ -9,7 +9,7 @@ import com.example.presentation.databinding.ItemRecyclerExBinding
 
 class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
-    var postList = listOf<com.example.data.model.UserDataModel>()
+    var postList = listOf<UserDataModel>()
 
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener : OnItemClickListener) {
@@ -19,7 +19,7 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) :
-            FavoriteAdapter.ViewHolder {
+            ViewHolder {
 
         val inflater = LayoutInflater.from(parent.context)
         val listItemBinding = ItemRecyclerExBinding.inflate(inflater,parent,false)
@@ -30,8 +30,9 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
         private var listener : OnItemClickListener? =null
 
 
-        fun bind(item: com.example.data.model.UserDataModel) {
+        fun bind(item: UserDataModel) {
             binding.user = item
+            binding.executePendingBindings()
 
             val pos = adapterPosition
             if(pos!= RecyclerView.NO_POSITION){
@@ -51,11 +52,9 @@ class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapt
         holder.bind(postList[position])
     }
 
-    fun addNewItem(itemsNew: List<UserDataModel>){
+    fun addItem(list: List<UserDataModel>) {
         val items = ArrayList<UserDataModel>()
-        items.clear() // ->> optional if you need have clear of object
-        items.addAll(itemsNew)
-        notifyDataSetChanged()
+        items.clear()
+        items.addAll(list)
     }
-
 }

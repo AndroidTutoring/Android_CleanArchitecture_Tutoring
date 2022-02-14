@@ -9,22 +9,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface Api {
+interface GithubAPI {
     @GET("users/{owner}/repos")
     fun getRepos(@Path("owner") owner: String)
             : Single<List<UserDataModel>>
 
-
 }
 
-class createRetrofit(){
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient
-    ) : Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.github.com/")
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
 
 
-}
