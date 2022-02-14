@@ -1,6 +1,7 @@
 package com.example.presentation.activity
 
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.UserRepository
 import com.example.data.repository.UserRepositoryImpl
@@ -34,15 +35,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     private fun dataFromViewModel() {
-        mainViewModel.mainBackPressPublishSubject.subscribe({ isBackPressPossible ->
+
+        mainViewModel.isBackPressPossible.observe(this, Observer {isBackPressPossible->
             if (isBackPressPossible) {//뒤로가기 두번
                 super.onBackPressed()
             } else {
                 showToast("뒤로가기 두번 눌러주세요")
             }
-        }, {
+        })
+
+        mainViewModel.error.observe(this, Observer {
             showToast(it.message.toString())
-        }).addTo(compositeDisposable)
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
