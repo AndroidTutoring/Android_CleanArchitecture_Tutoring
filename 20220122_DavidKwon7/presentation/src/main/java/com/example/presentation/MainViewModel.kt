@@ -27,7 +27,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var userdao: UserDao
     private val listData = listOf<UserDataModel>()
     private val githubRepos: ArrayList<UserDataModel> = ArrayList()
-
+    var progressBarVisible: MutableLiveData<Boolean> = MutableLiveData()
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L)
     val publishSubject : PublishSubject<List<UserDataModel>> =
@@ -42,20 +42,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         CompositeDisposable()
     }
 
-    private val _count = MutableLiveData<UserDataModel>()
-    val count : LiveData<UserDataModel> = _count
+    private val _list = MutableLiveData<List<UserDataModel>>()
+    val list : LiveData<List<UserDataModel>> = _list
 
-/*    init {
+    init {
         compositeDisposable.add(githubRepository.getRepos()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry(2)
             .subscribe({it->
-                _count.value = it
+                _list.value = it
             }
             )
         )
-    }*/
+    }
 
 
     fun update(githubRepos: List<UserDataModel>) {
