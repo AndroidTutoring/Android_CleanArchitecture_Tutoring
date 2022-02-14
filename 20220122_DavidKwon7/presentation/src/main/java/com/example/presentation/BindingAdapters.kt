@@ -1,4 +1,4 @@
-package com.example.presentation.app
+package com.example.presentation
 
 import android.view.View
 import androidx.databinding.BindingAdapter

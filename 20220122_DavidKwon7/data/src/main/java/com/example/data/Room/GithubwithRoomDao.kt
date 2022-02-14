@@ -11,7 +11,7 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addFav(user: UserDataModel) : Completable
 
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM userdatamodel")
     fun loadUserList(): Single<List<UserDataModel>>
 
     @Delete
