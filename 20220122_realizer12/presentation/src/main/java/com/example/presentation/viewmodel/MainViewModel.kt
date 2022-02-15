@@ -12,6 +12,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.lang.Exception
 
 class MainViewModel(
     private val userRepository: UserRepository
@@ -70,23 +71,29 @@ class MainViewModel(
                 .retry(2),
             userRepository.getFavoriteUsers(), { remote, local ->
 
-                if (page == 1) {
-                    vmSearchedUsersList = ArrayList()
-                }
-
-                remote.body()?.items.let { dataModelSearchUserList ->
-                    if (!dataModelSearchUserList.isNullOrEmpty()) {
-                        val presentationSearchUserList =
-                            dataModelSearchUserList.map { toPresentationModel(searchedUser = it) }
-                        vmSearchedUsersList?.addAll(presentationSearchUserList)
+                if(remote.isSuccessful){//remote 검색 성공했을때만 진행
+                    if (page == 1) {
+                        vmSearchedUsersList = ArrayList()
                     }
-                    vmSearchedUsersList?.map { searchedUser ->
-                        if (local.any { it.id == searchedUser.id }) {
-                            searchedUser.isMyFavorite = true
+
+                    remote.body()?.items.let { dataModelSearchUserList ->
+                        if (!dataModelSearchUserList.isNullOrEmpty()) {
+                            val presentationSearchUserList =
+                                dataModelSearchUserList.map { toPresentationModel(searchedUser = it) }
+                            vmSearchedUsersList?.addAll(presentationSearchUserList)
+                        }
+                        vmSearchedUsersList?.map { searchedUser ->
+                            if (local.any { it.id == searchedUser.id }) {
+                                searchedUser.isMyFavorite = true
+                            }
                         }
                     }
+                    return@zip vmSearchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
+
+                }else{//검색 실패시에는 에러 던짐
+                    throw RuntimeException()
                 }
-                return@zip vmSearchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
+
             })
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ searchedUsersList ->
