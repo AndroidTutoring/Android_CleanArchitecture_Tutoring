@@ -16,7 +16,6 @@ import com.example.presentation.databinding.ActivityMainBinding
 import com.example.presentation.viewmodel.MainViewModel
 import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.rxjava3.kotlin.addTo
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
@@ -63,8 +62,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     //초기 뷰 세팅
     private fun initSet() {
-
-
 
         //메인 뷰페이져  FragmentStateAdapter 연결
         binding.vpMain.apply {

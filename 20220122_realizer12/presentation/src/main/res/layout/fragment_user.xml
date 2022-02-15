@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
+        <variable
+            name="thisFragment"
+            type="com.example.presentation.fragment.UserFragment" />
+
+        <variable
+            name="mainViewModel"
+            type="com.example.presentation.viewmodel.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,12 +29,14 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/btn_search"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            bind:searchOption="@{()-> thisFragment.searchUserClickEvent()}" />
 
         <Button
             android:id="@+id/btn_search"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:onClick="@{()-> thisFragment.searchUserClickEvent()}"
             android:text="@string/search"
             app:layout_constraintBottom_toBottomOf="@+id/edit_search_user"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +52,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_search_user" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_search_user"
+            bind:addList="@{mainViewModel.searchedUsersList}" />
 
         <TextView
             android:id="@+id/empty_view"
@@ -53,10 +64,12 @@
             android:text="@string/empty_view_string"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_search_user" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_search_user"
+            bind:visibility="@{mainViewModel.searchedUsersList}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -13,7 +13,7 @@ import com.example.presentation.viewholder.RepoInfoViewHolder
 class RepoListRvAdapter : ListAdapter<PresentationUserRepo, RepoInfoViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoInfoViewHolder {
-        val binding:ItemRepoInfoBinding = DataBindingUtil.inflate(
+        val binding: ItemRepoInfoBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.item_repo_info,
             parent,
@@ -25,6 +25,7 @@ class RepoListRvAdapter : ListAdapter<PresentationUserRepo, RepoInfoViewHolder>(
     override fun onBindViewHolder(holder: RepoInfoViewHolder, position: Int) {
         holder.apply {
             bind(currentList[position])
+            binding.executePendingBindings()
         }
     }
 

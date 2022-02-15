@@ -9,7 +9,6 @@ import com.example.presentation.R
 import com.example.presentation.databinding.ItemRepoUserBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewholder.UserViewHolder
-import timber.log.Timber
 
 class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(diffUtil) {
 
@@ -28,7 +27,7 @@ class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val binding:ItemRepoUserBinding =
+        val binding: ItemRepoUserBinding =
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.item_repo_user,
@@ -66,6 +65,8 @@ class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(
             binding.root.setOnClickListener {
                 onItemClickListener?.onItemClickListener(currentList[adapterPosition])
             }
+
+            binding.executePendingBindings()
         }
     }
 

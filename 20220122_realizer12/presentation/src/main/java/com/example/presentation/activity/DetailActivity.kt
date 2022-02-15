@@ -1,7 +1,6 @@
 package com.example.presentation.activity
 
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.RepoRepository
@@ -45,6 +44,11 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
 
     //초기 세팅
     private fun initSet() {
+
+        binding.thisFragment = this
+        binding.lifecycleOwner = this
+        binding.detailViewModel = detailViewModel
+
         //유저 정보 가져옴.
         userInfo = intent.getParcelableExtra(UserFragment.PARAM_USER_INFO)
 
@@ -57,12 +61,6 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
 
     //뷰모델로부터  데이터 받아옴
     private fun getDataFromViewModel() {
-
-        //검색  유저 리스트 업데이트
-        detailViewModel.repoDetailList.observe(this, Observer {
-            binding.emptyView.visibility = View.GONE//데이터 가져오는 중 없앰.
-            repoRvAdapter.submitList(it.toMutableList())
-        })
 
         //error 관련 처리
         detailViewModel.error.observe(this, Observer {

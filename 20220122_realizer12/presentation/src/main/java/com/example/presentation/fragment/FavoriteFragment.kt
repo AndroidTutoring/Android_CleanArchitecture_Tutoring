@@ -23,22 +23,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSet()
-        getDataFromViewModel()
         listenerEvent()
-    }
-
-    //뷰모델로부터  데이터 받아옴
-    private fun getDataFromViewModel() {
-
-        //즐겨 찾기 유저 리스트 업데이트
-        mainSharedViewModel.favoriteUserList.observe(viewLifecycleOwner, Observer {
-            favoriteMarkedRvAdapter.submitList(it.toMutableList())
-        })
-
-        //error 관련 처리
-        mainSharedViewModel.error.observe(viewLifecycleOwner, Observer {
-            showToast(it.message.toString())
-        })
     }
 
 
@@ -59,6 +44,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment
 
     //초기세팅
     private fun initSet() {
+
+        binding.thisFragment = this
+        binding.lifecycleOwner = this
+        binding.mainViewModel = mainSharedViewModel
 
         //리사이클러뷰 세팅
         favoriteMarkedRvAdapter = UserListRvAdapter()

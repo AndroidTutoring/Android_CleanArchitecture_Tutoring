@@ -15,8 +15,8 @@ import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.util.Util.hideKeyboard
-import com.example.presentation.util.Util.search
 import com.example.presentation.viewmodel.MainViewModel
+import timber.log.Timber
 
 //유저 프래그먼트
 class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
@@ -33,15 +33,18 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSet()
-        getDataFromViewModel()
         listenerEvent()
     }
 
     //초기세팅
     private fun initSet() {
 
-        binding.emptyView.visibility = View.VISIBLE
+        //데바 필요한 값 연결
+        binding.thisFragment = this
+        binding.lifecycleOwner = this
+        binding.mainViewModel = mainSharedViewModel
 
+        //현재 프래그먼트 연결
         userListRcyAdapter = UserListRvAdapter()
         binding.rcyUserList.apply {
             adapter = userListRcyAdapter
@@ -52,26 +55,9 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
     }
 
 
-    //뷰모델로부터  데이터 받아옴
-    private fun getDataFromViewModel() {
-
-        //유저리스트 업데이트
-        mainSharedViewModel.searchedUsersList.observe(viewLifecycleOwner, Observer {
-            userListRcyAdapter.submitList(it.toMutableList())
-            binding.emptyView.visibility = View.GONE
-        })
-
-        //error 관련 처리
-        mainSharedViewModel.error.observe(viewLifecycleOwner, Observer {
-            showToast(it.message.toString())
-        })
-
-    }
-
-
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList() {
-
+        Timber.v("dadasdasd ")
         val splashSearchedUsersList = requireActivity().intent
             .getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
                 as List<PresentationSearchedUser>
@@ -98,19 +84,17 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
         }
     }
 
+    //검색 실행
+    fun searchUserClickEvent() {
+        binding.emptyView.visibility = View.VISIBLE
+        page = 1
+        searchUsers()
+        hideKeyboard()//키보드 내림
+    }
+
 
     //리스너 기능 모음.
     private fun listenerEvent() {
-        //유저 검색 클릭시
-        binding.btnSearch.setOnClickListener {
-            binding.emptyView.visibility = View.VISIBLE
-            page = 1
-            searchUsers()
-            hideKeyboard()//키보드 내림
-        }
-
-        //imeoption action search 버튼 누르면,   유저 검색 버튼 눌리게함.
-        binding.editSearchUser.search(binding.btnSearch)
 
         //리사이클러뷰
         binding.rcyUserList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
