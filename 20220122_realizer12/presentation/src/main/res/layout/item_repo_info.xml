@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="userRepoModel"
+            type="com.example.presentation.model.PresentationUserRepo" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,6 +33,7 @@
             android:id="@+id/tv_repo_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{userRepoModel.full_name}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_rep_name_title"
             app:layout_constraintStart_toEndOf="@+id/tv_rep_name_title"
             app:layout_constraintTop_toTopOf="parent"
@@ -52,6 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="web"
+            android:text="@{userRepoModel.url}"
             android:textColorLink="#2196F3"
             app:layout_constraintBottom_toBottomOf="@+id/tv_repo_url_title"
             app:layout_constraintStart_toEndOf="@+id/tv_repo_url_title"
@@ -64,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:text="@{userRepoModel.stargazers_count.toString()}"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
