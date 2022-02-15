@@ -1,13 +1,16 @@
 package com.example.presentation.util
 
+import android.content.Context
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 
 //바인딩 어뎁터 모음
@@ -33,6 +36,17 @@ fun EditText.search(doEvent: () -> Unit) {
         }
     })
 }
+
+//이미지로드용
+@BindingAdapter("bind:loadImage","bind:loadError")
+fun ImageView.loadImage(imageResource:Any?,errorImageResource:Any?){
+    //즐겨찾기 true일때  별을 색칠해준다.
+    Glide.with(context)
+        .load(imageResource)
+        .error(errorImageResource)
+        .into(this)
+}
+
 
 
 //값이 없으면  empty뷰 보여주고  있으면  안보여준다.
