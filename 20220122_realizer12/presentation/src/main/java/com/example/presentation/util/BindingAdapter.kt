@@ -20,6 +20,9 @@ import com.bumptech.glide.Glide
 fun <T, VH : RecyclerView.ViewHolder> RecyclerView.addList(list: List<T>?) {
     if (!list.isNullOrEmpty()) {
         (adapter as ListAdapter<T, VH>).submitList(list.toMutableList())
+    }else{
+        //리스트가 아무것도 없을때는 submitlist 초기화
+        (adapter as ListAdapter<T, VH>).submitList(null)
     }
 }
 
