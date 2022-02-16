@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
@@ -17,23 +18,24 @@ import io.reactivex.subjects.PublishSubject
 
 class FavoriteViewModel : ViewModel() {
 
-    private lateinit var api: Api
+    private lateinit var api: GithubAPI
     private lateinit var userdao: UserDao
-    private val githubRepos: ArrayList<User> = ArrayList()
+    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
     private lateinit var compositeDisposable: CompositeDisposable
 
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl(api)
+    private val remoteDataSource = RemoteDataSourceImpl()
     private val githubRepository = GithubRepositoryImpl(
         localDataSource = localDataSource,
         remoteDataSource = remoteDataSource)
-    val publishSubject : PublishSubject<List<User>> =
+    val publishSubject : PublishSubject<List<UserDataModel>> =
         PublishSubject.create()
 
     lateinit var adapter: FavoriteAdapter
     lateinit var binding: ActivityFavoriteBinding
 
-
+    private val _list = MutableLiveData<List<UserDataModel>>()
+    val list : LiveData<List<UserDataModel>> = _list
 
 
     @SuppressLint("CheckResult")
@@ -41,24 +43,16 @@ class FavoriteViewModel : ViewModel() {
         binding.rvProfile.adapter = this.adapter
     }
 
-
-    fun update(githubRepos: List<User>) {
-        this.githubRepos.clear()
-        this.githubRepos.addAll(githubRepos)
-        this.githubRepos.size
-        this.githubRepos.take(30)
-    }
-
-    private fun initRepo(){
-        githubRepository.getRepos()
+    init {
+        compositeDisposable.add(githubRepository.getRepos()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry(2)
-            .subscribe{ item ->
-                update(item)
-                publishSubject.onNext(item)
-            }.addTo(compositeDisposable)
-
+            .subscribe({it->
+                _list.value = it
+            }
+            )
+        )
     }
 
     override fun onCleared() {
