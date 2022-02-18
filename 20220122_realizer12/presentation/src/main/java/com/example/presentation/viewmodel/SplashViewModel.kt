@@ -17,10 +17,10 @@ class SplashViewModel(
 ) : BaseViewModel() {
 
     //유저리스트 라이브데이터
-    private var _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
+    private val _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
     val searchedUsersList: LiveData<List<PresentationSearchedUser>> = _searchedUserList
 
-    private var _error = MutableLiveData<Throwable>()
+    private val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error
 
     fun searchUsers() {

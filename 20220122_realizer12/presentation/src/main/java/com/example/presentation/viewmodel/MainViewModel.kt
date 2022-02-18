@@ -21,7 +21,7 @@ class MainViewModel(
     val behaviorSubject = BehaviorSubject.createDefault(0L)
 
     //메인 엑티비티 뒤로가기 가능 여부 post
-    private var _isBackPressPossible = MutableLiveData<Boolean>()
+    private val _isBackPressPossible = MutableLiveData<Boolean>()
     val isBackPressPossible:LiveData<Boolean> = _isBackPressPossible
 
     //뷰모델 안에서 사용되는 유저, 즐겨찾기 리스트
@@ -29,15 +29,15 @@ class MainViewModel(
     var vmFavoriteUserList: MutableList<PresentationSearchedUser>? = mutableListOf()
 
     //유저리스트 라이브데이터
-    private var _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
+    private val _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
     val searchedUsersList: LiveData<List<PresentationSearchedUser>> = _searchedUserList
 
     //즐겨찾기 유저리스트 라이브데이터
-    private var _favoriteUserList = MutableLiveData<List<PresentationSearchedUser>>()
+    private val _favoriteUserList = MutableLiveData<List<PresentationSearchedUser>>()
     val favoriteUserList: LiveData<List<PresentationSearchedUser>> = _favoriteUserList
 
 
-    private var _error = MutableLiveData<Throwable>()
+    private val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error
 
     fun getSearchUserList(searchedUserList: List<PresentationSearchedUser>) {
