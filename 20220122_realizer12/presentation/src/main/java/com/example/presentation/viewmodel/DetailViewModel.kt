@@ -14,11 +14,11 @@ class DetailViewModel(
     private val repoRepository: RepoRepository
 ) : BaseViewModel() {
 
-    //레포리스트 라이브데이터
+
     private val _repoDetailList = MutableLiveData<List<PresentationUserRepo>>()
     val repoDetailList: LiveData<List<PresentationUserRepo>> = _repoDetailList
 
-    //error 관련 처리용  라이브 데이터
+
     private val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error
 
