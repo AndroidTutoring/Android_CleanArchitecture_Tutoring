@@ -46,7 +46,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
         //현재 프래그먼트 연결
         userListRcyAdapter = UserListRvAdapter()
-        binding.rcyUserList.apply {
+        binding.rvUserList.apply {
             adapter = userListRcyAdapter
         }
 
@@ -64,7 +64,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
         if (!splashSearchedUsersList.isNullOrEmpty()) {
 
-            binding.editSearchUser.setText(splashSearchedUsersList[0].login)
+            binding.etSearchUser.setText(splashSearchedUsersList[0].login)
             binding.emptyView.visibility = View.GONE
 
             //받아온 검색된 유저리스트  업데이트  해주고, favorite filter 적용하면서, favorite리스트도 미리 받아둔다.
@@ -97,7 +97,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
     private fun listenerEvent() {
 
         //리사이클러뷰
-        binding.rcyUserList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.rvUserList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
@@ -158,7 +158,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
     //유저 검색
     private fun searchUsers() {
-        mainSharedViewModel.searchUser(binding.editSearchUser.text.toString(), page, perPage)
+        mainSharedViewModel.searchUser(binding.etSearchUser.text.toString(), page, perPage)
     }
 
     companion object {

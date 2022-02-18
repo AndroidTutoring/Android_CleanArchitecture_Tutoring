@@ -45,16 +45,16 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     //초기 세팅
     private fun initSet() {
 
-        binding.thisFragment = this
+        binding.thisActivity = this
         binding.lifecycleOwner = this
-        binding.detailViewModel = detailViewModel
+        binding.vm = detailViewModel
 
         //유저 정보 가져옴.
         userInfo = intent.getParcelableExtra(UserFragment.PARAM_USER_INFO)
 
         //리시이클러뷰 세팅
         repoRvAdapter = RepoListRvAdapter()
-        binding.rcyUserRepoList.apply {
+        binding.rvUserRepoList.apply {
             adapter = repoRvAdapter
         }
     }

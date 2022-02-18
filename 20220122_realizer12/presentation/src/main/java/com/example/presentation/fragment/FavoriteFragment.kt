@@ -47,7 +47,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment
 
         binding.thisFragment = this
         binding.lifecycleOwner = this
-        binding.mainViewModel = mainSharedViewModel
+        binding.mainVm = mainSharedViewModel
 
         //리사이클러뷰 세팅
         favoriteMarkedRvAdapter = UserListRvAdapter()
