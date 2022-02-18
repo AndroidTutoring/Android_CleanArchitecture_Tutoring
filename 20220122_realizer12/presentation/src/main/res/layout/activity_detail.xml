@@ -6,11 +6,11 @@
     <data>
 
         <variable
-            name="thisFragment"
+            name="thisActivity"
             type="com.example.presentation.activity.DetailActivity" />
 
         <variable
-            name="detailViewModel"
+            name="vm"
             type="com.example.presentation.viewmodel.DetailViewModel" />
     </data>
 
@@ -28,7 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:addList="@{detailViewModel.repoDetailList}" />
+            bind:addList="@{vm.repoDetailList}" />
 
         <TextView
             android:id="@+id/empty_view"
@@ -43,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:visibility="@{detailViewModel.repoDetailList}" />
+            bind:visibility="@{vm.repoDetailList}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
