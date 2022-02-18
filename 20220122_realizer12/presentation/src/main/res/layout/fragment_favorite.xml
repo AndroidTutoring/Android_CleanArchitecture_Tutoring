@@ -10,7 +10,7 @@
             type="com.example.presentation.fragment.FavoriteFragment" />
 
         <variable
-            name="mainViewModel"
+            name="mainVm"
             type="com.example.presentation.viewmodel.MainViewModel" />
     </data>
 
