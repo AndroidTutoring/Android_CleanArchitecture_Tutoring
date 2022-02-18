@@ -12,7 +12,6 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import java.lang.Exception
 
 class MainViewModel(
     private val userRepository: UserRepository
@@ -25,8 +24,8 @@ class MainViewModel(
     val isBackPressPossible:LiveData<Boolean> = _isBackPressPossible
 
     //뷰모델 안에서 사용되는 유저, 즐겨찾기 리스트
-    var vmSearchedUsersList: MutableList<PresentationSearchedUser>? = mutableListOf()
-    var vmFavoriteUserList: MutableList<PresentationSearchedUser>? = mutableListOf()
+    val vmSearchedUsersList: MutableList<PresentationSearchedUser> = mutableListOf()
+    val vmFavoriteUserList: MutableList<PresentationSearchedUser> = mutableListOf()
 
     //유저리스트 라이브데이터
     private val _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
@@ -41,7 +40,7 @@ class MainViewModel(
     val error: LiveData<Throwable> = _error
 
     fun getSearchUserList(searchedUserList: List<PresentationSearchedUser>) {
-        this.vmSearchedUsersList = searchedUserList as MutableList<PresentationSearchedUser>
+        this.vmSearchedUsersList.addAll(searchedUserList as MutableList<PresentationSearchedUser>)
     }
 
 
@@ -73,22 +72,22 @@ class MainViewModel(
 
                 if(remote.isSuccessful){//remote 검색 성공했을때만 진행
                     if (page == 1) {
-                        vmSearchedUsersList = ArrayList()
+                        vmSearchedUsersList.clear()
                     }
 
                     remote.body()?.items.let { dataModelSearchUserList ->
                         if (!dataModelSearchUserList.isNullOrEmpty()) {
                             val presentationSearchUserList =
                                 dataModelSearchUserList.map { toPresentationModel(searchedUser = it) }
-                            vmSearchedUsersList?.addAll(presentationSearchUserList)
+                            vmSearchedUsersList.addAll(presentationSearchUserList)
                         }
-                        vmSearchedUsersList?.map { searchedUser ->
+                        vmSearchedUsersList.map { searchedUser ->
                             if (local.any { it.id == searchedUser.id }) {
                                 searchedUser.isMyFavorite = true
                             }
                         }
                     }
-                    return@zip vmSearchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
+                    return@zip vmSearchedUsersList.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
 
                 }else{//검색 실패시에는 에러 던짐
                     throw RuntimeException()
