@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -55,11 +56,7 @@ fun ImageView.loadImage(imageResource:Any?,errorImageResource:Any?){
 //값이 없으면  empty뷰 보여주고  있으면  안보여준다.
 @BindingAdapter("bind:visibility")
 fun <T> View.setVisible(list: List<T>?) {
-    if (!list.isNullOrEmpty()) {
-        this.visibility = View.GONE
-    } else {
-        this.visibility = View.VISIBLE
-    }
+    this.isVisible = list.isNullOrEmpty()
 }
 
 
