@@ -54,7 +54,7 @@ class UserListRvAdapter : ListAdapter<PresentationSearchedUser, UserViewHolder>(
             bind(currentList[adapterPosition])
 
             //즐겨찾기 버튼 클릭시
-            binding.imgBtnFavorite.setOnClickListener {
+            binding.ivBtnFavorite.setOnClickListener {
                 onFavoriteMarkClickListener?.onFavoriteMarkListener(
                     currentList[adapterPosition],
                     adapterPosition
