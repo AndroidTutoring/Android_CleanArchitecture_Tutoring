@@ -38,10 +38,10 @@
             android:layout_height="0dp"
             android:onClick="@{()-> thisFragment.searchUserClickEvent()}"
             android:text="@string/search"
-            app:layout_constraintBottom_toBottomOf="@+id/edit_search_user"
+            app:layout_constraintBottom_toBottomOf="@+id/et_search_user"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/edit_search_user"
-            app:layout_constraintTop_toTopOf="@+id/edit_search_user" />
+            app:layout_constraintStart_toEndOf="@+id/et_search_user"
+            app:layout_constraintTop_toTopOf="@+id/et_search_user" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_user_list"
@@ -52,7 +52,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_search_user"
+            app:layout_constraintTop_toBottomOf="@+id/et_search_user"
             bind:addList="@{mainViewModel.searchedUsersList}" />
 
         <TextView
@@ -68,7 +68,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_search_user"
+            app:layout_constraintTop_toBottomOf="@+id/et_search_user"
             bind:visibility="@{mainViewModel.searchedUsersList}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

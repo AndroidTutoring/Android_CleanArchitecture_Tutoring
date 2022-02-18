@@ -28,6 +28,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:addList="@{mainViewModel.favoriteUserList}" />
+            bind:addList="@{mainVm.favoriteUserList}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

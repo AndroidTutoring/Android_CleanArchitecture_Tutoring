@@ -19,12 +19,7 @@ import com.bumptech.glide.Glide
 //리사이클러뷰에
 @BindingAdapter("bind:addList")
 fun <T, VH : RecyclerView.ViewHolder> RecyclerView.addList(list: List<T>?) {
-    if (!list.isNullOrEmpty()) {
-        (adapter as ListAdapter<T, VH>).submitList(list.toMutableList())
-    }else{
-        //리스트가 아무것도 없을때는 submitlist 초기화
-        (adapter as ListAdapter<T, VH>?)?.submitList(null)
-    }
+    (adapter as ListAdapter<T, VH>).submitList(list?.toMutableList())
 }
 
 //키보드 imeoption  action search 가능하게
