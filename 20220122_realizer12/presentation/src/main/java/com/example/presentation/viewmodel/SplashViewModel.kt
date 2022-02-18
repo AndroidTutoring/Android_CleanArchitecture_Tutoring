@@ -41,13 +41,16 @@ class SplashViewModel(
             { dataModelSearchedUsers, _ ->
                 return@zip dataModelSearchedUsers
             })
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ searchedUsersList ->
-                _searchedUserList.value = searchedUsersList?.let {
+            .map { searchedUsersList ->
+                searchedUsersList?.let {
                     toPresentationModel(
                         it
                     ).items
                 }
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ searchedUsersList ->
+                _searchedUserList.value = searchedUsersList
             }, {
                 _error.value = Throwable("유저를 검색하는 중에문제가 생감")
             })

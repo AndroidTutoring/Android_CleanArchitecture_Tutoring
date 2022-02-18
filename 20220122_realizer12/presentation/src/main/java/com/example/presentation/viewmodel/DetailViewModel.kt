@@ -27,10 +27,12 @@ class DetailViewModel(
         repoRepository.getUserRepoList(userName = userName)
             .subscribeOn(Schedulers.io())
             .filter { !it.isNullOrEmpty() }
+            .map { dataModelUserRepoList ->
+                dataModelUserRepoList.map { toPresentationModel(it) }
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ dataModelUserRepoList ->
-                val presentationUserRepoList = dataModelUserRepoList.map { toPresentationModel(it) }
-                _repoDetailList.value = presentationUserRepoList
+                _repoDetailList.value = dataModelUserRepoList
             }, { t ->
                 _error.value = Throwable("레포지토리 리스트 받아오는 중 문제 생김")
             })
