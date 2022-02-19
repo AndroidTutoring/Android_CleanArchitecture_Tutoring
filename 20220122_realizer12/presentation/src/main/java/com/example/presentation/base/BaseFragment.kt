@@ -5,15 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
-open class BaseFragment<VB : ViewBinding>(
-    private val inflate: (LayoutInflater, ViewGroup?, Boolean) -> VB
-) : Fragment() {
+open class BaseFragment<VDB: ViewDataBinding>(@LayoutRes val layRes:Int): Fragment() {
     protected val compositeDisposable = CompositeDisposable()
-    private var mBinding: VB? = null
+    private var mBinding: VDB? = null
     protected val binding get() = mBinding!!
 
     override fun onCreateView(
@@ -21,7 +22,7 @@ open class BaseFragment<VB : ViewBinding>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = inflate.invoke(inflater, container, false)
+        mBinding = DataBindingUtil.inflate(inflater,layRes,container,false)
         return binding.root
     }
 

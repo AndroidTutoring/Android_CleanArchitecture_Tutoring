@@ -1,19 +1,13 @@
 package com.example.presentation.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.data.model.SearchedUser
-import com.example.data.repository.UserRepository
-import com.example.data.repository.UserRepositoryImpl
-import com.example.data.retrofit.RetrofitHelper
-import com.example.data.room.LocalDataBase
-import com.example.data.source.local.UserLocalDataSourceImpl
-import com.example.data.source.remote.UserRemoteDataSourceImpl
+import com.example.presentation.R
 import com.example.presentation.activity.DetailActivity
 import com.example.presentation.activity.SplashActivity
 import com.example.presentation.adapter.UserListRvAdapter
@@ -21,14 +15,11 @@ import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.util.Util.hideKeyboard
-import com.example.presentation.util.Util.search
 import com.example.presentation.viewmodel.MainViewModel
-import com.example.presentation.viewmodel.factory.ViewModelFactory
-import io.reactivex.rxjava3.kotlin.addTo
 import timber.log.Timber
 
 //유저 프래그먼트
-class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::inflate) {
+class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
     private var page: Int = 1//페이지목록
     private var perPage: Int = 10//페이지당 요청하는 데이터 수
@@ -42,17 +33,20 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSet()
-        getDataFromViewModel()
         listenerEvent()
     }
 
     //초기세팅
     private fun initSet() {
 
-        binding.emptyView.visibility = View.VISIBLE
+        //데바 필요한 값 연결
+        binding.thisFragment = this
+        binding.lifecycleOwner = this
+        binding.mainViewModel = mainSharedViewModel
 
+        //현재 프래그먼트 연결
         userListRcyAdapter = UserListRvAdapter()
-        binding.rcyUserList.apply {
+        binding.rvUserList.apply {
             adapter = userListRcyAdapter
         }
 
@@ -61,28 +55,16 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
     }
 
 
-    //뷰모델로부터  데이터 받아옴
-    private fun getDataFromViewModel() {
-        //검색  유저 리스트 업데이트
-        mainSharedViewModel.userFragmentUpdateUserList.subscribe({
-            userListRcyAdapter.submitList(it.toMutableList())
-            binding.emptyView.visibility = View.GONE
-        }, {
-            showToast(it.message.toString())
-        }).addTo(compositeDisposable)
-    }
-
-
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList() {
-
+        Timber.v("dadasdasd ")
         val splashSearchedUsersList = requireActivity().intent
-                .getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
-                    as List<PresentationSearchedUser>
+            .getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
+                as List<PresentationSearchedUser>
 
         if (!splashSearchedUsersList.isNullOrEmpty()) {
 
-            binding.editSearchUser.setText(splashSearchedUsersList[0].login)
+            binding.etSearchUser.setText(splashSearchedUsersList[0].login)
             binding.emptyView.visibility = View.GONE
 
             //받아온 검색된 유저리스트  업데이트  해주고, favorite filter 적용하면서, favorite리스트도 미리 받아둔다.
@@ -91,32 +73,31 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
             mainSharedViewModel.initialListSetting()
 
             //configuration change로 다시 불릴때는 값 적용안되게 clear 시켜줌.
-            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)?.clear()
+            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
+                ?.clear()
 
-        }else{
+        } else {
 
             //맨처음  splash 적용된후  이제 기존 뷰모델에 저장한 값들  다시 넣어주면됨
             binding.emptyView.visibility = View.GONE
-            userListRcyAdapter.submitList(mainSharedViewModel.searchedUsersList?.map { it.copy() })
+            userListRcyAdapter.submitList(mainSharedViewModel.vmSearchedUsersList?.map { it.copy() })
         }
+    }
+
+    //검색 실행
+    fun searchUserClickEvent() {
+        binding.emptyView.visibility = View.VISIBLE
+        page = 1
+        searchUsers()
+        hideKeyboard()//키보드 내림
     }
 
 
     //리스너 기능 모음.
     private fun listenerEvent() {
-        //유저 검색 클릭시
-        binding.btnSearch.setOnClickListener {
-            binding.emptyView.visibility = View.VISIBLE
-            page = 1
-            searchUsers()
-            hideKeyboard()//키보드 내림
-        }
-
-        //imeoption action search 버튼 누르면,   유저 검색 버튼 눌리게함.
-        binding.editSearchUser.search(binding.btnSearch)
 
         //리사이클러뷰
-        binding.rcyUserList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.rvUserList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
@@ -177,7 +158,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(FragmentUserBinding::infl
 
     //유저 검색
     private fun searchUsers() {
-        mainSharedViewModel.searchUser(binding.editSearchUser.text.toString(), page, perPage)
+        mainSharedViewModel.searchUser(binding.etSearchUser.text.toString(), page, perPage)
     }
 
     companion object {
