@@ -1,14 +1,13 @@
 package com.example.data.repository.githubSource.remote
 
-import com.example.presentation.Api
-import com.example.presentation.User
+import com.example.data.Retrofit.RetrofitClient
+import com.example.data.model.UserDataModel
 import io.reactivex.Single
 
 class RemoteDataSourceImpl(
-    private val api : Api
 ) : RemoteDataSource {
-    override fun getRepos(userName: String): Single<List<User>> {
-        return api.getRepos("tkdgusl94")
+    override fun getRepos(userName: String): Single<List<UserDataModel>> {
+        return RetrofitClient.createGithubAPI.getRepos("tkdgusl94")
     }
 
 

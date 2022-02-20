@@ -3,22 +3,33 @@ package com.example.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import com.example.data.model.UserDataModel
+import com.example.presentation.databinding.ActivityProfileDetailBinding
 
 class ProfileDetailActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityProfileDetailBinding
+    lateinit var item : UserDataModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile_detail)
+        binding = ActivityProfileDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.user = item
+        //data change 요구!
+        binding.executePendingBindings()
+
 
         val getName = intent.getStringExtra("name")
         val getId = intent.getStringExtra("id")
         val getDate = intent.getStringExtra("date")
         val getUrl = intent.getStringExtra("url")
 
-        val name : TextView = findViewById(R.id.tv_rv_name)
-        val id : TextView = findViewById(R.id.tv_rv_id)
-        val date : TextView = findViewById(R.id.created_time)
-        val url :TextView = findViewById(R.id.html_url)
+        val name : TextView = binding.tvRvName
+        val id : TextView = binding.tvRvId
+        val date : TextView = binding.createdTime
+        val url :TextView = binding.htmlUrl
 
         name.text = getName
         id.text = getId
