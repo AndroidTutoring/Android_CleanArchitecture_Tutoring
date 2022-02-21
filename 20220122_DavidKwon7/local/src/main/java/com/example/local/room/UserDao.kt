@@ -1,4 +1,4 @@
-package com.example.presentation
+package com.example.local.room
 
 import androidx.room.*
 import com.example.data.model.UserDataModel
@@ -11,7 +11,7 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addFav(user: UserDataModel) : Completable
 
-    @Query("SELECT * FROM userdatamodel")
+    @Query("SELECT * FROM user")
     fun loadUserList(): Single<List<UserDataModel>>
 
     @Delete

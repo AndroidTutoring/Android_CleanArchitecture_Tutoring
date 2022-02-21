@@ -5,7 +5,6 @@ import com.example.data.repository.githubSource.local.LocalDataSource
 import com.example.data.repository.githubSource.remote.RemoteDataSource
 import io.reactivex.Completable
 import io.reactivex.Single
-
 class GithubRepositoryImpl (
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource

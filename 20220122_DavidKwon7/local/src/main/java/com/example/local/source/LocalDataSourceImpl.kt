@@ -1,7 +1,8 @@
-package com.example.data.repository.githubSource.local
+package com.example.local.source
 
 import com.example.data.model.UserDataModel
-import com.example.presentation.UserDao
+import com.example.data.repository.githubSource.local.LocalDataSource
+import com.example.local.room.UserDao
 import io.reactivex.Completable
 import io.reactivex.Single
 

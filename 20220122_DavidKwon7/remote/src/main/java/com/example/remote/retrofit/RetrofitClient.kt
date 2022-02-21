@@ -1,6 +1,5 @@
-package com.example.data.Retrofit
+package com.example.remote.retrofit
 
-import com.example.presentation.GithubAPI
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -26,9 +25,9 @@ object RetrofitClient {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
-    val createGithubAPI : GithubAPI by lazy {
+    val createGithubAPI : com.example.remote.retrofit.GithubAPI by lazy {
         InstanceBuilder.create(
-            GithubAPI::class.java
+            com.example.remote.retrofit.GithubAPI::class.java
         )
     }
 }
