@@ -40,7 +40,10 @@ android {
 
 dependencies {
 
+    //종속성 list
     implementation project(":data")
+    implementation project(":local")
+    implementation project(":remote")
 
 
     implementation 'androidx.core:core-ktx:1.7.0'

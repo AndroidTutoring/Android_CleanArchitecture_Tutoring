@@ -195,5 +195,7 @@
     <orderEntry type="library" name="Gradle: io.reactivex.rxjava2:rxandroid:2.0.1@aar" level="project" />
     <orderEntry type="module" module-name="AndroidTutoring_HJ.data" />
     <orderEntry type="module" module-name="AndroidTutoring_HJ.presentation" />
+    <orderEntry type="module" module-name="AndroidTutoring_HJ.local" />
+    <orderEntry type="module" module-name="AndroidTutoring_HJ.remote" />
   </component>
 </module>
