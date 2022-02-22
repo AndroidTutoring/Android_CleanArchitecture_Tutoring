@@ -6,5 +6,6 @@ import androidx.room.Entity
 data class UserDataModel(val name: String,
                          val id: String,
                          val date: String,
-                         val url: String?)
+                         val url: String?
+                         )
 

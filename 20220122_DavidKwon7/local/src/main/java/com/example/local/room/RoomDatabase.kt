@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 abstract class RoomDatabase : RoomDatabase() {
     abstract fun userDao() : com.example.local.room.UserDao
 
-    companion object{
+    /*companion object{
         @Volatile
         private var INSTANCE : RoomDatabase?=null
 
@@ -20,5 +20,5 @@ abstract class RoomDatabase : RoomDatabase() {
             }
             return INSTANCE
         }
-    }
+    }*/
 }

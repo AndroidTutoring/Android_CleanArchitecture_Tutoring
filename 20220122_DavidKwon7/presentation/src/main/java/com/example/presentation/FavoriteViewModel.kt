@@ -5,31 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.data.model.UserDataModel
-import com.example.data.repository.githubRepository.GithubRepositoryImpl
-import com.example.local.room.UserDao
-import com.example.local.source.LocalDataSourceImpl
-import com.example.remote.source.RemoteDataSourceImpl
+import com.example.data.repository.githubRepository.GithubRepository
 import com.example.presentation.databinding.ActivityFavoriteBinding
-import com.example.remote.retrofit.GithubAPI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
 
-class FavoriteViewModel : ViewModel() {
-
-    private lateinit var api: GithubAPI
-    private lateinit var userdao: UserDao
-    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(
+    private val githubRepository: GithubRepository
+) : ViewModel() {
     private lateinit var compositeDisposable: CompositeDisposable
-
-    private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl()
-    private val githubRepository = GithubRepositoryImpl(
-        localDataSource = localDataSource,
-        remoteDataSource = remoteDataSource)
-    val publishSubject : PublishSubject<List<UserDataModel>> =
-        PublishSubject.create()
 
     lateinit var adapter: FavoriteAdapter
     lateinit var binding: ActivityFavoriteBinding

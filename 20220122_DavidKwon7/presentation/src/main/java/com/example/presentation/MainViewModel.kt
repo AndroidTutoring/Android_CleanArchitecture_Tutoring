@@ -1,39 +1,34 @@
 package com.example.presentation
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.local.room.RoomDatabase
 import com.example.data.model.UserDataModel
+import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
+import com.example.data.repository.githubSource.local.LocalDataSource
+import com.example.data.repository.githubSource.remote.RemoteDataSource
 import com.example.local.room.UserDao
 import com.example.local.source.LocalDataSourceImpl
 import com.example.remote.retrofit.GithubAPI
 import com.example.remote.source.RemoteDataSourceImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private var api= GithubAPI::class.java
-    private lateinit var userdao: UserDao
-    private val listData = listOf<UserDataModel>()
-    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
-    var progressBarVisible: MutableLiveData<Boolean> = MutableLiveData()
-    private val backButtonSubject : Subject<Long> =
-        BehaviorSubject.createDefault(0L)
-    val publishSubject : PublishSubject<List<UserDataModel>> =
-        PublishSubject.create()
-    private val behaviorSubject = BehaviorSubject.createDefault(0L)
-    private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl()
-    private val githubRepository = GithubRepositoryImpl(
-        localDataSource = localDataSource,
-        remoteDataSource = remoteDataSource)
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val githubRepository: GithubRepository
+) : ViewModel() {
+
     private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
     }
@@ -66,7 +61,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             )
         )
     }
-
 
     override fun onCleared() {
         super.onCleared()

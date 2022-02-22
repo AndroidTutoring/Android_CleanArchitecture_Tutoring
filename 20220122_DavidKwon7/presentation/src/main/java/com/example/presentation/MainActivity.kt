@@ -10,24 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
-import com.example.data.repository.githubRepository.GithubRepositoryImpl
-import com.example.local.room.UserDao
-import com.example.local.source.LocalDataSourceImpl
 import com.example.presentation.databinding.ActivityMainBinding
-import com.example.remote.source.RemoteDataSourceImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity()  {
+class MainActivity @Inject constructor(
+    private val githubRepository: GithubRepository
+) : AppCompatActivity()  {
 
     private lateinit var mainViewModel : MainViewModel
-    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
     private val listData = listOf<UserDataModel>()
-    private val position: Int?=null
-    private lateinit var userdao: UserDao
     private lateinit var binding: ActivityMainBinding
     private val compositeDisposable : CompositeDisposable by lazy {
         CompositeDisposable()
@@ -35,14 +31,11 @@ class MainActivity : AppCompatActivity()  {
 
     private val backButtonSubject : Subject<Long> =
         BehaviorSubject.createDefault(0L)
-    lateinit var repository : GithubRepository
+
     private val adapter: ProfileAdapter by lazy {
         ProfileAdapter(listData,this)
     }
-    private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl()
-    private val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
-    remoteDataSource = remoteDataSource)
+
 
 
     @SuppressLint("CheckResult")
@@ -80,7 +73,7 @@ class MainActivity : AppCompatActivity()  {
         adapter.setOnItemClickListener(object :
             OnItemClickListener {
             override fun onItemClick(v: View, data: UserDataModel, pos: Int) {
-                repository.deleteFav(
+                githubRepository.deleteFav(
                     deleteUser = UserDataModel(
                     name=String(),id= String(),date = String(),url = String() ))
                     .subscribeOn(Schedulers.io())
