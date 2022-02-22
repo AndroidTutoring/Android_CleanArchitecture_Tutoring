@@ -1,13 +1,13 @@
-package com.example.data.room
+package com.example.local.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.data.model.SearchedUser
+import com.example.local.model.SearchedUserLocal
 
 @Database(
-    entities = [SearchedUser::class],
+    entities = [SearchedUserLocal::class],
     version = 3,
     exportSchema = false//schema 구조 export false처리
 )

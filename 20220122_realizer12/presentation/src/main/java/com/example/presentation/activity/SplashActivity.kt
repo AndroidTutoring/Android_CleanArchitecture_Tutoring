@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.UserRepository
 import com.example.data.repository.UserRepositoryImpl
 import com.example.remote.retrofit.RetrofitHelper
-import com.example.data.room.LocalDataBase
-import com.example.data.source.local.UserLocalDataSourceImpl
+import com.example.local.room.LocalDataBase
+import com.example.local.impl.UserLocalDataSourceImpl
 import com.example.remote.impl.UserRemoteDataSourceImpl
 import com.example.presentation.R
 import com.example.presentation.base.BaseActivity
