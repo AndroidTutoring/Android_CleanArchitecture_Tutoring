@@ -10,6 +10,7 @@ import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentFavoriteBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.MainViewModel
+import timber.log.Timber
 
 //즐겨찾기 프래그먼트
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment_favorite) {
@@ -54,12 +55,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment
         binding.rcyFavoriteList.apply {
             adapter = favoriteMarkedRvAdapter
         }
-
-        getFavoriteGitUsers()
     }
 
-    //미리 뷰모델 안에서 세팅 되어있던  즐겨찾기 리스트를 가져와 업데이트 해줌
-    private fun getFavoriteGitUsers() {
-        favoriteMarkedRvAdapter.submitList(mainSharedViewModel.vmFavoriteUserList?.toMutableList())
-    }
 }

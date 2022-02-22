@@ -12,6 +12,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import timber.log.Timber
 
 class MainViewModel(
     private val userRepository: UserRepository
@@ -74,7 +75,6 @@ class MainViewModel(
                     if (page == 1) {
                         vmSearchedUsersList.clear()
                     }
-
                     remote.body()?.items.let { dataModelSearchUserList ->
                         if (!dataModelSearchUserList.isNullOrEmpty()) {
                             val presentationSearchUserList =
@@ -185,6 +185,7 @@ class MainViewModel(
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                _favoriteUserList.value = vmFavoriteUserList
                 _searchedUserList.value = it?.toMutableList()
             }, {
                 _error.value = Throwable("즐겨찾기 업데이트 중 문제 생김")
