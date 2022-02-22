@@ -1,4 +1,4 @@
-package com.example.data.retrofit
+package com.example.remote.retrofit
 
 object ServerIp {
     const val BaseUrl = "https://api.github.com"

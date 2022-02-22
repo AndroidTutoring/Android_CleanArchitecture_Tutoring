@@ -5,8 +5,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.RepoRepository
 import com.example.data.repository.RepoRepositoryImpl
-import com.example.data.retrofit.RetrofitHelper
-import com.example.data.source.remote.RepoRemoteDataSourceImpl
+import com.example.remote.retrofit.RetrofitHelper
+import com.example.remote.impl.RepoRemoteDataSourceImpl
 import com.example.presentation.R
 import com.example.presentation.adapter.RepoListRvAdapter
 import com.example.presentation.base.BaseActivity

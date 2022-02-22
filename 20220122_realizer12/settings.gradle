@@ -10,3 +10,5 @@ rootProject.name = "cleanArchitectureTutoring"
 include ':app'
 include ':presentation'
 include ':data'
+include ':local'
+include ':remote'

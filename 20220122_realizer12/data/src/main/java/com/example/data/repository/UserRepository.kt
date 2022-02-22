@@ -14,5 +14,5 @@ interface UserRepository {
         query: String,
         page: Int,
         perPage: Int
-    ): Single<Response<SearchedUsers>>
+    ): Single<SearchedUsers>
 }

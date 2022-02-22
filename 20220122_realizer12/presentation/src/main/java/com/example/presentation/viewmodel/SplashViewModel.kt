@@ -26,13 +26,8 @@ class SplashViewModel(
     fun searchUsers() {
         Single.zip(
             userRepository.getSearchUsers(query = "realizer12", 1, 10)
-                .subscribeOn(Schedulers.io()).map {
-                    if (it.isSuccessful) {
-                        it.body()
-                    } else {
-                        throw Throwable()
-                    }
-                }.retryWhen { errorObservable ->
+                .subscribeOn(Schedulers.io())
+                .retryWhen { errorObservable ->
                     errorObservable
                         .delay(3, TimeUnit.SECONDS)
                         .take(2)

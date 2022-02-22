@@ -1,7 +1,7 @@
-package com.example.data.retrofit
+package com.example.remote.retrofit
 
-import com.example.data.model.SearchedUsers
-import com.example.data.model.UserRepo
+import com.example.remote.model.SearchedUsersRemote
+import com.example.remote.model.UserRepoRemote
 import io.reactivex.rxjava3.core.Single
 import retrofit2.Response
 import retrofit2.http.GET
@@ -15,12 +15,12 @@ interface ApiService {
         @Query("q") query: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int
-    ): Single<Response<SearchedUsers>>
+    ): Single<SearchedUsersRemote>
 
     //깃헙 유저 검색 하기
     @GET("/users/{userName}/repos")
     fun getUserRepoInfo(
         @Path("userName") userName: String
-    ): Single<List<UserRepo>>
+    ): Single<List<UserRepoRemote>>
 
 }
