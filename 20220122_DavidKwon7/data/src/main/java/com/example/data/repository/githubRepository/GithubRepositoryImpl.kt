@@ -3,6 +3,7 @@ package com.example.data.repository.githubRepository
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubSource.local.LocalDataSource
 import com.example.data.repository.githubSource.remote.RemoteDataSource
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject

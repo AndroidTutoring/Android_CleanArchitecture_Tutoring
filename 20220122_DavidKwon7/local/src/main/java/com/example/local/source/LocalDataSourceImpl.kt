@@ -6,14 +6,13 @@ import com.example.data.repository.githubSource.remote.RemoteDataSource
 import com.example.local.mapping.LocalToUserMapper
 import com.example.local.model.UserLocalDataModel
 import com.example.local.room.UserDao
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
 class LocalDataSourceImpl @Inject constructor (
     private val dao : UserDao,
-    //왱:?
-    //private val localToUserMapper : LocalToUserMapper<UserLocalDataModel, UserDataModel>
     ) : LocalDataSource {
 
     override fun getCachedUserList(): Single<List<UserDataModel>> {
