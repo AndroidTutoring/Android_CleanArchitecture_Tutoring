@@ -49,7 +49,14 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileAdapter.ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_recycler_ex,parent,false)
+        val view = LayoutInflater
+            .from(context)
+            .inflate(
+                R.layout.
+                item_recycler_ex,
+                parent,
+                false
+            )
         return ViewHolder(binding)
     }
 
