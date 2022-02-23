@@ -6,11 +6,14 @@ import com.example.data.repository.RepoRepository
 import com.example.presentation.base.BaseViewModel
 import com.example.presentation.model.PresentationUserRepo
 import com.example.presentation.model.PresentationUserRepo.Companion.toPresentationModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class DetailViewModel(
+@HiltViewModel
+class DetailViewModel @Inject constructor(
     private val repoRepository: RepoRepository
 ) : BaseViewModel() {
 

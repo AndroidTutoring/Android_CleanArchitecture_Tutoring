@@ -7,14 +7,16 @@ import com.example.presentation.base.BaseViewModel
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.model.PresentationSearchedUser.Companion.toDataModel
 import com.example.presentation.model.PresentationSearchedUser.Companion.toPresentationModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import timber.log.Timber
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : BaseViewModel() {
 

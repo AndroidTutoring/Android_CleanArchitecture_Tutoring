@@ -1,37 +1,23 @@
 package com.example.presentation.activity
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.UserRepository
-import com.example.data.repository.UserRepositoryImpl
-import com.example.remote.retrofit.RetrofitHelper
-import com.example.local.room.LocalDataBase
-import com.example.local.impl.UserLocalDataSourceImpl
-import com.example.remote.impl.UserRemoteDataSourceImpl
 import com.example.presentation.R
 import com.example.presentation.adapter.MainViewPagerAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityMainBinding
 import com.example.presentation.viewmodel.MainViewModel
-import com.example.presentation.viewmodel.factory.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
-    private val userRepository: UserRepository by lazy {
-        val favoriteMarkDataBase = LocalDataBase.getInstance(applicationContext)
-        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
-        UserRepositoryImpl(localDataSource, remoteDataSource)
-    }
-
-    private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(
-            this,
-            ViewModelFactory(userRepository))
-            .get(MainViewModel::class.java)
-    }
+    @Inject lateinit var userRepository: UserRepository
+    private val mainViewModel: MainViewModel by viewModels()
 
     private fun dataFromViewModel() {
 

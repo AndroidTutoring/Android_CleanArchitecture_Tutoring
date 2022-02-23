@@ -1,12 +1,9 @@
 package com.example.presentation.activity
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.RepoRepository
-import com.example.data.repository.RepoRepositoryImpl
-import com.example.remote.retrofit.RetrofitHelper
-import com.example.remote.impl.RepoRemoteDataSourceImpl
 import com.example.presentation.R
 import com.example.presentation.adapter.RepoListRvAdapter
 import com.example.presentation.base.BaseActivity
@@ -14,26 +11,22 @@ import com.example.presentation.databinding.ActivityDetailBinding
 import com.example.presentation.fragment.UserFragment
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.DetailViewModel
-import com.example.presentation.viewmodel.factory.DetailViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_detail) {
+
+    @Inject lateinit var repoRepository: RepoRepository
 
     //유저 정보
     private var userInfo: PresentationSearchedUser? = null
 
     private lateinit var repoRvAdapter: RepoListRvAdapter
-    private val repoRepository: RepoRepository by lazy {
-        val remoteDataSource = RepoRemoteDataSourceImpl(RetrofitHelper)
-        RepoRepositoryImpl(remoteDataSource)
-    }
+
 
     //정보화면 뷰모델
-    private val detailViewModel: DetailViewModel by lazy {
-        ViewModelProvider(
-            this,
-            DetailViewModelFactory(repoRepository)
-        ).get(DetailViewModel::class.java)
-    }
+    private val detailViewModel: DetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

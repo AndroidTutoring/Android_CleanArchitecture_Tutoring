@@ -7,8 +7,9 @@ import com.example.local.model.SearchedUserLocal.Companion.toDataModel
 import com.example.local.model.SearchedUserLocal.Companion.toLocalModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-class UserLocalDataSourceImpl(
+class UserLocalDataSourceImpl @Inject constructor(
     private val favoriteDao: FavoriteDao
 ) : UserLocalDataSource {
 

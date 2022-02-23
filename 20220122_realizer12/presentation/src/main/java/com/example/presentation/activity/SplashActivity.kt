@@ -2,36 +2,24 @@ package com.example.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.data.repository.UserRepository
-import com.example.data.repository.UserRepositoryImpl
-import com.example.remote.retrofit.RetrofitHelper
-import com.example.local.room.LocalDataBase
-import com.example.local.impl.UserLocalDataSourceImpl
-import com.example.remote.impl.UserRemoteDataSourceImpl
 import com.example.presentation.R
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.SplashViewModel
-import com.example.presentation.viewmodel.factory.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
 
 
-    private val userRepository: UserRepository by lazy {
-        val favoriteMarkDataBase = LocalDataBase.getInstance(this.applicationContext)
-        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
-        UserRepositoryImpl(localDataSource, remoteDataSource)
-    }
+    @Inject lateinit var userRepository: UserRepository
 
-    private val splashViewModel: SplashViewModel by lazy {
-        ViewModelProvider(this,
-            ViewModelFactory(userRepository))
-            .get(SplashViewModel::class.java)
-    }
+    private val splashViewModel: SplashViewModel by viewModels()
 
 
     //뷰모델로부터  데이터 받아옴

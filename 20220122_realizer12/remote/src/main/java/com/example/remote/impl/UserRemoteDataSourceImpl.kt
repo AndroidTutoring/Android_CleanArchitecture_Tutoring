@@ -3,12 +3,12 @@ package com.example.remote.impl
 import com.example.data.model.SearchedUsers
 import com.example.data.source.remote.UserRemoteDataSource
 import com.example.remote.model.SearchedUsersRemote.Companion.toDataModel
-import com.example.remote.retrofit.RetrofitHelper
+import com.example.remote.retrofit.ApiService
 import io.reactivex.rxjava3.core.Single
-import retrofit2.Response
+import javax.inject.Inject
 
 
-class UserRemoteDataSourceImpl(private val retrofitHelper: RetrofitHelper) :
+class UserRemoteDataSourceImpl @Inject constructor(private val apiService: ApiService) :
     UserRemoteDataSource {
 
     //유저 검색
@@ -17,7 +17,7 @@ class UserRemoteDataSourceImpl(private val retrofitHelper: RetrofitHelper) :
         page: Int,
         perPage: Int
     ): Single<SearchedUsers> {
-        return retrofitHelper.apiServices.searchUsers(query, page, perPage).map {
+        return apiService.searchUsers(query, page, perPage).map {
             toDataModel(it)
         }
 
