@@ -3,7 +3,6 @@ package com.example.presentation.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.example.presentation.R
 import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
@@ -11,7 +10,6 @@ import com.example.presentation.databinding.FragmentFavoriteBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 //즐겨찾기 프래그먼트
 @AndroidEntryPoint
