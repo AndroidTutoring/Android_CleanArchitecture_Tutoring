@@ -4,10 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.data.Room.RoomDatabase
+import com.example.localdata.room.RoomDatabase
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
-import com.example.data.repository.githubSource.local.LocalDataSourceImpl
+import com.example.localdata.source.LocalDataSourceImpl
+import com.example.localdata.room.UserDao
 import com.example.remotedata.retrofit.GithubAPI
 import com.example.remotedata.source.RemoteDataSourceImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,7 +20,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private var api= GithubAPI::class.java
+    private lateinit var githubAPI: GithubAPI
     private lateinit var userdao: UserDao
     private val listData = listOf<UserDataModel>()
     private val githubRepos: ArrayList<UserDataModel> = ArrayList()
@@ -30,7 +31,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         PublishSubject.create()
     private val behaviorSubject = BehaviorSubject.createDefault(0L)
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl()
+    private val remoteDataSource = RemoteDataSourceImpl(githubAPI)
     private val githubRepository = GithubRepositoryImpl(
         localDataSource = localDataSource,
         remoteDataSource = remoteDataSource)

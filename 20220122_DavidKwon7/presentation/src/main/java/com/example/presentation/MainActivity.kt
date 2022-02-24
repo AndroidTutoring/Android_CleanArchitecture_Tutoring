@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
-import com.example.data.repository.githubSource.local.LocalDataSourceImpl
+import com.example.localdata.source.LocalDataSourceImpl
+import com.example.localdata.room.UserDao
 import com.example.presentation.databinding.ActivityMainBinding
+import com.example.remotedata.retrofit.GithubAPI
 import com.example.remotedata.source.RemoteDataSourceImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -21,7 +23,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
 class MainActivity : AppCompatActivity()  {
-
+    private lateinit var githubAPI: GithubAPI
     private lateinit var mainViewModel : MainViewModel
     private val githubRepos: ArrayList<UserDataModel> = ArrayList()
     private val listData = listOf<UserDataModel>()
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity()  {
         ProfileAdapter(listData,this)
     }
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl()
+    private val remoteDataSource = RemoteDataSourceImpl(githubAPI)
     private val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
     remoteDataSource = remoteDataSource)
 
