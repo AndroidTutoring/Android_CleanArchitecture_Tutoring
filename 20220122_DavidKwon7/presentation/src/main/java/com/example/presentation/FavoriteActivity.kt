@@ -19,15 +19,15 @@ import io.reactivex.subjects.Subject
 
 class FavoriteActivity : AppCompatActivity() {
 
-    private var backPressedTime : Long = 0
+    private var backPressedTime: Long = 0
     lateinit var binding: ActivityFavoriteBinding
-    lateinit var repository : GithubRepository
+    lateinit var repository: GithubRepository
     lateinit var adapter: FavoriteAdapter
     private lateinit var favoriteViewModel: FavoriteViewModel
     private val listData = listOf<UserDataModel>()
 
 
-    private val backButtonSubject : Subject<Long> =
+    private val backButtonSubject: Subject<Long> =
         BehaviorSubject.createDefault(0L)
 
     private lateinit var compositeDisposable: CompositeDisposable
@@ -46,11 +46,14 @@ class FavoriteActivity : AppCompatActivity() {
         setAdapter()
 
 
-        favoriteViewModel.list.observe(this, Observer { it->
-            adapter.addItem(it)
-        })
+        favoriteViewModel.list.observe(
+            this,
+            Observer {
+                adapter.addItem(it)
+            })
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
@@ -58,12 +61,16 @@ class FavoriteActivity : AppCompatActivity() {
 
 
     private fun clickFavorite() {
-            binding.goToUser.setOnClickListener {
-                    startActivity(Intent(
-                        this,
-                        MainActivity::class.java))
-            }
+        binding.goToUser.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    MainActivity::class.java
+                )
+            )
         }
+    }
+
     //item click
     private fun itemDeleteClick() {
         adapter.setOnItemClickListener(object :
@@ -71,15 +78,17 @@ class FavoriteActivity : AppCompatActivity() {
             override fun onItemClick(
                 v: View,
                 data: UserDataModel,
-                pos: Int) {
+                pos: Int
+            ) {
 
                 repository.deleteFav(
                     deleteUser = UserDataModel(
-                    name = "",
-                    id = "",
-                    date = "",
-                    url = ""
-                    ))
+                        name = "",
+                        id = "",
+                        date = "",
+                        url = ""
+                    )
+                )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
@@ -87,7 +96,7 @@ class FavoriteActivity : AppCompatActivity() {
         })
     }
 
-    private fun setAdapter(){
+    private fun setAdapter() {
         binding.rvProfile.apply {
             adapter = FavoriteAdapter(this@FavoriteActivity)
         }

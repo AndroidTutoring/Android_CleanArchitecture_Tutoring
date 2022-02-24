@@ -85,10 +85,7 @@ class ProfileAdapter(var postList: List<UserDataModel>, val context: MainActivit
                     intent,
                     null
                 )
-
         }
-
-
     }
 
     override fun getItemCount(): Int {
