@@ -5,14 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.data.model.UserDataModel
-import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
-import com.example.data.repository.githubSource.remote.RemoteDataSourceImpl
+import com.example.remotedata.source.RemoteDataSourceImpl
 import com.example.presentation.databinding.ActivityFavoriteBinding
+import com.example.remotedata.retrofit.GithubAPI
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 

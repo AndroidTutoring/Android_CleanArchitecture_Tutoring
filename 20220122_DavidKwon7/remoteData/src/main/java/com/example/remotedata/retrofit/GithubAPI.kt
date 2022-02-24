@@ -1,4 +1,4 @@
-package com.example.presentation
+package com.example.remotedata.retrofit
 
 import com.example.data.model.UserDataModel
 import io.reactivex.Single

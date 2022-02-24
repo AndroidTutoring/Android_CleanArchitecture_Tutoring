@@ -8,7 +8,8 @@ import com.example.data.Room.RoomDatabase
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
 import com.example.data.repository.githubSource.local.LocalDataSourceImpl
-import com.example.data.repository.githubSource.remote.RemoteDataSourceImpl
+import com.example.remotedata.retrofit.GithubAPI
+import com.example.remotedata.source.RemoteDataSourceImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo

@@ -1,7 +1,7 @@
-package com.example.data.repository.githubSource.remote
+package com.example.remotedata.source
 
-import com.example.data.Retrofit.RetrofitClient
 import com.example.data.model.UserDataModel
+import com.example.data.repository.githubSource.remote.RemoteDataSource
 import io.reactivex.Single
 
 class RemoteDataSourceImpl(
