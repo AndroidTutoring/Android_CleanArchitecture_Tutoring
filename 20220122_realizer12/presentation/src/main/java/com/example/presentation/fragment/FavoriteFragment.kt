@@ -12,7 +12,6 @@ import com.example.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 //즐겨찾기 프래그먼트
-@AndroidEntryPoint
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment_favorite) {
 
     private lateinit var favoriteMarkedRvAdapter: UserListRvAdapter
