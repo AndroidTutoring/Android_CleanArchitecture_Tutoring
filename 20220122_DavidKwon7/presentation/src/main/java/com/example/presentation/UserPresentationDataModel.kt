@@ -7,11 +7,12 @@ import com.example.data.model.UserDataModel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class UserPresentationDataModel(val name: String,
-                                     val id: String,
-                                     val date: String,
-                                     val url: String?
-                ) : Parcelable {
+data class UserPresentationDataModel(
+    val name: String,
+    val id: String,
+    val date: String,
+    val url: String?
+) : Parcelable {
 
 
     companion object {

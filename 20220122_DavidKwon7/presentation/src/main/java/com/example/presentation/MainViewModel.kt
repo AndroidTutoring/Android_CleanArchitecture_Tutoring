@@ -45,21 +45,20 @@ class MainViewModel @Inject constructor(
         roomDatabaseInstance?.userDao()?.loadUserList()
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({ it->
-                    _list.value = it
+            ?.subscribe({ result->
+                    _list.value = result
             })?.addTo(compositeDisposable)
     }
 
     init {
-        compositeDisposable.add(githubRepository.getRepos()
+        githubRepository.getRepos()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry(2)
-            .subscribe({it->
-                _list.value = it
+            .subscribe({result->
+                _list.value = result
             }
-            )
-        )
+        ).addTo(compositeDisposable)
     }
 
 

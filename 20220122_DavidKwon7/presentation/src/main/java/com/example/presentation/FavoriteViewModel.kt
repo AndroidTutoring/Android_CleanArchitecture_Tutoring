@@ -15,6 +15,7 @@ import com.example.remotedata.retrofit.GithubAPI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
@@ -39,15 +40,15 @@ class FavoriteViewModel @Inject constructor(
     }
 
     init {
-        compositeDisposable.add(githubRepository.getRepos()
+        githubRepository.getRepos()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry(2)
-            .subscribe({it->
-                _list.value = it
+            .subscribe({result ->
+                _list.value = result
             }
-            )
-        )
+            ).addTo(compositeDisposable)
+
     }
 
     override fun onCleared() {

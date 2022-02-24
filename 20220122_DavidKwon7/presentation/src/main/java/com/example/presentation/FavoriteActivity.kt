@@ -77,10 +77,11 @@ class FavoriteActivity : AppCompatActivity() {
 
                 repository.deleteFav(
                     deleteUser = UserDataModel(
-                    name=String(),
-                    id= String(),
-                    date = String(),
-                    url = String() ))
+                    name = "",
+                    id = "",
+                    date = "",
+                    url = ""
+                    ))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
@@ -91,7 +92,6 @@ class FavoriteActivity : AppCompatActivity() {
     private fun setAdapter(){
         binding.rvProfile.apply {
             adapter = FavoriteAdapter(this@FavoriteActivity)
-            layoutManager = LinearLayoutManager(context)
         }
     }
 }

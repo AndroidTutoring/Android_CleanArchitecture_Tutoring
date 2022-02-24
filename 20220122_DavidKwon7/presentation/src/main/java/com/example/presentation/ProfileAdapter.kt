@@ -12,21 +12,21 @@ import com.example.presentation.databinding.ItemRecyclerExBinding
 
 
 class ProfileAdapter(var postList: List<UserDataModel>, val context: MainActivity) :
-RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
-    lateinit var binding : ItemRecyclerExBinding
+    RecyclerView.Adapter<ProfileAdapter.ViewHolder>() {
+    lateinit var binding: ItemRecyclerExBinding
     private val githubRepos: ArrayList<UserDataModel> = ArrayList()
 
-    private var listener : OnItemClickListener? = null
-    fun setOnItemClickListener(listener:OnItemClickListener) {
+    private var listener: OnItemClickListener? = null
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
         notifyDataSetChanged()
     }
 
 
-     class ViewHolder(
-         private val binding: ItemRecyclerExBinding
-     ) : RecyclerView.ViewHolder(binding.root) {
-         private var listener : OnItemClickListener? = null
+    class ViewHolder(
+        private val binding: ItemRecyclerExBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        private var listener: OnItemClickListener? = null
 
 
         fun bind(item: UserDataModel) {
@@ -36,10 +36,9 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
 
 
             val pos = adapterPosition
-            if(pos!= RecyclerView.NO_POSITION)
-            {
+            if (pos != RecyclerView.NO_POSITION) {
                 itemView.setOnClickListener {
-                    listener?.onItemClick(itemView,item,pos)
+                    listener?.onItemClick(itemView, item, pos)
 
                 }
             }
@@ -47,28 +46,51 @@ RecyclerView.Adapter<ProfileAdapter.ViewHolder>(){
     }
 
 
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ProfileAdapter.ViewHolder {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileAdapter.ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_recycler_ex,parent,false)
+        val view = LayoutInflater
+            .from(context)
+            .inflate(
+                R.layout.item_recycler_ex,
+                parent,
+                false
+            )
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ProfileAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(postList[position])
 
         //클릭 이벤트
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView?.context, ProfileDetailActivity::class.java)
+            val intent = Intent(
+                holder
+                    .itemView
+                    ?.context,
+                ProfileDetailActivity::class.java
+            )
             intent.putExtra("name", postList.get(position).name)
             intent.putExtra("id", postList.get(position).id)
             intent.putExtra("date", postList.get(position).date)
             intent.putExtra("url", postList.get(position).url)
-            ContextCompat.startActivity(holder.itemView.context,intent,null)
+
+            ContextCompat
+                .startActivity(
+                    holder
+                        .itemView
+                        .context,
+                    intent,
+                    null
+                )
 
         }
 
 
     }
+
     override fun getItemCount(): Int {
         return postList.size
     }

@@ -22,28 +22,30 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity() {
     private lateinit var githubAPI: GithubAPI
-    private lateinit var mainViewModel : MainViewModel
+    private lateinit var mainViewModel: MainViewModel
     private val githubRepos: ArrayList<UserDataModel> = ArrayList()
     private val listData = listOf<UserDataModel>()
-    private val position: Int?=null
+    private val position: Int? = null
     private lateinit var userdao: UserDao
     private lateinit var binding: ActivityMainBinding
-    private val compositeDisposable : CompositeDisposable by lazy {
+    private val compositeDisposable: CompositeDisposable by lazy {
         CompositeDisposable()
     }
 
-    private val backButtonSubject : Subject<Long> =
+    private val backButtonSubject: Subject<Long> =
         BehaviorSubject.createDefault(0L)
-    lateinit var repository : GithubRepository
+    lateinit var repository: GithubRepository
     private val adapter: ProfileAdapter by lazy {
-        ProfileAdapter(listData,this)
+        ProfileAdapter(listData, this)
     }
     private val localDataSource = LocalDataSourceImpl(dao = userdao)
     private val remoteDataSource = RemoteDataSourceImpl(githubAPI)
-    private val githubRepository = GithubRepositoryImpl(localDataSource = localDataSource,
-    remoteDataSource = remoteDataSource)
+    private val githubRepository = GithubRepositoryImpl(
+        localDataSource = localDataSource,
+        remoteDataSource = remoteDataSource
+    )
 
 
     @SuppressLint("CheckResult")
@@ -54,62 +56,77 @@ class MainActivity : AppCompatActivity()  {
 
         clickFavorite()
         itemFavClick()
-        back2()
+        backSetting()
 
         setAdapter()
 
         mainViewModel.list.observe(this, Observer {
-            it ->
             adapter.addItem(it)
         })
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
     }
 
-        private fun clickFavorite() {
-            binding.btn2.setOnClickListener {
-                startActivity(Intent(this,FavoriteActivity::class.java))
-            }
+    private fun clickFavorite() {
+        binding.goToFavorite.setOnClickListener {
+            startActivity(Intent(this, FavoriteActivity::class.java))
         }
+    }
 
 
     //item click
     private fun itemFavClick() {
         adapter.setOnItemClickListener(object :
             OnItemClickListener {
-            override fun onItemClick(v: View, data: UserDataModel, pos: Int) {
+            override fun onItemClick(
+                v: View,
+                data: UserDataModel,
+                pos: Int
+            ) {
                 repository.deleteFav(
                     deleteUser = UserDataModel(
-                    name=String(),id= String(),date = String(),url = String() ))
+                        name = "",
+                        id = "",
+                        date = "",
+                        url = ""
+                    )
+                )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
             }
         })
     }
+
     //뒤로 가기
     @SuppressLint("CheckResult")
-    private fun back2() {
-        backButtonSubject.buffer(2,1)
+    private fun backSetting() {
+        backButtonSubject.buffer(2, 1)
             .observeOn(AndroidSchedulers.mainThread())
-            .map{t ->
+            .map { t ->
                 t[1] - t[0] < 1500L
             }
             .subscribe { willFinish ->
-                if (willFinish){
+                if (willFinish) {
                     finish()
-                } else{
-                    Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "error",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
     }
-    private fun setAdapter(){
+
+    private fun setAdapter() {
         binding.rvProfile.apply {
-            adapter = ProfileAdapter(listData,this@MainActivity)
+            adapter = ProfileAdapter(listData, this@MainActivity)
             layoutManager = LinearLayoutManager(context)
         }
     }

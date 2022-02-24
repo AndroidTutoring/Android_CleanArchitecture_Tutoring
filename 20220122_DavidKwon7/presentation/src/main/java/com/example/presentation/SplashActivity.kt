@@ -20,7 +20,9 @@ class SplashActivity : AppCompatActivity() {
         CompositeDisposable()
     }
 
-    private val backButtonSubject: BehaviorSubject<Long> = BehaviorSubject.createDefault(0L)
+    private val backButtonSubject: BehaviorSubject<Long> =
+        BehaviorSubject
+            .createDefault(0L)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +30,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding!!.root)
 
         initTimer()
-        back2()
-
+        backSetting()
     }
 
     override fun onDestroy() {
@@ -49,14 +50,18 @@ class SplashActivity : AppCompatActivity() {
 
 
     @SuppressLint("CheckResult")
-    private fun back2() {
+    private fun backSetting() {
         backButtonSubject
             .buffer(2, 1)
             .map { it[1] - it[0] < 1500 }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { willFinish ->
                 if (willFinish) finish()
-                else Toast.makeText(this, "다시 한 번 더 눌러주세요", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(
+                    this,
+                    "다시 한 번 더 눌러주세요",
+                    Toast.LENGTH_SHORT
+                ).show()
             } .addTo(disposables)
             }
 
