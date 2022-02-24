@@ -21,20 +21,30 @@ class ProfileDetailActivity : AppCompatActivity() {
         binding.executePendingBindings()
 
 
-        val getName = intent.getStringExtra("name")
-        val getId = intent.getStringExtra("id")
-        val getDate = intent.getStringExtra("date")
-        val getUrl = intent.getStringExtra("url")
+        binding.user = item
+        //data change 요구!
+        binding.executePendingBindings()
 
-        val name : TextView = binding.tvRvName
-        val id : TextView = binding.tvRvId
-        val date : TextView = binding.createdTime
-        val url :TextView = binding.htmlUrl
+        item.name = intent
+            .getStringExtra(
+                "name"
+            ).toString()
 
-        name.text = getName
-        id.text = getId
-        date.text = getDate
-        url.text = getUrl
+        item.id = intent
+            .getStringExtra(
+                "id"
+            ).toString()
+
+        item.date = intent
+            .getStringExtra(
+                "date"
+            ).toString()
+
+        item.url = intent
+            .getStringExtra(
+                "url"
+            ).toString()
+
 
 
 

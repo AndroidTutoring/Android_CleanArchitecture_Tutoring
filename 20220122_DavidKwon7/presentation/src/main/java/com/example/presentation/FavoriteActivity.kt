@@ -58,12 +58,10 @@ class FavoriteActivity : AppCompatActivity() {
 
 
     private fun clickFavorite() {
-            binding.btn1.setOnClickListener {
-                binding.btn1.setOnClickListener {
+            binding.goToUser.setOnClickListener {
                     startActivity(Intent(
                         this,
                         MainActivity::class.java))
-                }
             }
         }
     //item click

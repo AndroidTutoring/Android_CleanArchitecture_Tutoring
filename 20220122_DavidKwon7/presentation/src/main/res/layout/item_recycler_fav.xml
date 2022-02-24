@@ -14,7 +14,7 @@
         android:background="#0E0D0D">
 
         <TextView
-            android:id="@+id/tv_rv_name"
+            android:id="@+id/name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{user.name}"
@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_rv_id"
+            android:id="@+id/id_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{user.id}"
@@ -35,27 +35,27 @@
             android:textSize="18sp"
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_rv_name" />
+            app:layout_constraintTop_toBottomOf="@id/name_tv" />
 
         <TextView
-            android:id="@+id/created_time"
+            android:id="@+id/created_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{user.date}"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/tv_rv_id"
+            app:layout_constraintTop_toBottomOf="@id/id_tv"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
             app:layout_constraintStart_toStartOf="parent"
             android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/html_url"
+            android:id="@+id/url_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{user.url}"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/created_time"
+            app:layout_constraintTop_toBottomOf="@id/created_time_tv"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
             app:layout_constraintStart_toStartOf="parent"
