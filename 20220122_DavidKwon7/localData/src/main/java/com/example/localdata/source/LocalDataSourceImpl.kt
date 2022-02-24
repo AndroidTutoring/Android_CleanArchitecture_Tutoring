@@ -2,10 +2,14 @@ package com.example.localdata.source
 
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubSource.local.LocalDataSource
+import com.example.localdata.room.UserDao
 import io.reactivex.Completable
 import io.reactivex.Single
+import javax.inject.Inject
 
-class LocalDataSourceImpl (private val dao : com.example.localdata.room.UserDao) : LocalDataSource {
+class LocalDataSourceImpl @Inject constructor(
+    private val dao : UserDao
+) : LocalDataSource {
     override fun getCachedUserList(): Single<List<UserDataModel>> {
         return dao.loadUserList()
     }
