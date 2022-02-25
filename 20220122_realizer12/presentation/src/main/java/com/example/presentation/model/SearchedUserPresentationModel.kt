@@ -5,7 +5,7 @@ import com.example.data.model.SearchedUserDataModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class PresentationSearchedUser(
+data class SearchedUserPresentationModel(
     var uid: Long,//데이터 고유식별값 -> auto increment
     var id: Long = 0L,//유저 아이디
     var avatar_url: String = "",//유저 프로필 url
@@ -17,7 +17,7 @@ data class PresentationSearchedUser(
 
         //데이터 모듈 데이터 모델로
         fun toDataModel(
-            presentationSearchedUser: PresentationSearchedUser
+            presentationSearchedUser: SearchedUserPresentationModel
         ): SearchedUserDataModel {
             return SearchedUserDataModel(
                 uid = presentationSearchedUser.uid,
@@ -32,8 +32,8 @@ data class PresentationSearchedUser(
         //presentation 모듈 데이터 모델로
         fun toPresentationModel(
             searchedUser: SearchedUserDataModel
-        ): PresentationSearchedUser {
-            return PresentationSearchedUser(
+        ): SearchedUserPresentationModel {
+            return SearchedUserPresentationModel(
                 uid = searchedUser.uid,
                 id = searchedUser.id,
                 avatar_url = searchedUser.avatar_url,

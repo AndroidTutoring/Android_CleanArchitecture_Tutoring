@@ -7,9 +7,8 @@ import com.example.presentation.R
 import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentFavoriteBinding
-import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.viewmodel.MainViewModel
-import dagger.hilt.android.AndroidEntryPoint
 
 //즐겨찾기 프래그먼트
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment_favorite) {
@@ -32,7 +31,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment
         favoriteMarkedRvAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
             override fun onFavoriteMarkListener(
-                searchedUser: PresentationSearchedUser,
+                searchedUser: SearchedUserPresentationModel,
                 position: Int
             ) {
                 mainSharedViewModel.deleteFavoriteUsers(

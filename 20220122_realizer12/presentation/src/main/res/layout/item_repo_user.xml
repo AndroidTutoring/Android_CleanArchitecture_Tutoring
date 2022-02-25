@@ -8,7 +8,7 @@
 
         <variable
             name="searchUserModel"
-            type="com.example.presentation.model.PresentationSearchedUser" />
+            type="com.example.presentation.model.SearchedUserPresentationModel" />
 
     </data>
 

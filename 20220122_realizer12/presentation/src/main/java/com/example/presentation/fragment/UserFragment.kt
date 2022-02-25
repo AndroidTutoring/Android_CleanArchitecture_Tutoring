@@ -12,7 +12,7 @@ import com.example.presentation.activity.SplashActivity
 import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
-import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.viewmodel.MainViewModel
 import timber.log.Timber
@@ -59,7 +59,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
         Timber.v("dadasdasd ")
         val splashSearchedUsersList = requireActivity().intent
             .getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
-                as List<PresentationSearchedUser>
+                as List<SearchedUserPresentationModel>
 
         if (!splashSearchedUsersList.isNullOrEmpty()) {
 
@@ -108,7 +108,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
         //아이템 클릭시 처리
         userListRcyAdapter.setItemClickListener(object : UserListRvAdapter.ItemClickListener {
-            override fun onItemClickListener(searchedUser: PresentationSearchedUser) {
+            override fun onItemClickListener(searchedUser: SearchedUserPresentationModel) {
                 gotoDetailActivity(searchedUser)
             }
         })
@@ -117,7 +117,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
         userListRcyAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
             override fun onFavoriteMarkListener(
-                searchedUser: PresentationSearchedUser,
+                searchedUser: SearchedUserPresentationModel,
                 position: Int
             ) {
                 val deepCopiedSearchedUser = searchedUser.copy()
@@ -129,7 +129,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
     //즐겨 찾기 취소 또는 추가 여부에 따른  delete  add 를 리턴
     private fun returnFavoriteMarkStatus(
-        searchedUser: PresentationSearchedUser
+        searchedUser: SearchedUserPresentationModel
     ) {
         if (searchedUser.isMyFavorite) {
             showToast("즐겨찾기 취소")
@@ -148,7 +148,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
     }
 
     //상세화면으로 가기
-    private fun gotoDetailActivity(searchedUser: PresentationSearchedUser) {
+    private fun gotoDetailActivity(searchedUser: SearchedUserPresentationModel) {
         val intent = Intent(requireActivity(), DetailActivity::class.java)
         intent.putExtra(PARAM_USER_INFO, searchedUser)
         startActivity(intent)

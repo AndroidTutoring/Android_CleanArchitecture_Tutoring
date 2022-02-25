@@ -5,7 +5,7 @@ import com.example.data.model.UserRepoDataModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class PresentationUserRepo(
+data class UserRepoPresentationModel(
     var id: Long? = null,
     var full_name: String? = null,
     var url: String? = null,
@@ -15,7 +15,7 @@ data class PresentationUserRepo(
 
         //데이터 모듈 데이터 모델로
         fun toDataModel(
-            presentationUserRepo: PresentationUserRepo
+            presentationUserRepo: UserRepoPresentationModel
         ): UserRepoDataModel {
             return UserRepoDataModel(
                 id = presentationUserRepo.id,
@@ -28,8 +28,8 @@ data class PresentationUserRepo(
         //presentation 모듈 데이터 모델로
         fun toPresentationModel(
             userRepo: UserRepoDataModel
-        ): PresentationUserRepo {
-            return PresentationUserRepo(
+        ): UserRepoPresentationModel {
+            return UserRepoPresentationModel(
                 id = userRepo.id,
                 full_name = userRepo.full_name,
                 url = userRepo.url,

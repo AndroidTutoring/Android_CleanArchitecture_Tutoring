@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.data.repository.UserRepository
 import com.example.presentation.base.BaseViewModel
-import com.example.presentation.model.PresentationSearchedUser
-import com.example.presentation.model.PresentationSearchedUsers.Companion.toPresentationModel
+import com.example.presentation.model.SearchedUserPresentationModel
+import com.example.presentation.model.SearchedUsersPresentationModel.Companion.toPresentationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
@@ -20,8 +20,8 @@ class SplashViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //유저리스트 라이브데이터
-    private val _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
-    val searchedUsersList: LiveData<List<PresentationSearchedUser>> = _searchedUserList
+    private val _searchedUserList = MutableLiveData<List<SearchedUserPresentationModel>>()
+    val searchedUsersList: LiveData<List<SearchedUserPresentationModel>> = _searchedUserList
 
     private val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error

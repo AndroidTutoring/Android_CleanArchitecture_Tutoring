@@ -9,7 +9,7 @@ import com.example.presentation.adapter.RepoListRvAdapter
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivityDetailBinding
 import com.example.presentation.fragment.UserFragment
-import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.viewmodel.DetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     @Inject lateinit var repoRepository: RepoRepository
 
     //유저 정보
-    private var userInfo: PresentationSearchedUser? = null
+    private var userInfo: SearchedUserPresentationModel? = null
 
     private lateinit var repoRvAdapter: RepoListRvAdapter
 

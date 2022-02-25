@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.data.repository.UserRepository
 import com.example.presentation.base.BaseViewModel
-import com.example.presentation.model.PresentationSearchedUser
-import com.example.presentation.model.PresentationSearchedUser.Companion.toDataModel
-import com.example.presentation.model.PresentationSearchedUser.Companion.toPresentationModel
+import com.example.presentation.model.SearchedUserPresentationModel
+import com.example.presentation.model.SearchedUserPresentationModel.Companion.toDataModel
+import com.example.presentation.model.SearchedUserPresentationModel.Companion.toPresentationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
@@ -27,23 +27,23 @@ class MainViewModel @Inject constructor(
     val isBackPressPossible:LiveData<Boolean> = _isBackPressPossible
 
     //뷰모델 안에서 사용되는 유저, 즐겨찾기 리스트
-    val vmSearchedUsersList: MutableList<PresentationSearchedUser> = mutableListOf()
-    val vmFavoriteUserList: MutableList<PresentationSearchedUser> = mutableListOf()
+    val vmSearchedUsersList: MutableList<SearchedUserPresentationModel> = mutableListOf()
+    val vmFavoriteUserList: MutableList<SearchedUserPresentationModel> = mutableListOf()
 
     //유저리스트 라이브데이터
-    private val _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
-    val searchedUsersList: LiveData<List<PresentationSearchedUser>> = _searchedUserList
+    private val _searchedUserList = MutableLiveData<List<SearchedUserPresentationModel>>()
+    val searchedUsersList: LiveData<List<SearchedUserPresentationModel>> = _searchedUserList
 
     //즐겨찾기 유저리스트 라이브데이터
-    private val _favoriteUserList = MutableLiveData<List<PresentationSearchedUser>>()
-    val favoriteUserList: LiveData<List<PresentationSearchedUser>> = _favoriteUserList
+    private val _favoriteUserList = MutableLiveData<List<SearchedUserPresentationModel>>()
+    val favoriteUserList: LiveData<List<SearchedUserPresentationModel>> = _favoriteUserList
 
 
     private val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error
 
-    fun getSearchUserList(searchedUserList: List<PresentationSearchedUser>) {
-        this.vmSearchedUsersList.addAll(searchedUserList as MutableList<PresentationSearchedUser>)
+    fun getSearchUserList(searchedUserList: List<SearchedUserPresentationModel>) {
+        this.vmSearchedUsersList.addAll(searchedUserList as MutableList<SearchedUserPresentationModel>)
     }
 
 
@@ -108,7 +108,7 @@ class MainViewModel @Inject constructor(
 
     //유저 즐겨찾기 추가
     fun addFavoriteUsers(
-        presentationSearchedUser: PresentationSearchedUser,
+        presentationSearchedUser: SearchedUserPresentationModel,
     ) {
 
         userRepository.addFavoriteUser(toDataModel(presentationSearchedUser))
@@ -138,7 +138,7 @@ class MainViewModel @Inject constructor(
 
     //즐겨찾기한 유저 지우기
     fun deleteFavoriteUsers(
-        presentationSearchedUser: PresentationSearchedUser
+        presentationSearchedUser: SearchedUserPresentationModel
     ) {
 
         userRepository.deleteFavoriteUser(toDataModel(presentationSearchedUser))

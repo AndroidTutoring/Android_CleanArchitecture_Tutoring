@@ -8,7 +8,7 @@ import com.example.data.repository.UserRepository
 import com.example.presentation.R
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
-import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
         //검색  유저 리스트 업데이트
         splashViewModel.searchedUsersList.observe(this, Observer {
-            gotoMainActivity(it as ArrayList<PresentationSearchedUser>?)
+            gotoMainActivity(it as ArrayList<SearchedUserPresentationModel>?)
         })
 
         //에러관련 처리
@@ -45,7 +45,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
     }
 
     //메인 가기
-    private fun gotoMainActivity(searchUsers: ArrayList<PresentationSearchedUser>?) {
+    private fun gotoMainActivity(searchUsers: ArrayList<SearchedUserPresentationModel>?) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(PARAM_INIT_USER_INFO, searchUsers)
         startActivity(intent)
