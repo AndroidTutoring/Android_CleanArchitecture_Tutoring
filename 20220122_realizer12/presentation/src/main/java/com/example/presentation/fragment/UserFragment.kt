@@ -56,7 +56,6 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
     //splash 에서 받아온  유저 리스트
     private fun showSplashUserList() {
-        Timber.v("dadasdasd ")
         val splashSearchedUsersList = requireActivity().intent
             .getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
                 as List<SearchedUserPresentationModel>

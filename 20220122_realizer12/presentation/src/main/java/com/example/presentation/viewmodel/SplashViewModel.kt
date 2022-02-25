@@ -28,7 +28,7 @@ class SplashViewModel @Inject constructor(
 
     fun searchUsers() {
         Single.zip(
-            userRepository.getSearchUsers(query = "realizer12", 1, 10)
+            userRepository.getSearchUsers()
                 .subscribeOn(Schedulers.io())
                 .retryWhen { errorObservable ->
                     errorObservable
