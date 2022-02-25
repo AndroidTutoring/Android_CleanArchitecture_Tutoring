@@ -27,8 +27,8 @@ class MainViewModel @Inject constructor(
     val isBackPressPossible:LiveData<Boolean> = _isBackPressPossible
 
     //뷰모델 안에서 사용되는 유저, 즐겨찾기 리스트
-    val vmSearchedUsersList: MutableList<SearchedUserPresentationModel> = mutableListOf()
-    val vmFavoriteUserList: MutableList<SearchedUserPresentationModel> = mutableListOf()
+    val tempSearchedUsersList: MutableList<SearchedUserPresentationModel> = mutableListOf()
+    val tempFavoriteUserList: MutableList<SearchedUserPresentationModel> = mutableListOf()
 
     //유저리스트 라이브데이터
     private val _searchedUserList = MutableLiveData<List<SearchedUserPresentationModel>>()
@@ -43,7 +43,7 @@ class MainViewModel @Inject constructor(
     val error: LiveData<Throwable> = _error
 
     fun getSearchUserList(searchedUserList: List<SearchedUserPresentationModel>) {
-        this.vmSearchedUsersList.addAll(searchedUserList as MutableList<SearchedUserPresentationModel>)
+        this.tempSearchedUsersList.addAll(searchedUserList as MutableList<SearchedUserPresentationModel>)
     }
 
 
@@ -74,21 +74,21 @@ class MainViewModel @Inject constructor(
             userRepository.getFavoriteUsers(), { remote, local ->
 
                     if (page == 1) {
-                        vmSearchedUsersList.clear()
+                        tempSearchedUsersList.clear()
                     }
                     remote.items.let { dataModelSearchUserList ->
                         if (!dataModelSearchUserList.isNullOrEmpty()) {
                             val presentationSearchUserList =
                                 dataModelSearchUserList.map { toPresentationModel(searchedUser = it) }
-                            vmSearchedUsersList.addAll(presentationSearchUserList)
+                            tempSearchedUsersList.addAll(presentationSearchUserList)
                         }
-                        vmSearchedUsersList.map { searchedUser ->
+                        tempSearchedUsersList.map { searchedUser ->
                             if (local.any { it.id == searchedUser.id }) {
                                 searchedUser.isMyFavorite = true
                             }
                         }
                     }
-                    return@zip vmSearchedUsersList.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
+                    return@zip tempSearchedUsersList.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
 
             })
             .observeOn(AndroidSchedulers.mainThread())
@@ -115,15 +115,15 @@ class MainViewModel @Inject constructor(
             .doOnComplete {
 
                 //추가했으니까  favorite user list에도 업데이트 해줌.
-                vmFavoriteUserList.add(presentationSearchedUser)
-                _favoriteUserList.value = vmFavoriteUserList
+                tempFavoriteUserList.add(presentationSearchedUser)
+                _favoriteUserList.value = tempFavoriteUserList
 
                 //searcheduser 리스트에는  관련 id체크 해서  별표 여부 true값 바꿔주고 update
-                vmSearchedUsersList.find {
+                tempSearchedUsersList.find {
                     it.id == presentationSearchedUser.id
                 }?.isMyFavorite = true
                 _searchedUserList.value =
-                    vmSearchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
+                    tempSearchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
 
             }
             .subscribe()
@@ -145,15 +145,15 @@ class MainViewModel @Inject constructor(
             .doOnComplete {
 
                 //즐겨찾기 리스트에서 해당값 삭제 해주고 즐겨찾기 리스트 업데이트
-                vmFavoriteUserList.removeAll { it.id == presentationSearchedUser.id }
-                _favoriteUserList.value = vmFavoriteUserList
+                tempFavoriteUserList.removeAll { it.id == presentationSearchedUser.id }
+                _favoriteUserList.value = tempFavoriteUserList
 
                 //searcheduser 리스트에는  관련 id체크 해서  별표 여부 false값 바꿔주고 update
-                vmSearchedUsersList.find {
+                tempSearchedUsersList.find {
                     it.id == presentationSearchedUser.id
                 }?.isMyFavorite = false
 
-                _searchedUserList.value = vmSearchedUsersList.map { it.copy() }
+                _searchedUserList.value = tempSearchedUsersList.map { it.copy() }
 
             }.subscribe()
             .addTo(compositeDisposable)
@@ -167,7 +167,7 @@ class MainViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .map { dataModelFavoriteUsers ->
 
-                val newList = vmSearchedUsersList.map { it.copy() }
+                val newList = tempSearchedUsersList.map { it.copy() }
                 newList.map { searchedUsersList ->
                     if(dataModelFavoriteUsers.any { it.id == searchedUsersList.id }){
                         searchedUsersList.isMyFavorite =
@@ -179,7 +179,7 @@ class MainViewModel @Inject constructor(
 
 
                 //즐겨찾기 리스트  미리 업데이트 함.
-                vmFavoriteUserList
+                tempFavoriteUserList
                     .addAll(dataModelFavoriteUsers
                         .map { toPresentationModel(it) })
 
@@ -187,7 +187,7 @@ class MainViewModel @Inject constructor(
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                _favoriteUserList.value = vmFavoriteUserList
+                _favoriteUserList.value = tempFavoriteUserList
                 _searchedUserList.value = it?.toMutableList()
             }, {
                 _error.value = Throwable("즐겨찾기 업데이트 중 문제 생김")

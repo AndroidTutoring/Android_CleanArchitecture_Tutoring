@@ -79,7 +79,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
             //맨처음  splash 적용된후  이제 기존 뷰모델에 저장한 값들  다시 넣어주면됨
             binding.emptyView.visibility = View.GONE
-            userListRcyAdapter.submitList(mainSharedViewModel.vmSearchedUsersList.map { it.copy() })
+            userListRcyAdapter.submitList(mainSharedViewModel.tempSearchedUsersList.map { it.copy() })
         }
     }
 
