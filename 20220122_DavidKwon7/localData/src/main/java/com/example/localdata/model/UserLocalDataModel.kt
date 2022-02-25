@@ -1,8 +1,10 @@
 package com.example.localdata.model
 
+import androidx.room.Entity
 import com.example.data.model.UserDataModel
 import com.example.localdata.mapping.LocalToUserMapper
 
+@Entity(tableName = "localUser")
 data class UserLocalDataModel(
     val name: String,
     val id: String,
