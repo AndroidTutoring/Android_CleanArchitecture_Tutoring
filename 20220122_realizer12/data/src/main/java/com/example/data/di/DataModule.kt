@@ -22,15 +22,15 @@ object DataModule {
     fun provideUserRepository(
          localDataSource:UserLocalDataSource,
          remoteDataSource:UserRemoteDataSource
-    ):UserRepository{
-       return UserRepositoryImpl(localDataSource, remoteDataSource)
-    }
+    ):UserRepository =
+        UserRepositoryImpl(localDataSource, remoteDataSource)
+
 
     @Singleton
     @Provides
     fun provideRepoRepository(
         remoteDataSource:RepoRemoteDataSource
-    ):RepoRepository{
-        return RepoRepositoryImpl(remoteDataSource)
-    }
+    ):RepoRepository =
+         RepoRepositoryImpl(remoteDataSource)
+
 }

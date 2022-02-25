@@ -23,37 +23,35 @@ object RemoteModule {
     @Provides
     fun provideUserRemoteDataSource(
         apiService: ApiService
-    ): UserRemoteDataSource {
-        return UserRemoteDataSourceImpl(apiService)
-    }
+    ): UserRemoteDataSource =
+        UserRemoteDataSourceImpl(apiService)
 
 
     @Singleton
     @Provides
     fun provideRepoRemoteDataSource(
         apiService: ApiService
-    ): RepoRemoteDataSource {
-        return RepoRemoteDataSourceImpl(apiService)
-    }
+    ): RepoRemoteDataSource =
+        RepoRemoteDataSourceImpl(apiService)
 
 
     @Singleton
     @Provides
     fun provideApiService(
         retrofit: Retrofit
-    ):ApiService{
-        return retrofit.create(ApiService::class.java)
-    }
+    ): ApiService =
+        retrofit.create(ApiService::class.java)
+
 
     @Singleton
     @Provides
-    fun provideRetrofit():Retrofit{
-        return Retrofit.Builder()
+    fun provideRetrofit(): Retrofit =
+        Retrofit.Builder()
             .baseUrl(ServerIp.BaseUrl)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
+
 
 
 }
