@@ -16,7 +16,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
-    @Inject lateinit var userRepository: UserRepository
     private val mainViewModel: MainViewModel by viewModels()
 
     private fun dataFromViewModel() {

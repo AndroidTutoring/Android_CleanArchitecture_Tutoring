@@ -17,7 +17,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_detail) {
 
-    @Inject lateinit var repoRepository: RepoRepository
 
     //유저 정보
     private var userInfo: SearchedUserPresentationModel? = null

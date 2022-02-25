@@ -17,8 +17,6 @@ import javax.inject.Inject
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
 
 
-    @Inject lateinit var userRepository: UserRepository
-
     private val splashViewModel: SplashViewModel by viewModels()
 
 
