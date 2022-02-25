@@ -10,5 +10,5 @@ import com.example.local.model.SearchedUserLocalModel
     exportSchema = false//schema 구조 export false처리
 )
 abstract class LocalDataBase : RoomDatabase() {
-    abstract fun getFavoriteMarkDao(): FavoriteDao
+    abstract fun favoriteMarkDao(): FavoriteDao
 }

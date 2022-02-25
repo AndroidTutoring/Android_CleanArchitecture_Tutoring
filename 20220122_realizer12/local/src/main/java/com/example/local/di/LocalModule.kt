@@ -30,7 +30,7 @@ object LocalModule {
     fun provideFavoriteDao(
         localDataBase: LocalDataBase
     ): FavoriteDao =
-        localDataBase.getFavoriteMarkDao()
+        localDataBase.favoriteMarkDao()
 
 
     @Singleton
