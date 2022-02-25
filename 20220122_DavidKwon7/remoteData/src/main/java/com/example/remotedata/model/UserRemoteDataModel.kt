@@ -12,10 +12,10 @@ data class UserRemoteDataModel(
     companion object : RemoteToUserMapper<UserRemoteDataModel, UserDataModel> {
         override fun toUser(userRemoteDataModel: UserRemoteDataModel): UserDataModel =
             UserDataModel (
-                name = "",
-                id = "",
-                url = "",
-                date = ""
+                name = userRemoteDataModel.name,
+                id = userRemoteDataModel.id,
+                url = userRemoteDataModel.url,
+                date = userRemoteDataModel.date
             )
 
     }

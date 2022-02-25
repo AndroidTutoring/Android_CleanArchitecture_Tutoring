@@ -12,12 +12,12 @@ data class UserLocalDataModel(
     val url: String?
 ) {
     companion object : LocalToUserMapper<UserLocalDataModel, UserDataModel> {
-        override fun toUser(UserLocalDataModel: UserLocalDataModel): UserDataModel =
+        override fun toUser(userLocalDataModel: UserLocalDataModel): UserDataModel =
             UserDataModel(
-                name = "",
-                id = "",
-                url = "",
-                date = ""
+                name = userLocalDataModel.name,
+                id = userLocalDataModel.id,
+                url = userLocalDataModel.url,
+                date = userLocalDataModel.date
             )
     }
 }
