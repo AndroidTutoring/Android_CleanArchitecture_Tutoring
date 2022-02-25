@@ -41,29 +41,27 @@ data class SearchedUserLocal(
         //데이터 모듈 데이터 모델로
         fun toDataModel(
             searchedUserLocal: SearchedUserLocal
-        ): SearchedUserDataModel {
-            return SearchedUserDataModel(
+        ): SearchedUserDataModel =
+            SearchedUserDataModel(
                 uid = searchedUserLocal.uid,
                 id = searchedUserLocal.id,
                 avatar_url = searchedUserLocal.avatar_url,
                 login = searchedUserLocal.login,
                 html_url = searchedUserLocal.html_url,
-                isMyFavorite = searchedUserLocal.isMyFavorite
-            )
-        }
+                isMyFavorite = searchedUserLocal.isMyFavorite)
+
 
         //데이터 모듈 데이터 모델로
         fun toLocalModel(
             searchedUser: SearchedUserDataModel
-        ): SearchedUserLocal {
-            return SearchedUserLocal(
+        ): SearchedUserLocal =
+             SearchedUserLocal(
                 uid = searchedUser.uid,
                 id = searchedUser.id,
                 avatar_url = searchedUser.avatar_url,
                 login = searchedUser.login,
                 html_url = searchedUser.html_url,
-                isMyFavorite = searchedUser.isMyFavorite
-            )
-        }
+                isMyFavorite = searchedUser.isMyFavorite)
+
     }
 }
