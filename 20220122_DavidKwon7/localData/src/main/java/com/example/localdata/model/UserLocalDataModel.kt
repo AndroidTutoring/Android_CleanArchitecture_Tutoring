@@ -19,6 +19,15 @@ data class UserLocalDataModel(
                 url = userLocalDataModel.url,
                 date = userLocalDataModel.date
             )
+
+        override fun from(r: UserLocalDataModel?): UserDataModel {
+            return UserDataModel(
+                name = r?.name,
+                id = r?.id,
+                url = r?.url,
+                date = r?.date
+            )
+        }
     }
 }
 

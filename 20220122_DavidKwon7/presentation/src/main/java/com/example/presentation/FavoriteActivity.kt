@@ -1,13 +1,10 @@
 package com.example.presentation
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.presentation.databinding.ActivityFavoriteBinding

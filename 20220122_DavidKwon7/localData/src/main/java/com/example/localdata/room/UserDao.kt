@@ -2,6 +2,8 @@ package com.example.localdata.room
 
 import androidx.room.*
 import com.example.data.model.UserDataModel
+import com.example.localdata.mapping.LocalToUserMapper
+import com.example.localdata.model.UserLocalDataModel
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -9,11 +11,16 @@ import io.reactivex.Single
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addFav(user: UserDataModel) : Completable
+    fun addFav(
+        localUser: Pair<LocalToUserMapper<UserLocalDataModel, UserDataModel>, UserDataModel
+                >) : Completable
 
-    @Query("SELECT * FROM userdatamodel")
+    @Query("SELECT * FROM user")
     fun loadUserList(): Single<List<UserDataModel>>
 
+
     @Delete
-    fun deleteFav(user: UserDataModel) : Completable
+    fun deleteFav(
+        user: Pair<LocalToUserMapper<UserLocalDataModel, UserDataModel>, UserDataModel
+                >) : Completable
 }
