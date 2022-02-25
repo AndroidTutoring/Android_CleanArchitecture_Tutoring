@@ -28,7 +28,7 @@ import kotlinx.parcelize.Parcelize
 )//id값은 깃헙 유저 아이디이므로, unique 설정
 //깃헙 유저 모델
 @Parcelize
-data class SearchedUserLocal(
+data class SearchedUserLocalModel(
     @PrimaryKey(autoGenerate = true) var uid: Long,
     @ColumnInfo(name = "user_id") var id: Long = 0L,
     @ColumnInfo(name = "avatar_url") var avatar_url: String = "",
@@ -40,7 +40,7 @@ data class SearchedUserLocal(
 
         //데이터 모듈 데이터 모델로
         fun toDataModel(
-            searchedUserLocal: SearchedUserLocal
+            searchedUserLocal: SearchedUserLocalModel
         ): SearchedUserDataModel =
             SearchedUserDataModel(
                 uid = searchedUserLocal.uid,
@@ -54,8 +54,8 @@ data class SearchedUserLocal(
         //데이터 모듈 데이터 모델로
         fun toLocalModel(
             searchedUser: SearchedUserDataModel
-        ): SearchedUserLocal =
-             SearchedUserLocal(
+        ): SearchedUserLocalModel =
+             SearchedUserLocalModel(
                 uid = searchedUser.uid,
                 id = searchedUser.id,
                 avatar_url = searchedUser.avatar_url,

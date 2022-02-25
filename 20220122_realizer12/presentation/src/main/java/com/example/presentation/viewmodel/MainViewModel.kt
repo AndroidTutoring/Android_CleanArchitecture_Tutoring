@@ -120,11 +120,11 @@ class MainViewModel @Inject constructor(
             .doOnComplete {
 
                 //추가했으니까  favorite user list에도 업데이트 해줌.
-                vmFavoriteUserList?.add(presentationSearchedUser)
+                vmFavoriteUserList.add(presentationSearchedUser)
                 _favoriteUserList.value = vmFavoriteUserList
 
                 //searcheduser 리스트에는  관련 id체크 해서  별표 여부 true값 바꿔주고 update
-                vmSearchedUsersList?.find {
+                vmSearchedUsersList.find {
                     it.id == presentationSearchedUser.id
                 }?.isMyFavorite = true
                 _searchedUserList.value =
@@ -150,15 +150,15 @@ class MainViewModel @Inject constructor(
             .doOnComplete {
 
                 //즐겨찾기 리스트에서 해당값 삭제 해주고 즐겨찾기 리스트 업데이트
-                vmFavoriteUserList?.removeAll { it.id == presentationSearchedUser.id }
+                vmFavoriteUserList.removeAll { it.id == presentationSearchedUser.id }
                 _favoriteUserList.value = vmFavoriteUserList
 
                 //searcheduser 리스트에는  관련 id체크 해서  별표 여부 false값 바꿔주고 update
-                vmSearchedUsersList?.find {
+                vmSearchedUsersList.find {
                     it.id == presentationSearchedUser.id
                 }?.isMyFavorite = false
 
-                _searchedUserList.value = vmSearchedUsersList?.map { it.copy() }
+                _searchedUserList.value = vmSearchedUsersList.map { it.copy() }
 
             }.subscribe()
             .addTo(compositeDisposable)
@@ -172,15 +172,20 @@ class MainViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .map { dataModelFavoriteUsers ->
 
-                val newList = vmSearchedUsersList?.map { it.copy() }
-                newList?.map { searchedUsersList ->
-                    searchedUsersList.isMyFavorite =
-                        dataModelFavoriteUsers.any { it.id == searchedUsersList.id }
+                val newList = vmSearchedUsersList.map { it.copy() }
+                newList.map { searchedUsersList ->
+                    if(dataModelFavoriteUsers.any { it.id == searchedUsersList.id }){
+                        searchedUsersList.isMyFavorite =
+                            dataModelFavoriteUsers.any { it.id == searchedUsersList.id }
+                        searchedUsersList.uid =
+                            dataModelFavoriteUsers.find { it.id == searchedUsersList.id }!!.uid
+                    }
                 }
+
 
                 //즐겨찾기 리스트  미리 업데이트 함.
                 vmFavoriteUserList
-                    ?.addAll(dataModelFavoriteUsers
+                    .addAll(dataModelFavoriteUsers
                         .map { toPresentationModel(it) })
 
                 return@map newList

@@ -2,10 +2,10 @@ package com.example.local.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.local.model.SearchedUserLocal
+import com.example.local.model.SearchedUserLocalModel
 
 @Database(
-    entities = [SearchedUserLocal::class],
+    entities = [SearchedUserLocalModel::class],
     version = 3,
     exportSchema = false//schema 구조 export false처리
 )
