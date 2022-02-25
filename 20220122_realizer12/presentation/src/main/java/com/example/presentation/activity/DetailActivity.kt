@@ -3,7 +3,6 @@ package com.example.presentation.activity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.example.data.repository.RepoRepository
 import com.example.presentation.R
 import com.example.presentation.adapter.RepoListRvAdapter
 import com.example.presentation.base.BaseActivity
@@ -12,7 +11,6 @@ import com.example.presentation.fragment.UserFragment
 import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.viewmodel.DetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_detail) {

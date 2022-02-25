@@ -1,7 +1,7 @@
 package com.example.data.di
 
-import com.example.data.repository.RepoRepository
-import com.example.data.repository.RepoRepositoryImpl
+import com.example.data.repository.UserRepoRepository
+import com.example.data.repository.UserRepoRepositoryImpl
 import com.example.data.repository.UserRepository
 import com.example.data.repository.UserRepositoryImpl
 import com.example.data.source.local.UserLocalDataSource
@@ -30,7 +30,7 @@ object DataModule {
     @Provides
     fun provideRepoRepository(
         remoteDataSource:RepoRemoteDataSource
-    ):RepoRepository =
-         RepoRepositoryImpl(remoteDataSource)
+    ):UserRepoRepository =
+         UserRepoRepositoryImpl(remoteDataSource)
 
 }

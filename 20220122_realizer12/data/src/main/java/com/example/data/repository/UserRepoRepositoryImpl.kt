@@ -2,9 +2,9 @@ package com.example.data.repository
 
 import com.example.data.source.remote.RepoRemoteDataSource
 
-class RepoRepositoryImpl(
+class UserRepoRepositoryImpl(
     private val repoRemoteDataSource: RepoRemoteDataSource
-) : RepoRepository {
+) : UserRepoRepository {
 
     override fun getUserRepoList(
         userName: String

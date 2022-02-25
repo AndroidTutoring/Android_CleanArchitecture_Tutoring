@@ -2,7 +2,7 @@ package com.example.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.data.repository.RepoRepository
+import com.example.data.repository.UserRepoRepository
 import com.example.presentation.base.BaseViewModel
 import com.example.presentation.model.UserRepoPresentationModel
 import com.example.presentation.model.UserRepoPresentationModel.Companion.toPresentationModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val repoRepository: RepoRepository
+    private val repoRepository: UserRepoRepository
 ) : BaseViewModel() {
 
 
