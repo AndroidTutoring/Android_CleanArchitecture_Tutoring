@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 
 @Parcelize
-data class SearchedUser(
+data class SearchedUserDataModel(
     var uid: Long,//데이터 고유식별값 -> auto increment
     var id: Long = 0L,//유저 아이디
     var avatar_url: String = "",//유저 프로필 url

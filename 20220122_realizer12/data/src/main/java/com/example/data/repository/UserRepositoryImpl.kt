@@ -1,6 +1,6 @@
 package com.example.data.repository
 
-import com.example.data.model.SearchedUser
+import com.example.data.model.SearchedUserDataModel
 import com.example.data.source.local.UserLocalDataSource
 import com.example.data.source.remote.UserRemoteDataSource
 import io.reactivex.rxjava3.core.Completable
@@ -12,15 +12,15 @@ class UserRepositoryImpl @Inject constructor(
     private val userRemoteDataSource: UserRemoteDataSource
 ) : UserRepository {
 
-    override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUser): Completable =
+    override fun deleteFavoriteUser(deletedFavoriteUser: SearchedUserDataModel): Completable =
         userLocalDataSource.deleteFavoriteUser(deletedFavoriteUser)
 
 
-    override fun addFavoriteUser(favoriteUser: SearchedUser): Completable =
+    override fun addFavoriteUser(favoriteUser: SearchedUserDataModel): Completable =
         userLocalDataSource.addFavoriteUser(favoriteUser)
 
 
-    override fun getFavoriteUsers(): Single<List<SearchedUser>> =
+    override fun getFavoriteUsers(): Single<List<SearchedUserDataModel>> =
         userLocalDataSource.getFavoriteUsers()
 
     override fun getSearchUsers(

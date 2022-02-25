@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.data.model.SearchedUser
+import com.example.data.model.SearchedUserDataModel
 import kotlinx.parcelize.Parcelize
 
 //로컬 데이터 베이스 즐겨찾기 테이블 구성
@@ -28,8 +28,8 @@ data class SearchedUserLocal(
         //데이터 모듈 데이터 모델로
         fun toDataModel(
             searchedUserLocal: SearchedUserLocal
-        ): SearchedUser {
-            return SearchedUser(
+        ): SearchedUserDataModel {
+            return SearchedUserDataModel(
                 uid = searchedUserLocal.uid,
                 id = searchedUserLocal.id,
                 avatar_url = searchedUserLocal.avatar_url,
@@ -41,7 +41,7 @@ data class SearchedUserLocal(
 
         //데이터 모듈 데이터 모델로
         fun toLocalModel(
-            searchedUser: SearchedUser
+            searchedUser: SearchedUserDataModel
         ): SearchedUserLocal {
             return SearchedUserLocal(
                 uid = searchedUser.uid,

@@ -1,7 +1,7 @@
 package com.example.presentation.model
 
 import android.os.Parcelable
-import com.example.data.model.UserRepo
+import com.example.data.model.UserRepoDataModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -16,8 +16,8 @@ data class PresentationUserRepo(
         //데이터 모듈 데이터 모델로
         fun toDataModel(
             presentationUserRepo: PresentationUserRepo
-        ): UserRepo {
-            return UserRepo(
+        ): UserRepoDataModel {
+            return UserRepoDataModel(
                 id = presentationUserRepo.id,
                 full_name = presentationUserRepo.full_name,
                 url = presentationUserRepo.url,
@@ -27,7 +27,7 @@ data class PresentationUserRepo(
 
         //presentation 모듈 데이터 모델로
         fun toPresentationModel(
-            userRepo: UserRepo
+            userRepo: UserRepoDataModel
         ): PresentationUserRepo {
             return PresentationUserRepo(
                 id = userRepo.id,

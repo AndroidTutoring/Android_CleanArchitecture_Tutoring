@@ -1,8 +1,8 @@
 package com.example.presentation.model
 
 import android.os.Parcelable
-import com.example.data.model.SearchedUser
-import com.example.data.model.SearchedUsers
+import com.example.data.model.SearchedUserDataModel
+import com.example.data.model.SearchedUsersDataModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -15,20 +15,20 @@ data class PresentationSearchedUsers(
         //데이터 모듈 데이터 모델로
         fun toDataModel(
             presentationSearchedUsers: PresentationSearchedUsers
-        ): SearchedUsers {
-            return SearchedUsers(
+        ): SearchedUsersDataModel {
+            return SearchedUsersDataModel(
                 items = presentationSearchedUsers.items?.map {
                     PresentationSearchedUser.toDataModel(
                         it
                     )
-                } as ArrayList<SearchedUser>,
+                } as ArrayList<SearchedUserDataModel>,
                 total_count = presentationSearchedUsers.total_count
             )
         }
 
         //presentation 모듈 데이터 모델로
         fun toPresentationModel(
-            searchedUsers: SearchedUsers
+            searchedUsers: SearchedUsersDataModel
         ): PresentationSearchedUsers {
             return PresentationSearchedUsers(
                 items = searchedUsers.items?.map { PresentationSearchedUser.toPresentationModel(it) } as ArrayList<PresentationSearchedUser>,

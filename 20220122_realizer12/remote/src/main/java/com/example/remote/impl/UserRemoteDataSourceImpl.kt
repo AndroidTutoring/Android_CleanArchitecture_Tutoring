@@ -1,6 +1,6 @@
 package com.example.remote.impl
 
-import com.example.data.model.SearchedUsers
+import com.example.data.model.SearchedUsersDataModel
 import com.example.data.source.remote.UserRemoteDataSource
 import com.example.remote.model.SearchedUsersRemote.Companion.toDataModel
 import com.example.remote.retrofit.ApiService
@@ -16,7 +16,7 @@ class UserRemoteDataSourceImpl @Inject constructor(private val apiService: ApiSe
         query: String,
         page: Int,
         perPage: Int
-    ): Single<SearchedUsers> {
+    ): Single<SearchedUsersDataModel> {
         return apiService.searchUsers(query, page, perPage).map {
             toDataModel(it)
         }

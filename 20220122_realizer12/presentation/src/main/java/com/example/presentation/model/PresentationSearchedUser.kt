@@ -1,7 +1,7 @@
 package com.example.presentation.model
 
 import android.os.Parcelable
-import com.example.data.model.SearchedUser
+import com.example.data.model.SearchedUserDataModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -18,8 +18,8 @@ data class PresentationSearchedUser(
         //데이터 모듈 데이터 모델로
         fun toDataModel(
             presentationSearchedUser: PresentationSearchedUser
-        ): SearchedUser {
-            return SearchedUser(
+        ): SearchedUserDataModel {
+            return SearchedUserDataModel(
                 uid = presentationSearchedUser.uid,
                 id = presentationSearchedUser.id,
                 avatar_url = presentationSearchedUser.avatar_url,
@@ -31,7 +31,7 @@ data class PresentationSearchedUser(
 
         //presentation 모듈 데이터 모델로
         fun toPresentationModel(
-            searchedUser: SearchedUser
+            searchedUser: SearchedUserDataModel
         ): PresentationSearchedUser {
             return PresentationSearchedUser(
                 uid = searchedUser.uid,

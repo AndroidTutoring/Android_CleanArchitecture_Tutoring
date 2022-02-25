@@ -1,7 +1,7 @@
 package com.example.remote.model
 
 import android.os.Parcelable
-import com.example.data.model.UserRepo
+import com.example.data.model.UserRepoDataModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -16,8 +16,8 @@ data class UserRepoRemote(
         //데이터 모듈 데이터 모델로
         fun toDataModel(
             userRepoRemote: UserRepoRemote
-        ): UserRepo {
-            return UserRepo(
+        ): UserRepoDataModel {
+            return UserRepoDataModel(
                 id = userRepoRemote.id,
                 full_name = userRepoRemote.full_name,
                 url = userRepoRemote.url,

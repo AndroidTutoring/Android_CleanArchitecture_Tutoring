@@ -1,7 +1,7 @@
 package com.example.remote.model
 
 import android.os.Parcelable
-import com.example.data.model.SearchedUser
+import com.example.data.model.SearchedUserDataModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -18,8 +18,8 @@ data class SearchedUserRemote(
         //데이터 모듈 데이터 모델로
         fun toDataModel(
             searchedUserRemote: SearchedUserRemote
-        ): SearchedUser {
-            return SearchedUser(
+        ): SearchedUserDataModel {
+            return SearchedUserDataModel(
                 uid = searchedUserRemote.uid,
                 id = searchedUserRemote.id,
                 avatar_url = searchedUserRemote.avatar_url,

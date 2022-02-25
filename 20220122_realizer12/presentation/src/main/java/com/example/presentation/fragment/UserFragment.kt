@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.example.data.model.SearchedUser
+import com.example.data.model.SearchedUserDataModel
 import com.example.presentation.R
 import com.example.presentation.activity.DetailActivity
 import com.example.presentation.activity.SplashActivity
@@ -15,7 +15,6 @@ import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.PresentationSearchedUser
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.viewmodel.MainViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 //유저 프래그먼트
@@ -59,7 +58,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
     private fun showSplashUserList() {
         Timber.v("dadasdasd ")
         val splashSearchedUsersList = requireActivity().intent
-            .getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
+            .getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
                 as List<PresentationSearchedUser>
 
         if (!splashSearchedUsersList.isNullOrEmpty()) {
@@ -73,7 +72,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             mainSharedViewModel.initialListSetting()
 
             //configuration change로 다시 불릴때는 값 적용안되게 clear 시켜줌.
-            requireActivity().intent.getParcelableArrayListExtra<SearchedUser>(SplashActivity.PARAM_INIT_USER_INFO)
+            requireActivity().intent.getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
                 ?.clear()
 
         } else {

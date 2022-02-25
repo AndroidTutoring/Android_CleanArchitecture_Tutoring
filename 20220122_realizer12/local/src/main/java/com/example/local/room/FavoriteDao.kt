@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import com.example.data.model.SearchedUser
 import com.example.local.model.SearchedUserLocal
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
