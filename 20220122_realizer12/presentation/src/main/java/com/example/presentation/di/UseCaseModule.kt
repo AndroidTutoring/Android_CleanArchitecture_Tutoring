@@ -1,11 +1,7 @@
 package com.example.presentation.di
 
-import com.example.data.source.remote.UserRemoteDataSource
-import com.example.domain.repository.UserRepoRepository
 import com.example.domain.repository.UserRepository
 import com.example.domain.usecase.*
-import com.example.remote.impl.UserRemoteDataSourceImpl
-import com.example.remote.retrofit.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,10 +13,11 @@ import javax.inject.Singleton
 object UseCaseModule {
     @Singleton
     @Provides
-    fun provideGetSearchedUsersListUseCase(
-        userRepository:UserRepository
-    ): GetSearchedUsersListUseCase =
-        GetSearchedUsersListUseCase(userRepository)
+    fun provideGetSearchedUsersListMainUseCase(
+        getFavoriteUsersUseCase: GetFavoriteUsersUseCase,
+        getSearchedUsersListUseCase: GetSearchedUsersListUseCase
+    ): GetSearchedUsersListInMainUseCase =
+        GetSearchedUsersListInMainUseCase(getFavoriteUsersUseCase,getSearchedUsersListUseCase)
 
     @Singleton
     @Provides
@@ -48,4 +45,18 @@ object UseCaseModule {
         getFavoriteUsersUseCase: GetFavoriteUsersUseCase
     ): UpdateSearchedUsersFavoriteUseCase =
         UpdateSearchedUsersFavoriteUseCase(getFavoriteUsersUseCase)
+
+    @Singleton
+    @Provides
+    fun provideGetSearchedUsersUseCase(
+        userRepository:UserRepository
+    ): GetSearchedUsersListUseCase =
+        GetSearchedUsersListUseCase(userRepository)
+
+    @Singleton
+    @Provides
+    fun provideGetInitialSearchedUserUseCase(
+        getSearchedUsersListUseCase: GetSearchedUsersListUseCase
+    ): GetInitialSearchedUserUseCase =
+        GetInitialSearchedUserUseCase(getSearchedUsersListUseCase)
 }

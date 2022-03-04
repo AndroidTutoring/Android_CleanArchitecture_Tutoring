@@ -14,19 +14,6 @@ data class SearchedUsersPresentationModel(
 ) : Parcelable {
     companion object {
 
-        //데이터 모듈 데이터 모델로
-        fun toDataModel(
-            presentationSearchedUsers: SearchedUsersPresentationModel
-        ): SearchedUsersDataModel {
-            return SearchedUsersDataModel(
-                items = presentationSearchedUsers.items?.map {
-                    SearchedUserPresentationModel.toDataModel(
-                        it
-                    )
-                } as ArrayList<SearchedUserDataModel>,
-                total_count = presentationSearchedUsers.total_count
-            )
-        }
 
 
         fun toEntity(

@@ -14,6 +14,7 @@ import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentUserBinding
 import com.example.presentation.model.SearchedUserPresentationModel
+import com.example.presentation.util.EventObserver
 import com.example.presentation.util.Util.hideKeyboard
 import com.example.presentation.viewmodel.MainViewModel
 import timber.log.Timber
@@ -61,18 +62,21 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             .getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
                 as List<SearchedUserPresentationModel>
 
-        mainSharedViewModel.initialSetting.observe(this, Observer {
-            binding.etSearchUser.setText(splashSearchedUsersList[0].login)
-            binding.emptyView.visibility = View.GONE
+        mainSharedViewModel.initialSetting.observe(this, EventObserver { it->
+            if(it){
+                binding.etSearchUser.setText(splashSearchedUsersList[0].login)
+                binding.emptyView.visibility = View.GONE
 
-            //받아온 검색된 유저리스트  업데이트  해주고, favorite filter 적용하면서, favorite리스트도 미리 받아둔다.
-            //아직  favorite fragment가  create되기 전이므로 ..
-            mainSharedViewModel.getSearchUserList(splashSearchedUsersList.map { it.copy() })
-            mainSharedViewModel.initialListSetting()
+                //받아온 검색된 유저리스트  업데이트  해주고, favorite filter 적용하면서, favorite리스트도 미리 받아둔다.
+                //아직  favorite fragment가  create되기 전이므로 ..
+                mainSharedViewModel.getSearchUserList(splashSearchedUsersList.map { it.copy() })
+                mainSharedViewModel.initialListSetting()
 
-            //configuration change로 다시 불릴때는 값 적용안되게 clear 시켜줌.
-            requireActivity().intent.getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
-                ?.clear()
+                //configuration change로 다시 불릴때는 값 적용안되게 clear 시켜줌.
+                requireActivity().intent.getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
+                    ?.clear()
+            }
+
         })
     }
 

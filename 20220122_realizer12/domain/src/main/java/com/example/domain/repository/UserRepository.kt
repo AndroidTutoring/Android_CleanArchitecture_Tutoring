@@ -11,8 +11,8 @@ interface UserRepository {
     fun addFavoriteUser(favoriteUser: SearchedUserEntity): Completable//유저 즐겨찾기에 추가
     fun getFavoriteUsers(): Single<List<SearchedUserEntity>>//즐겨 찾기 유저 다 가져오기
     fun getSearchUsers(
-        query: String = "realizer12",
-        page: Int = 1,
-        perPage: Int = 10
+        query: String,
+        page: Int,
+        perPage: Int
     ): Single<SearchedUsersEntity>
 }

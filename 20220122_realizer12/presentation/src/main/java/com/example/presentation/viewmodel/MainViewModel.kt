@@ -7,15 +7,17 @@ import com.example.presentation.base.BaseViewModel
 import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.model.SearchedUserPresentationModel.Companion.toEntity
 import com.example.presentation.model.SearchedUserPresentationModel.Companion.toPresentationModel
+import com.example.presentation.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getSearchedUsersListUseCase: GetSearchedUsersListUseCase,
+    private val getSearchedUsersListUseCase: GetSearchedUsersListInMainUseCase,
     private val addFavoriteUsersUseCase: AddFavoriteUsersUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
     private val updateSearchedUsersFavoriteUseCase: UpdateSearchedUsersFavoriteUseCase,
@@ -41,8 +43,8 @@ class MainViewModel @Inject constructor(
     val favoriteUserList: LiveData<List<SearchedUserPresentationModel>> = _favoriteUserList
 
     //즐겨찾기 유저리스트 라이브데이터
-    private val _initialSetting = MutableLiveData<Boolean>()
-    val initialSetting: LiveData<Boolean> = _initialSetting
+    private val _initialSetting = MutableLiveData<Event<Boolean>>()
+    val initialSetting: LiveData<Event<Boolean>> = _initialSetting
 
     private val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error
@@ -53,7 +55,7 @@ class MainViewModel @Inject constructor(
 
 
     init {
-        _initialSetting.value = true
+        _initialSetting.value = Event(true)
 
     }
 
@@ -77,7 +79,12 @@ class MainViewModel @Inject constructor(
         getSearchedUsersListUseCase.searchUsers(searchQuery, page, perPage)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ searchedUsersList ->
-                _searchedUserList.value = searchedUsersList.map { toPresentationModel(it) }
+
+                if(page == 1) {
+                    tempSearchedUsersList.clear()
+                }
+                tempSearchedUsersList.addAll(searchedUsersList.map { toPresentationModel(it) })
+                _searchedUserList.value =tempSearchedUsersList
             }, {
                 _error.value = Throwable("유저를 검색하는 중에문제가 생감")
             })
