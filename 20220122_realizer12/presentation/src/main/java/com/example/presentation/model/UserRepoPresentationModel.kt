@@ -2,6 +2,9 @@ package com.example.presentation.model
 
 import android.os.Parcelable
 import com.example.data.model.UserRepoDataModel
+import com.example.domain.entity.SearchedUserEntity
+import com.example.domain.entity.SearchedUsersEntity
+import com.example.domain.entity.UserRepoEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -13,11 +16,11 @@ data class UserRepoPresentationModel(
 ) : Parcelable {
     companion object {
 
-        //데이터 모듈 데이터 모델로
-        fun toDataModel(
+
+        fun toEntity(
             presentationUserRepo: UserRepoPresentationModel
-        ): UserRepoDataModel {
-            return UserRepoDataModel(
+        ): UserRepoEntity {
+            return UserRepoEntity(
                 id = presentationUserRepo.id,
                 full_name = presentationUserRepo.full_name,
                 url = presentationUserRepo.url,
@@ -25,9 +28,10 @@ data class UserRepoPresentationModel(
             )
         }
 
+
         //presentation 모듈 데이터 모델로
         fun toPresentationModel(
-            userRepo: UserRepoDataModel
+            userRepo: UserRepoEntity
         ): UserRepoPresentationModel {
             return UserRepoPresentationModel(
                 id = userRepo.id,

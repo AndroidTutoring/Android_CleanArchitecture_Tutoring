@@ -2,6 +2,7 @@ package com.example.presentation.model
 
 import android.os.Parcelable
 import com.example.data.model.SearchedUserDataModel
+import com.example.domain.entity.SearchedUserEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -15,23 +16,23 @@ data class SearchedUserPresentationModel(
 ) : Parcelable {
     companion object {
 
-        //데이터 모듈 데이터 모델로
-        fun toDataModel(
-            presentationSearchedUser: SearchedUserPresentationModel
-        ): SearchedUserDataModel {
-            return SearchedUserDataModel(
-                uid = presentationSearchedUser.uid,
-                id = presentationSearchedUser.id,
-                avatar_url = presentationSearchedUser.avatar_url,
-                login = presentationSearchedUser.login,
-                html_url = presentationSearchedUser.html_url,
-                isMyFavorite = presentationSearchedUser.isMyFavorite
+        fun toEntity(
+            searchedUserDataModel: SearchedUserPresentationModel
+        ): SearchedUserEntity {
+            return SearchedUserEntity(
+                uid = searchedUserDataModel.uid,
+                id = searchedUserDataModel.id,
+                avatar_url = searchedUserDataModel.avatar_url,
+                login = searchedUserDataModel.login,
+                html_url = searchedUserDataModel.html_url,
+                isMyFavorite = searchedUserDataModel.isMyFavorite
             )
         }
 
+
         //presentation 모듈 데이터 모델로
         fun toPresentationModel(
-            searchedUser: SearchedUserDataModel
+            searchedUser: SearchedUserEntity
         ): SearchedUserPresentationModel {
             return SearchedUserPresentationModel(
                 uid = searchedUser.uid,

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.data.model.SearchedUserDataModel
 import com.example.presentation.R
@@ -60,8 +61,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             .getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
                 as List<SearchedUserPresentationModel>
 
-        if (!splashSearchedUsersList.isNullOrEmpty()) {
-
+        mainSharedViewModel.initialSetting.observe(this, Observer {
             binding.etSearchUser.setText(splashSearchedUsersList[0].login)
             binding.emptyView.visibility = View.GONE
 
@@ -73,13 +73,7 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
             //configuration change로 다시 불릴때는 값 적용안되게 clear 시켜줌.
             requireActivity().intent.getParcelableArrayListExtra<SearchedUserDataModel>(SplashActivity.PARAM_INIT_USER_INFO)
                 ?.clear()
-
-        } else {
-
-            //맨처음  splash 적용된후  이제 기존 뷰모델에 저장한 값들  다시 넣어주면됨
-            binding.emptyView.visibility = View.GONE
-            userListRcyAdapter.submitList(mainSharedViewModel.tempSearchedUsersList.map { it.copy() })
-        }
+        })
     }
 
     //검색 실행
@@ -93,6 +87,8 @@ class UserFragment : BaseFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
     //리스너 기능 모음.
     private fun listenerEvent() {
+
+
 
         //리사이클러뷰
         binding.rvUserList.addOnScrollListener(object : RecyclerView.OnScrollListener() {

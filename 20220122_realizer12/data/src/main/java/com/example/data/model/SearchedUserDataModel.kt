@@ -16,20 +16,6 @@ data class SearchedUserDataModel(
 ) : Parcelable {
     companion object{
 
-        //데이터 모듈 데이터 모델로
-        fun toEntity(
-            searchedUserDataModel: SearchedUserDataModel
-        ): SearchedUserEntity {
-            return SearchedUserEntity(
-                uid = searchedUserDataModel.uid,
-                id = searchedUserDataModel.id,
-                avatar_url = searchedUserDataModel.avatar_url,
-                login = searchedUserDataModel.login,
-                html_url = searchedUserDataModel.html_url,
-                isMyFavorite = searchedUserDataModel.isMyFavorite
-            )
-        }
-
         fun toDataModel(
             searchedUserEntity: SearchedUserEntity
         ):SearchedUserDataModel{

@@ -3,6 +3,8 @@ package com.example.presentation.model
 import android.os.Parcelable
 import com.example.data.model.SearchedUserDataModel
 import com.example.data.model.SearchedUsersDataModel
+import com.example.domain.entity.SearchedUserEntity
+import com.example.domain.entity.SearchedUsersEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -26,9 +28,23 @@ data class SearchedUsersPresentationModel(
             )
         }
 
+
+        fun toEntity(
+            presentationSearchedUsers: SearchedUsersPresentationModel
+        ): SearchedUsersEntity {
+            return SearchedUsersEntity(
+               items =  presentationSearchedUsers.items?.map {
+                   SearchedUserPresentationModel.toEntity(it)
+               }as ArrayList<SearchedUserEntity>,
+
+               total_count = presentationSearchedUsers.total_count
+            )
+        }
+
+
         //presentation 모듈 데이터 모델로
         fun toPresentationModel(
-            searchedUsers: SearchedUsersDataModel
+            searchedUsers: SearchedUsersEntity
         ): SearchedUsersPresentationModel {
             return SearchedUsersPresentationModel(
                 items = searchedUsers.items?.map { SearchedUserPresentationModel.toPresentationModel(it) } as ArrayList<SearchedUserPresentationModel>,
