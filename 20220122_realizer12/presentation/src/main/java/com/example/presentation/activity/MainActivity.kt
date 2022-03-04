@@ -3,7 +3,6 @@ package com.example.presentation.activity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.example.data.repository.UserRepository
 import com.example.presentation.R
 import com.example.presentation.adapter.MainViewPagerAdapter
 import com.example.presentation.base.BaseActivity
@@ -11,7 +10,6 @@ import com.example.presentation.databinding.ActivityMainBinding
 import com.example.presentation.viewmodel.MainViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {

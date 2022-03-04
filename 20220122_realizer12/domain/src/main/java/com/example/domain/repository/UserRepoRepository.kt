@@ -1,10 +1,10 @@
-package com.example.data.repository
+package com.example.domain.repository
 
-import com.example.data.model.UserRepoDataModel
+import com.example.domain.entity.UserRepoEntity
 import io.reactivex.rxjava3.core.Single
 
 interface UserRepoRepository {
     fun getUserRepoList(
         userName: String
-    ): Single<List<UserRepoDataModel>>
+    ): Single<List<UserRepoEntity>>
 }

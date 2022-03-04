@@ -2,7 +2,7 @@ package com.example.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.data.repository.UserRepoRepository
+import com.example.domain.repository.UserRepoRepository
 import com.example.presentation.base.BaseViewModel
 import com.example.presentation.model.UserRepoPresentationModel
 import com.example.presentation.model.UserRepoPresentationModel.Companion.toPresentationModel

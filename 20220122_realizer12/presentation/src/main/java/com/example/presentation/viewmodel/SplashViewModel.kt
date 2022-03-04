@@ -2,14 +2,13 @@ package com.example.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.data.repository.UserRepository
+import com.example.domain.repository.UserRepository
 import com.example.presentation.base.BaseViewModel
 import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.model.SearchedUsersPresentationModel.Companion.toPresentationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
