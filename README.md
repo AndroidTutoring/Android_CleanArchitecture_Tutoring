@@ -7,8 +7,6 @@
 - 후기
 
 [권혁준](https://github.com/DavidKwon7)
-- 후기
-
 
 정말 많이 배울 수 있었던 수업이었습니다. 
 
