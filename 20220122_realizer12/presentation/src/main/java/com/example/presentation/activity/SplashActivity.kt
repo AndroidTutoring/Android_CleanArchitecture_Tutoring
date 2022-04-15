@@ -2,36 +2,20 @@ package com.example.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.example.data.repository.UserRepository
-import com.example.data.repository.UserRepositoryImpl
-import com.example.data.retrofit.RetrofitHelper
-import com.example.data.room.LocalDataBase
-import com.example.data.source.local.UserLocalDataSourceImpl
-import com.example.data.source.remote.UserRemoteDataSourceImpl
 import com.example.presentation.R
 import com.example.presentation.base.BaseActivity
 import com.example.presentation.databinding.ActivitySplashBinding
-import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.viewmodel.SplashViewModel
-import com.example.presentation.viewmodel.factory.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
 
 
-    private val userRepository: UserRepository by lazy {
-        val favoriteMarkDataBase = LocalDataBase.getInstance(this.applicationContext)
-        val remoteDataSource = UserRemoteDataSourceImpl(RetrofitHelper)
-        val localDataSource = UserLocalDataSourceImpl(favoriteMarkDataBase.getFavoriteMarkDao())
-        UserRepositoryImpl(localDataSource, remoteDataSource)
-    }
-
-    private val splashViewModel: SplashViewModel by lazy {
-        ViewModelProvider(this,
-            ViewModelFactory(userRepository))
-            .get(SplashViewModel::class.java)
-    }
+    private val splashViewModel: SplashViewModel by viewModels()
 
 
     //뷰모델로부터  데이터 받아옴
@@ -39,7 +23,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
         //검색  유저 리스트 업데이트
         splashViewModel.searchedUsersList.observe(this, Observer {
-            gotoMainActivity(it as ArrayList<PresentationSearchedUser>?)
+            gotoMainActivity(it as ArrayList<SearchedUserPresentationModel>?)
         })
 
         //에러관련 처리
@@ -57,7 +41,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
     }
 
     //메인 가기
-    private fun gotoMainActivity(searchUsers: ArrayList<PresentationSearchedUser>?) {
+    private fun gotoMainActivity(searchUsers: ArrayList<SearchedUserPresentationModel>?) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(PARAM_INIT_USER_INFO, searchUsers)
         startActivity(intent)

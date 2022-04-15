@@ -2,19 +2,26 @@ package com.example.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.data.repository.UserRepository
+import com.example.domain.usecase.*
 import com.example.presentation.base.BaseViewModel
-import com.example.presentation.model.PresentationSearchedUser
-import com.example.presentation.model.PresentationSearchedUser.Companion.toDataModel
-import com.example.presentation.model.PresentationSearchedUser.Companion.toPresentationModel
+import com.example.presentation.model.SearchedUserPresentationModel
+import com.example.presentation.model.SearchedUserPresentationModel.Companion.toEntity
+import com.example.presentation.model.SearchedUserPresentationModel.Companion.toPresentationModel
+import com.example.presentation.util.Event
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import timber.log.Timber
+import javax.inject.Inject
 
-class MainViewModel(
-    private val userRepository: UserRepository
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val getSearchedUsersListUseCase: GetSearchedUsersListInMainUseCase,
+    private val addFavoriteUsersUseCase: AddFavoriteUsersUseCase,
+    private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
+    private val updateSearchedUsersFavoriteUseCase: UpdateSearchedUsersFavoriteUseCase,
+    private val getFavoriteUsersUseCase: GetFavoriteUsersUseCase
 ) : BaseViewModel() {
 
     val behaviorSubject = BehaviorSubject.createDefault(0L)
@@ -24,23 +31,32 @@ class MainViewModel(
     val isBackPressPossible:LiveData<Boolean> = _isBackPressPossible
 
     //뷰모델 안에서 사용되는 유저, 즐겨찾기 리스트
-    val vmSearchedUsersList: MutableList<PresentationSearchedUser> = mutableListOf()
-    val vmFavoriteUserList: MutableList<PresentationSearchedUser> = mutableListOf()
+    val tempSearchedUsersList: MutableList<SearchedUserPresentationModel> = mutableListOf()
+    val tempFavoriteUserList: MutableList<SearchedUserPresentationModel> = mutableListOf()
 
     //유저리스트 라이브데이터
-    private val _searchedUserList = MutableLiveData<List<PresentationSearchedUser>>()
-    val searchedUsersList: LiveData<List<PresentationSearchedUser>> = _searchedUserList
+    private val _searchedUserList = MutableLiveData<List<SearchedUserPresentationModel>>()
+    val searchedUsersList: LiveData<List<SearchedUserPresentationModel>> = _searchedUserList
 
     //즐겨찾기 유저리스트 라이브데이터
-    private val _favoriteUserList = MutableLiveData<List<PresentationSearchedUser>>()
-    val favoriteUserList: LiveData<List<PresentationSearchedUser>> = _favoriteUserList
+    private val _favoriteUserList = MutableLiveData<List<SearchedUserPresentationModel>>()
+    val favoriteUserList: LiveData<List<SearchedUserPresentationModel>> = _favoriteUserList
 
+    //즐겨찾기 유저리스트 라이브데이터
+    private val _initialSetting = MutableLiveData<Event<Boolean>>()
+    val initialSetting: LiveData<Event<Boolean>> = _initialSetting
 
     private val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> = _error
 
-    fun getSearchUserList(searchedUserList: List<PresentationSearchedUser>) {
-        this.vmSearchedUsersList.addAll(searchedUserList as MutableList<PresentationSearchedUser>)
+    fun getSearchUserList(searchedUserList: List<SearchedUserPresentationModel>) {
+        this.tempSearchedUsersList.addAll(searchedUserList as MutableList<SearchedUserPresentationModel>)
+    }
+
+
+    init {
+        _initialSetting.value = Event(true)
+
     }
 
 
@@ -60,43 +76,15 @@ class MainViewModel(
     }
 
     fun searchUser(searchQuery: String, page: Int, perPage: Int) {
-        //local , remote  zip으로  동시에 다 처리되면  뿌려지게 수정
-        Single.zip(
-            userRepository.getSearchUsers(
-                searchQuery,
-                page,
-                perPage
-            ).subscribeOn(Schedulers.io())
-                .retry(2),
-            userRepository.getFavoriteUsers(), { remote, local ->
-
-                if(remote.isSuccessful){//remote 검색 성공했을때만 진행
-                    if (page == 1) {
-                        vmSearchedUsersList.clear()
-                    }
-
-                    remote.body()?.items.let { dataModelSearchUserList ->
-                        if (!dataModelSearchUserList.isNullOrEmpty()) {
-                            val presentationSearchUserList =
-                                dataModelSearchUserList.map { toPresentationModel(searchedUser = it) }
-                            vmSearchedUsersList.addAll(presentationSearchUserList)
-                        }
-                        vmSearchedUsersList.map { searchedUser ->
-                            if (local.any { it.id == searchedUser.id }) {
-                                searchedUser.isMyFavorite = true
-                            }
-                        }
-                    }
-                    return@zip vmSearchedUsersList.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
-
-                }else{//검색 실패시에는 에러 던짐
-                    throw RuntimeException()
-                }
-
-            })
+        getSearchedUsersListUseCase.searchUsers(searchQuery, page, perPage)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ searchedUsersList ->
-                _searchedUserList.value = searchedUsersList
+
+                if(page == 1) {
+                    tempSearchedUsersList.clear()
+                }
+                tempSearchedUsersList.addAll(searchedUsersList.map { toPresentationModel(it) })
+                _searchedUserList.value =tempSearchedUsersList
             }, {
                 _error.value = Throwable("유저를 검색하는 중에문제가 생감")
             })
@@ -106,11 +94,9 @@ class MainViewModel(
 
     //유저 즐겨찾기 추가
     fun addFavoriteUsers(
-        presentationSearchedUser: PresentationSearchedUser,
+        presentationSearchedUser: SearchedUserPresentationModel,
     ) {
-
-        userRepository.addFavoriteUser(toDataModel(presentationSearchedUser))
-            .subscribeOn(Schedulers.io())
+        addFavoriteUsersUseCase.addFavoriteUsers(toEntity(presentationSearchedUser))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
                 _error.value = Throwable("즐겨찾기 유저 추가하는 중 문제가 생김")
@@ -118,15 +104,15 @@ class MainViewModel(
             .doOnComplete {
 
                 //추가했으니까  favorite user list에도 업데이트 해줌.
-                vmFavoriteUserList?.add(presentationSearchedUser)
-                _favoriteUserList.value = vmFavoriteUserList
+                tempFavoriteUserList.add(presentationSearchedUser)
+                _favoriteUserList.value = tempFavoriteUserList
 
                 //searcheduser 리스트에는  관련 id체크 해서  별표 여부 true값 바꿔주고 update
-                vmSearchedUsersList?.find {
+                tempSearchedUsersList.find {
                     it.id == presentationSearchedUser.id
                 }?.isMyFavorite = true
                 _searchedUserList.value =
-                    vmSearchedUsersList?.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
+                    tempSearchedUsersList.map { it.copy() }//깊은 복사 안하면 계속 adapter의 리스트와 동기화되어서  사용함.
 
             }
             .subscribe()
@@ -136,11 +122,10 @@ class MainViewModel(
 
     //즐겨찾기한 유저 지우기
     fun deleteFavoriteUsers(
-        presentationSearchedUser: PresentationSearchedUser
+        presentationSearchedUser: SearchedUserPresentationModel
     ) {
 
-        userRepository.deleteFavoriteUser(toDataModel(presentationSearchedUser))
-            .subscribeOn(Schedulers.io())
+        deleteFavoriteUseCase.deleteFavoriteUsers(toEntity(presentationSearchedUser))
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
                 _error.value = Throwable("즐겨찾기 유저 삭제하는 중 문제가 생김")
@@ -148,15 +133,15 @@ class MainViewModel(
             .doOnComplete {
 
                 //즐겨찾기 리스트에서 해당값 삭제 해주고 즐겨찾기 리스트 업데이트
-                vmFavoriteUserList?.removeAll { it.id == presentationSearchedUser.id }
-                _favoriteUserList.value = vmFavoriteUserList
+                tempFavoriteUserList.removeAll { it.id == presentationSearchedUser.id }
+                _favoriteUserList.value = tempFavoriteUserList
 
                 //searcheduser 리스트에는  관련 id체크 해서  별표 여부 false값 바꿔주고 update
-                vmSearchedUsersList?.find {
+                tempSearchedUsersList.find {
                     it.id == presentationSearchedUser.id
                 }?.isMyFavorite = false
 
-                _searchedUserList.value = vmSearchedUsersList?.map { it.copy() }
+                _searchedUserList.value = tempSearchedUsersList.map { it.copy() }
 
             }.subscribe()
             .addTo(compositeDisposable)
@@ -165,31 +150,31 @@ class MainViewModel(
     //초기 스플래시에서 넘어온 값들 즐겨찾기 여부 체크해주고,
     //favoriteuserlist 미리  업데이트 해놓음.
     fun initialListSetting() {
-        //현재  검색된걸로 뿌려져있는 리스트에서 favorite에 있는 애들만 뽑아서 주고 나머지는 안줘야되는
-        userRepository.getFavoriteUsers()
-            .subscribeOn(Schedulers.io())
-            .map { dataModelFavoriteUsers ->
 
-                val newList = vmSearchedUsersList?.map { it.copy() }
-                newList?.map { searchedUsersList ->
-                    searchedUsersList.isMyFavorite =
-                        dataModelFavoriteUsers.any { it.id == searchedUsersList.id }
-                }
 
-                //즐겨찾기 리스트  미리 업데이트 함.
-                vmFavoriteUserList
-                    ?.addAll(dataModelFavoriteUsers
-                        .map { toPresentationModel(it) })
-
-                return@map newList
-            }
+        getFavoriteUsersUseCase
+            .getFavoriteUsers()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                _searchedUserList.value = it?.toMutableList()
+                 tempFavoriteUserList.addAll(it.map { toPresentationModel(it) })
+                _favoriteUserList.value = tempFavoriteUserList
             }, {
                 _error.value = Throwable("즐겨찾기 업데이트 중 문제 생김")
             })
-            .addTo(compositeDisposable)
+
+
+
+
+        //현재  검색된걸로 뿌려져있는 리스트에서 favorite에 있는 애들만 뽑아서 주고 나머지는 안줘야되는
+        updateSearchedUsersFavoriteUseCase.updateFavoriteValue(tempSearchedUsersList.map { toEntity(it) })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                _searchedUserList.value = it.map { toPresentationModel(it) }
+            },{
+                _error.value = Throwable("즐겨찾기 업데이트 중 문제 생김")
+            }).addTo(compositeDisposable)
+
+
     }
 
 }

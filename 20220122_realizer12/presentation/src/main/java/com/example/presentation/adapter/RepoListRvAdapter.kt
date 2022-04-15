@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.presentation.R
 import com.example.presentation.databinding.ItemRepoInfoBinding
-import com.example.presentation.model.PresentationUserRepo
+import com.example.presentation.model.UserRepoPresentationModel
 import com.example.presentation.viewholder.RepoInfoViewHolder
 
-class RepoListRvAdapter : ListAdapter<PresentationUserRepo, RepoInfoViewHolder>(diffUtil) {
+class RepoListRvAdapter : ListAdapter<UserRepoPresentationModel, RepoInfoViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoInfoViewHolder {
         val binding: ItemRepoInfoBinding = DataBindingUtil.inflate(
@@ -33,17 +33,17 @@ class RepoListRvAdapter : ListAdapter<PresentationUserRepo, RepoInfoViewHolder>(
 
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<PresentationUserRepo>() {
+        val diffUtil = object : DiffUtil.ItemCallback<UserRepoPresentationModel>() {
             override fun areContentsTheSame(
-                oldItem: PresentationUserRepo,
-                newItem: PresentationUserRepo
+                oldItem: UserRepoPresentationModel,
+                newItem: UserRepoPresentationModel
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areItemsTheSame(
-                oldItem: PresentationUserRepo,
-                newItem: PresentationUserRepo
+                oldItem: UserRepoPresentationModel,
+                newItem: UserRepoPresentationModel
             ): Boolean {
                 return oldItem.id == newItem.id
             }

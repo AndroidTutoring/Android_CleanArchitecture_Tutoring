@@ -2,21 +2,24 @@ package com.example.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.data.repository.RepoRepository
+import com.example.domain.repository.UserRepoRepository
 import com.example.presentation.base.BaseViewModel
-import com.example.presentation.model.PresentationUserRepo
-import com.example.presentation.model.PresentationUserRepo.Companion.toPresentationModel
+import com.example.presentation.model.UserRepoPresentationModel
+import com.example.presentation.model.UserRepoPresentationModel.Companion.toPresentationModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class DetailViewModel(
-    private val repoRepository: RepoRepository
+@HiltViewModel
+class DetailViewModel @Inject constructor(
+    private val repoRepository: UserRepoRepository
 ) : BaseViewModel() {
 
 
-    private val _repoDetailList = MutableLiveData<List<PresentationUserRepo>>()
-    val repoDetailList: LiveData<List<PresentationUserRepo>> = _repoDetailList
+    private val _repoDetailList = MutableLiveData<List<UserRepoPresentationModel>>()
+    val repoDetailList: LiveData<List<UserRepoPresentationModel>> = _repoDetailList
 
 
     private val _error = MutableLiveData<Throwable>()

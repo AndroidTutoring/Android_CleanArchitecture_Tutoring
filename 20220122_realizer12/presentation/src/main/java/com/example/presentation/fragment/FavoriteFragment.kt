@@ -3,12 +3,11 @@ package com.example.presentation.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.example.presentation.R
 import com.example.presentation.adapter.UserListRvAdapter
 import com.example.presentation.base.BaseFragment
 import com.example.presentation.databinding.FragmentFavoriteBinding
-import com.example.presentation.model.PresentationSearchedUser
+import com.example.presentation.model.SearchedUserPresentationModel
 import com.example.presentation.viewmodel.MainViewModel
 
 //즐겨찾기 프래그먼트
@@ -32,7 +31,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment
         favoriteMarkedRvAdapter.setFavoriteMarkClickListener(object :
             UserListRvAdapter.FavoriteClickListener {
             override fun onFavoriteMarkListener(
-                searchedUser: PresentationSearchedUser,
+                searchedUser: SearchedUserPresentationModel,
                 position: Int
             ) {
                 mainSharedViewModel.deleteFavoriteUsers(
@@ -54,12 +53,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(R.layout.fragment
         binding.rcyFavoriteList.apply {
             adapter = favoriteMarkedRvAdapter
         }
-
-        getFavoriteGitUsers()
     }
 
-    //미리 뷰모델 안에서 세팅 되어있던  즐겨찾기 리스트를 가져와 업데이트 해줌
-    private fun getFavoriteGitUsers() {
-        favoriteMarkedRvAdapter.submitList(mainSharedViewModel.vmFavoriteUserList?.toMutableList())
-    }
 }
