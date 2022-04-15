@@ -24,10 +24,10 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_recycler_ex" />
+            tools:listitem="@layout/item_recycler_fav" />
 
         <Button
-            android:id="@+id/btn1"
+            android:id="@+id/goToUser"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             android:text="유저" />
 
         <Button
-            android:id="@+id/btn2"
+            android:id="@+id/goToFavorite"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -7,29 +7,25 @@ import androidx.lifecycle.ViewModel
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.data.repository.githubRepository.GithubRepositoryImpl
-import com.example.data.repository.githubSource.local.LocalDataSourceImpl
-import com.example.data.repository.githubSource.remote.RemoteDataSourceImpl
+import com.example.localdata.source.LocalDataSourceImpl
+import com.example.localdata.room.UserDao
+import com.example.remotedata.source.RemoteDataSourceImpl
 import com.example.presentation.databinding.ActivityFavoriteBinding
+import com.example.remotedata.retrofit.GithubAPI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
 
-class FavoriteViewModel : ViewModel() {
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(
+    private val githubRepository: GithubRepository
+) : ViewModel() {
 
-    private lateinit var api: GithubAPI
-    private lateinit var userdao: UserDao
-    private val githubRepos: ArrayList<UserDataModel> = ArrayList()
     private lateinit var compositeDisposable: CompositeDisposable
-
-    private val localDataSource = LocalDataSourceImpl(dao = userdao)
-    private val remoteDataSource = RemoteDataSourceImpl()
-    private val githubRepository = GithubRepositoryImpl(
-        localDataSource = localDataSource,
-        remoteDataSource = remoteDataSource)
-    val publishSubject : PublishSubject<List<UserDataModel>> =
-        PublishSubject.create()
 
     lateinit var adapter: FavoriteAdapter
     lateinit var binding: ActivityFavoriteBinding
@@ -44,15 +40,15 @@ class FavoriteViewModel : ViewModel() {
     }
 
     init {
-        compositeDisposable.add(githubRepository.getRepos()
+        githubRepository.getRepos()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .retry(2)
-            .subscribe({it->
-                _list.value = it
+            .subscribe({result ->
+                _list.value = result
             }
-            )
-        )
+            ).addTo(compositeDisposable)
+
     }
 
     override fun onCleared() {

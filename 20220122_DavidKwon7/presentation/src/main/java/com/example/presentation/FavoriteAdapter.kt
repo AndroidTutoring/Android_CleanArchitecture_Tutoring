@@ -7,26 +7,31 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.data.model.UserDataModel
 import com.example.presentation.databinding.ItemRecyclerExBinding
 
-class FavoriteAdapter(val context: Context) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
+class FavoriteAdapter(val context: Context) :
+    RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
 
     var postList = listOf<UserDataModel>()
 
     private var listener : OnItemClickListener? = null
     fun setOnItemClickListener(listener : OnItemClickListener) {
         this.listener = listener
-
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) :
             ViewHolder {
-
         val inflater = LayoutInflater.from(parent.context)
-        val listItemBinding = ItemRecyclerExBinding.inflate(inflater,parent,false)
+        val listItemBinding = ItemRecyclerExBinding.inflate(
+            inflater,
+            parent,
+            false
+        )
         return ViewHolder(listItemBinding)
     }
 
-    class ViewHolder (val binding: ItemRecyclerExBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder (val binding: ItemRecyclerExBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
         private var listener : OnItemClickListener? =null
 
 

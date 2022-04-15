@@ -38,7 +38,9 @@ android {
 dependencies {
 
     implementation project(":data")
-    implementation project(':presentation')
+    implementation project(":presentation")
+    implementation project(":localData")
+    implementation project(":remoteData")
 
 
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -51,8 +53,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // dagger hilt
-    implementation "com.google.dagger:hilt-android:2.28-alpha"
-    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
+    implementation "com.google.dagger:hilt-android:2.38.1"
+    kapt "com.google.dagger:hilt-android-compiler:2.38.1"
 
 
     //retrofit

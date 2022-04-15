@@ -4,45 +4,37 @@ import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import com.example.data.model.UserDataModel
+import com.example.presentation.mapping.PresentationToUserMapper
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class UserPresentationDataModel(val name: String,
-                                     val id: String,
-                                     val date: String,
-                                     val url: String?
-                ) : Parcelable {
+data class UserPresentationDataModel(
+    val name: String,
+    val id: String,
+    val date: String,
+    val url: String?
+) : Parcelable {
 
 
-    companion object {
+    companion object :
+        PresentationToUserMapper<UserDataModel, UserPresentationDataModel> {
 
-        fun toPresentationModel(
-            user: List<UserPresentationDataModel>
-        ): List<UserPresentationDataModel> {
-            return user.toList().map {
+        override fun toPresentationModel(
+            user: UserDataModel
+        ): UserPresentationDataModel =
+            with(user) {
                 UserPresentationDataModel(
-                    it.name,
-                    it.id,
-                    it.date,
-                    it.url
+                    name = name,
+                    id = id,
+                    date = date,
+                    url = url
                 )
             }
-        }
-
-        fun toDataModel(
-            user: List<UserDataModel>
-        ): List<UserDataModel> {
-            return user.toList().map {
-                UserDataModel(
-                    it.name,
-                    it.id,
-                    it.date,
-                    it.url
-                )
-            }
-        }
     }
+
 }
+
+
 
 
 

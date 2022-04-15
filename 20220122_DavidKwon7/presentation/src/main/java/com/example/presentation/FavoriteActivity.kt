@@ -1,13 +1,10 @@
 package com.example.presentation
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.model.UserDataModel
 import com.example.data.repository.githubRepository.GithubRepository
 import com.example.presentation.databinding.ActivityFavoriteBinding
@@ -19,15 +16,15 @@ import io.reactivex.subjects.Subject
 
 class FavoriteActivity : AppCompatActivity() {
 
-    private var backPressedTime : Long = 0
+    private var backPressedTime: Long = 0
     lateinit var binding: ActivityFavoriteBinding
-    lateinit var repository : GithubRepository
+    lateinit var repository: GithubRepository
     lateinit var adapter: FavoriteAdapter
     private lateinit var favoriteViewModel: FavoriteViewModel
     private val listData = listOf<UserDataModel>()
 
 
-    private val backButtonSubject : Subject<Long> =
+    private val backButtonSubject: Subject<Long> =
         BehaviorSubject.createDefault(0L)
 
     private lateinit var compositeDisposable: CompositeDisposable
@@ -46,11 +43,14 @@ class FavoriteActivity : AppCompatActivity() {
         setAdapter()
 
 
-        favoriteViewModel.list.observe(this, Observer { it->
-            adapter.addItem(it)
-        })
+        favoriteViewModel.list.observe(
+            this,
+            Observer {
+                adapter.addItem(it)
+            })
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
@@ -58,14 +58,16 @@ class FavoriteActivity : AppCompatActivity() {
 
 
     private fun clickFavorite() {
-            binding.btn1.setOnClickListener {
-                binding.btn1.setOnClickListener {
-                    startActivity(Intent(
-                        this,
-                        MainActivity::class.java))
-                }
-            }
+        binding.goToUser.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    MainActivity::class.java
+                )
+            )
         }
+    }
+
     //item click
     private fun itemDeleteClick() {
         adapter.setOnItemClickListener(object :
@@ -73,14 +75,17 @@ class FavoriteActivity : AppCompatActivity() {
             override fun onItemClick(
                 v: View,
                 data: UserDataModel,
-                pos: Int) {
+                pos: Int
+            ) {
 
                 repository.deleteFav(
                     deleteUser = UserDataModel(
-                    name=String(),
-                    id= String(),
-                    date = String(),
-                    url = String() ))
+                        name = "",
+                        id = "",
+                        date = "",
+                        url = ""
+                    )
+                )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
@@ -88,10 +93,9 @@ class FavoriteActivity : AppCompatActivity() {
         })
     }
 
-    private fun setAdapter(){
+    private fun setAdapter() {
         binding.rvProfile.apply {
             adapter = FavoriteAdapter(this@FavoriteActivity)
-            layoutManager = LinearLayoutManager(context)
         }
     }
 }

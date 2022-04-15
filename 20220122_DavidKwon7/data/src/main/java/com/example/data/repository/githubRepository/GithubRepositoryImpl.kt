@@ -5,8 +5,9 @@ import com.example.data.repository.githubSource.local.LocalDataSource
 import com.example.data.repository.githubSource.remote.RemoteDataSource
 import io.reactivex.Completable
 import io.reactivex.Single
+import javax.inject.Inject
 
-class GithubRepositoryImpl (
+class GithubRepositoryImpl @Inject constructor (
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource
 
@@ -25,5 +26,7 @@ class GithubRepositoryImpl (
         }
 
 
-        override fun getRepos(): Single<List<UserDataModel>> = remoteDataSource.getRepos(userName = String())
+        override fun getRepos(): Single<List<UserDataModel>> =
+            remoteDataSource
+                .getRepos(userName = String())
 }

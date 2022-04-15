@@ -5,7 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidTutoring_HJ.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidTutoring_HJ.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AndroidTutoring_HJ.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AndroidTutoring_HJ.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/data/AndroidTutoring_HJ.data.iml" filepath="$PROJECT_DIR$/.idea/modules/data/AndroidTutoring_HJ.data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/localData/AndroidTutoring_HJ.localData.iml" filepath="$PROJECT_DIR$/.idea/modules/localData/AndroidTutoring_HJ.localData.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/presentation/AndroidTutoring_HJ.presentation.iml" filepath="$PROJECT_DIR$/.idea/modules/presentation/AndroidTutoring_HJ.presentation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/remoteData/AndroidTutoring_HJ.remoteData.iml" filepath="$PROJECT_DIR$/.idea/modules/remoteData/AndroidTutoring_HJ.remoteData.iml" />
     </modules>
   </component>
 </project>
